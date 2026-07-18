@@ -34,12 +34,26 @@ Skills work best for specialized knowledge tied to specific tasks: code review s
 
 To create a skill, make a directory named after the skill inside a skills folder, containing a `SKILL.md` file. For a personal skill, that's under `~/.claude/skills/<skill-name>/SKILL.md`.
 
-`SKILL.md` has three parts:
-- `name`: identifies the skill.
-- `description`: tells Claude when to use it; this is the matching criteria.
-- Everything after the second `---`: the instructions Claude follows when the skill is active.
+`SKILL.md` is a markdown file with a YAML frontmatter block (the section fenced between two `---` lines) followed by the instructions:
 
-Claude Code loads skills at startup, so a new or edited skill requires a session restart before it's picked up. You can verify it's available by asking Claude what skills it has.
+```markdown
+---
+name: pr-description
+description: Write a PR description for the current changes. Use when the user asks to summarize a diff or draft a pull request.
+---
+
+Read the diff, then write a PR description with these sections:
+- Summary: one paragraph on what changed and why.
+- Changes: a bullet per notable change.
+- Testing: how the change was verified.
+```
+
+That's the three parts:
+- `name`: identifies the skill (in the frontmatter).
+- `description`: tells Claude when to use it; this is the matching criteria (in the frontmatter).
+- Everything after the closing `---`: the instructions Claude follows when the skill is active.
+
+Claude Code loads skills at startup, so a new or edited skill requires a session restart before it's picked up. You can verify it's available by asking Claude what skills it has. To test it, make a change (say, edit some files on a branch) and ask Claude to "write a PR description for my changes." Claude announces that it's using the skill, then follows the template, producing the same format every time.
 
 At startup, Claude Code scans four locations for skills, in this priority order when names collide:
 

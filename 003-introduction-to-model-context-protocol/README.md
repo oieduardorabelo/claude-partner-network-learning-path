@@ -74,10 +74,10 @@ Defining a tool is just decorating a typed function:
 - Type-annotate each argument, and use `Field(description=...)` from pydantic to describe it. The SDK folds all of this (the decorator, the types, the field descriptions) into a generated JSON schema that gets passed to Claude.
 - Validate inputs and raise a `ValueError` with a clear message when something's wrong, so Claude can see the error and correct itself.
 
-The two tools in the project:
+The two tools in the project (note that the tool `name` in the decorator is separate from the Python function name, and it's the `name` that Claude and the Inspector see):
 
-- `read_document(doc_id)`: looks `doc_id` up in the in-memory `docs` dictionary, raises a `ValueError` if it's missing, otherwise returns the contents.
-- `edit_document(doc_id, old_string, new_string)`: a simple find-and-replace on the document's contents, with the same existence check first.
+- `read_contents` (function `read_document(doc_id)`): looks `doc_id` up in the in-memory `docs` dictionary, raises a `ValueError` if it's missing, otherwise returns the contents.
+- `edit_document` (function `edit_document(doc_id, old_string, new_string)`): a simple find-and-replace on the document's contents, with the same existence check first.
 
 A good description matters in practice (it's how Claude knows exactly when to reach for a tool), even though the course keeps them short to save time.
 
@@ -85,7 +85,7 @@ A good description matters in practice (it's how Claude knows exactly when to re
 
 Because you're using the Python SDK, you get an in-browser debugger for free, so you can exercise a server without wiring it into a real app. Run `mcp dev mcp_server.py` and it starts the server (listening on port 6277, with the inspector UI on 6274 by default) and gives you a URL to open.
 
-In the inspector: click **Connect** to start your server, then use the top menu (resources, prompts, tools, and more) to find the Tools section. **List Tools** shows what you defined; clicking a tool opens a panel on the right where you fill in arguments and **Run Tool** to see the result. You can chain calls to verify behavior, for example run `edit_document` to replace a string, then run `read_document` on the same ID to confirm the change stuck.
+In the inspector: click **Connect** to start your server, then use the top menu (resources, prompts, tools, and more) to find the Tools section. **List Tools** shows what you defined; clicking a tool opens a panel on the right where you fill in arguments and **Run Tool** to see the result. You can chain calls to verify behavior, for example run `edit_document` to replace a string, then run `read_contents` on the same ID to confirm the change stuck. (When you test resources, note the Inspector lists direct resources and templated resources separately, so the templated `fetch_doc` shows up under "resource templates," not in the main resource list.)
 
 The inspector is under active development, so the exact UI will drift, but the core flow (connect, pick a primitive, invoke it manually) stays the same. Expect to lean on it a lot while building your own servers.
 
@@ -120,7 +120,7 @@ The **MIME type** is a hint to the client about what it's getting back: `applica
 
 On the client side, one method handles reads:
 
-- `read_resource(uri)`: `await self.session.read_resource(AnyURL(uri))`, take `result.contents[0]`, and branch on its MIME type. If it's `application/json`, return `json.loads(resource.text)`; otherwise return `resource.text` unchanged.
+- `read_resource(uri)`: `await self.session.read_resource(AnyUrl(uri))` (`AnyUrl` imported from pydantic), take `result.contents[0]`, confirm it's a `TextResourceContents`, then branch on its MIME type. If it's `application/json`, return `json.loads(resource.text)`; otherwise return `resource.text` unchanged.
 
 ## Prompts
 

@@ -1,0 +1,215 @@
+[0:03]
+Every time you explain your team's
+
+[0:05]
+coding standards to Claude, you're
+
+[0:07]
+repeating yourself.
+
+[0:09]
+Every PR review, you redescribe how you
+
+[0:12]
+want feedback [music] structured. Every
+
+[0:13]
+commit message, you remind Claude of
+
+[0:16]
+your preferred format.
+
+[0:18]
+And skills fix this.
+
+[0:20]
+A skill is a markdown file that teaches
+
+[0:22]
+Claude how [music] to do something once,
+
+[0:24]
+and Claude applies that knowledge
+
+[0:26]
+automatically whenever it's relevant.
+
+[0:32]
+Agent skills are folders of
+
+[0:34]
+instructions, scripts, and resources
+
+[0:36]
+that agents can discover and use to do
+
+[0:38]
+things more accurately and efficiently.
+
+[0:41]
+With Claude Code, we have the skill.md
+
+[0:43]
+file.
+
+[0:45]
+The description is how Claude decides
+
+[0:47]
+whether to use the skill. When you ask
+
+[0:49]
+Claude to review this PR, it matches
+
+[0:52]
+your request against available skill
+
+[0:53]
+descriptions and finds this one.
+
+[0:57]
+Claude reads your request, compares it
+
+[0:58]
+to all available skill descriptions, and
+
+[1:00]
+activates the ones that match.
+
+[1:05]
+You can store skills in a few places
+
+[1:07]
+depending on who needs them.
+
+[1:10]
+Personal skills go in the home directory
+
+[1:13]
+.claude/skills
+
+[1:15]
+and follow you across all your project.
+
+[1:17]
+These are your preferences, your commit
+
+[1:19]
+message style, your documentation
+
+[1:21]
+format, how you like code explained.
+
+[1:24]
+Project skills go in the .claude/skills
+
+[1:27]
+inside of the root directory of your
+
+[1:29]
+repository. Anyone who clones the
+
+[1:31]
+repository gets these skills
+
+[1:32]
+automatically. This is where team
+
+[1:34]
+standards live, like your company's
+
+[1:36]
+brand guidelines, preferred fonts, and
+
+[1:38]
+colors that you use for web design.
+
+[1:43]
+Claude Code has several ways to
+
+[1:44]
+customize behavior.
+
+[1:46]
+Skills are unique because they're
+
+[1:48]
+automatic and task-specific.
+
+[1:51]
+Claude.md files load into every
+
+[1:52]
+conversation. If you want Claude to
+
+[1:55]
+always use TypeScript strict mode, that
+
+[1:57]
+goes in your claw.md file. Skills, on
+
+[1:59]
+the other hand, load on demand when they
+
+[2:01]
+match your request. It only loads in the
+
+[2:04]
+name and description, so it doesn't fill
+
+[2:06]
+up your entire context window. Your PR
+
+[2:09]
+review checklist doesn't need to be in
+
+[2:11]
+the context when you're debugging.
+
+[2:13]
+It loads when you actually ask for a
+
+[2:16]
+review.
+
+[2:17]
+Slash commands require you to type them.
+
+[2:19]
+Skills don't.
+
+[2:21]
+Claude applies them when it recognizes
+
+[2:23]
+the situation.
+
+[2:27]
+Skills work best for specialized
+
+[2:29]
+knowledge that applies to specific
+
+[2:31]
+tasks.
+
+[2:32]
+Code review standards your team follows,
+
+[2:34]
+commit message formats that you prefer,
+
+[2:37]
+brand guidelines of your organization.
+
+[2:42]
+If you find yourself explaining the same
+
+[2:44]
+thing [music] to Claude repeatedly,
+
+[2:46]
+well,
+
+[2:47]
+that's a skill waiting to be written.

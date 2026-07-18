@@ -1,0 +1,260 @@
+[0:03]
+When skills don't work, the problem
+
+[0:05]
+usually falls into one of a few
+
+[0:07]
+categories.
+
+[0:09]
+The skill doesn't trigger, doesn't load,
+
+[0:12]
+has conflicts, or fails at runtime. But
+
+[0:15]
+[music]
+
+[0:16]
+good news, most fixes are pretty
+
+[0:19]
+straightforward. Here are some of them.
+
+[0:22]
+First thing we can do is try the agent
+
+[0:23]
+skills verifier command. Depending on
+
+[0:26]
+your operating system, installation
+
+[0:28]
+steps will differ, but we recommend
+
+[0:31]
+using UV as it's the easiest way to get
+
+[0:33]
+it installed fast. Once installed,
+
+[0:35]
+either navigate to your skill directory
+
+[0:37]
+or run this command from anywhere.
+
+[0:41]
+Your skill exists, it passes the
+
+[0:43]
+validator, but Claude isn't using it
+
+[0:46]
+when expected. H well, the cause is
+
+[0:50]
+almost always the description. Cloud
+
+[0:52]
+uses semantic matching, so your request
+
+[0:54]
+needs to overlap with the description's
+
+[0:56]
+meaning. If there's not enough overlap,
+
+[1:00]
+no match. Check your description against
+
+[1:02]
+how you're phrasing requests. Add
+
+[1:04]
+trigger phrases users would actually
+
+[1:06]
+say, test with variations. Help me
+
+[1:09]
+profile this. Why is this slow? Make
+
+[1:12]
+this faster. If any fail to trigger, add
+
+[1:14]
+those keywords to your description. If
+
+[1:17]
+your skill doesn't appear when you ask
+
+[1:19]
+Claude what skills are available, well,
+
+[1:21]
+check these things. Skills must be in
+
+[1:23]
+the right location with the right
+
+[1:25]
+structure. The skill.md file must be
+
+[1:27]
+inside of a name directory, not at a
+
+[1:29]
+skills root. The file name must be
+
+[1:31]
+exactly skill.md.
+
+[1:34]
+All caps on the skill lowerase MD. Just
+
+[1:37]
+crossing things off the list here. Okay,
+
+[1:39]
+just crossing them off. Run claude-debug
+
+[1:42]
+to see loading errors. Look for messages
+
+[1:45]
+mentioning your skill name. Sometimes
+
+[1:47]
+this will just solve the problem for
+
+[1:49]
+you. If Claude uses the wrong skill or
+
+[1:52]
+seems confused, your descriptions are
+
+[1:55]
+probably too similar. Make them
+
+[1:57]
+distinct. Remember, being as specific as
+
+[2:00]
+possible doesn't just help with Claude
+
+[2:02]
+deciding when to use your skill, but not
+
+[2:04]
+conflicting with other similar sounding
+
+[2:06]
+skills.
+
+[2:07]
+If your personal skill is being ignored,
+
+[2:09]
+an enterprise or higher priority skill
+
+[2:12]
+might have the same name. So investigate
+
+[2:14]
+that. If you see an enterprise code
+
+[2:17]
+review and you also have a personal code
+
+[2:20]
+review, well the enterprise one will win
+
+[2:23]
+every time. So your solutions is to
+
+[2:25]
+rename your skill to something a little
+
+[2:27]
+bit more distinct. Talk to your admin
+
+[2:29]
+about the enterprise skill, but you'll
+
+[2:31]
+have a better chance with number one.
+
+[2:33]
+Probably
+
+[2:35]
+install the plugin but can't see it.
+
+[2:37]
+Skills? Well, clear the cache. Restart
+
+[2:40]
+claw code and reinstall. If skills still
+
+[2:43]
+don't appear, the plug-in structure just
+
+[2:45]
+might be wrong. This is when the
+
+[2:46]
+validator tool makes sense.
+
+[2:49]
+The skill loads but fails during
+
+[2:51]
+execution. If your skill uses external
+
+[2:53]
+packages, they must be installed. Add
+
+[2:56]
+this info to your description.
+
+[2:58]
+Scripts need execute permission. Use for
+
+[3:01]
+slashes everywhere, even on Windows.
+
+[3:06]
+So, here's a quick checklist. Not
+
+[3:08]
+triggering? Well, improve your
+
+[3:10]
+description and trigger phrases. Not
+
+[3:12]
+loading? Check your path, file name,
+
+[3:14]
+YAML syntax. Wrong skill [music] used?
+
+[3:17]
+Make your descriptions a little bit more
+
+[3:18]
+distinct. Are you being shadowed? Check
+
+[3:21]
+the priority and rename if needed.
+
+[3:24]
+Plugins are missing. Clear your cache
+
+[3:26]
+and reinstall. Runtime failure? Check
+
+[3:29]
+dependencies, permissions, and pass.

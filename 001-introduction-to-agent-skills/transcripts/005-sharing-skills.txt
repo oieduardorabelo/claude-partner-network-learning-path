@@ -1,0 +1,287 @@
+[0:02]
+Skills become more valuable when shared.
+
+[0:05]
+A PR review skill that only you use is
+
+[0:07]
+helpful. The same skill shared across
+
+[0:09]
+your team standardizes code review and
+
+[0:11]
+provides a consistent experience amongst
+
+[0:13]
+your organization which much better.
+
+[0:16]
+Here are ways you can share your skills.
+
+[0:20]
+Now the simplest sharing method is
+
+[0:22]
+committing skills to your repository.
+
+[0:24]
+Place them include/skills.
+
+[0:27]
+Anyone who clones a repository gets
+
+[0:30]
+these skills automatically. No extra
+
+[0:32]
+installation. It's just what you're
+
+[0:34]
+doing already. When you push update,
+
+[0:36]
+everyone gets them on the next poll.
+
+[0:38]
+This works well for team coding
+
+[0:40]
+standards, project specific workflows,
+
+[0:43]
+skills that reference your codebase
+
+[0:45]
+structure.
+
+[0:47]
+Another way you can distribute your
+
+[0:49]
+skills is through plugins. Think of
+
+[0:51]
+plugins as ways to extend cloud code
+
+[0:54]
+with custom functionality, but designed
+
+[0:56]
+to be shared across teams and projects.
+
+[1:01]
+In your plug-in project, create a
+
+[1:03]
+directory called skills. This will then
+
+[1:05]
+follow a similar file structure to the
+
+[1:08]
+cloud directory in our project with the
+
+[1:10]
+name of the skill with a skill.md file.
+
+[1:13]
+And after you distribute your plugin to
+
+[1:15]
+a marketplace, other users can download
+
+[1:17]
+it into cloud codes for themselves to
+
+[1:19]
+use.
+
+[1:20]
+This is best if your skills have
+
+[1:22]
+functionality that isn't too project
+
+[1:24]
+specific and can be used by community
+
+[1:26]
+members.
+
+[1:30]
+Administrators can deploy skills
+
+[1:32]
+organizationwide through managed
+
+[1:33]
+settings. Enterprise skills take highest
+
+[1:36]
+priority. Like we discussed before, they
+
+[1:38]
+override personal project and plug-in
+
+[1:40]
+skills with the same name. This is for
+
+[1:43]
+mandatory standards, security
+
+[1:45]
+requirements, compliance workflows,
+
+[1:47]
+coding practices that must be consistent
+
+[1:49]
+across the organization. Keyword must.
+
+[1:54]
+Here's something that surprises people.
+
+[1:56]
+Sub agents don't automatically see your
+
+[1:58]
+skills. Yeah, when you delegate a task
+
+[2:01]
+to a sub agent, it starts with a fresh,
+
+[2:03]
+clean context. Built-in agents like the
+
+[2:06]
+explorer, plan, and verify can't access
+
+[2:08]
+skills at all. Only custom sub agents
+
+[2:10]
+you define can use them and only when
+
+[2:12]
+you explicitly list them. To create a
+
+[2:15]
+custom sub agent with skills, add an
+
+[2:16]
+agent.mmd file include/ aents. The
+
+[2:20]
+skills field lists which skills to load.
+
+[2:22]
+These skills are loaded when the sub
+
+[2:24]
+aent starts, not in demand like in the
+
+[2:26]
+main conversation. So take that into
+
+[2:28]
+consideration.
+
+[2:30]
+First ensure the skills exist.
+
+[2:35]
+Okay, it exists. Then create the sub
+
+[2:38]
+agent using the claw code sub aent
+
+[2:40]
+creator. If you have a sub agent that
+
+[2:42]
+you want to add these skills to already
+
+[2:44]
+just go to the existing agent.md file.
+
+[2:47]
+Then after that create the skills fields
+
+[2:49]
+and add your skills. When you delegate
+
+[2:52]
+to the sub agent it has both skills
+
+[2:53]
+loaded and applies them to every single
+
+[2:55]
+review.
+
+[2:58]
+Now this pattern works really well when
+
+[3:01]
+you want isolated task delegation with
+
+[3:03]
+specific expertise.
+
+[3:05]
+Different sub agents need different
+
+[3:06]
+skills. Front-end reviewer versus
+
+[3:09]
+back-end reviewer. You want to enforce
+
+[3:11]
+standards and delegated work without
+
+[3:13]
+relying on prompts. Only list skills
+
+[3:15]
+that are always relevant to the subage's
+
+[3:17]
+purpose.
+
+[3:21]
+Share skills through project directories
+
+[3:23]
+for team access, plugins for cross
+
+[3:25]
+repository distribution, or enterprise
+
+[3:27]
+deployment for organizationwide
+
+[3:29]
+standards. Sub agents don't inherit
+
+[3:31]
+skills automatically, so list them
+
+[3:33]
+explicitly in the sub agents skills
+
+[3:35]
+field. Built-in agents can't access
+
+[3:37]
+skills. Only custom sub agents can in
+
+[3:40]
+your claw/ agents. Skills load when the
+
+[3:43]
+sub agents start, so only list skills
+
+[3:45]
+that are always relevant to its purpose.

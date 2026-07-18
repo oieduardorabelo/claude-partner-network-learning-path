@@ -1,0 +1,311 @@
+[0:02]
+A basic skill works with just a name and
+
+[0:04]
+description, but here are some other
+
+[0:06]
+advanced tips that can make your skills
+
+[0:08]
+really effective in claw code.
+
+[0:12]
+The agentskills.io open standard has
+
+[0:15]
+many available fields. We already went
+
+[0:17]
+over the name, which identifies your
+
+[0:20]
+skill, uses lowercase letters, numbers,
+
+[0:22]
+and hyphens only. A maximum of 64
+
+[0:25]
+characters and should match your
+
+[0:26]
+directory name. a description which is
+
+[0:28]
+also required which tells Claude when to
+
+[0:30]
+use the skill. This is a maximum of,024
+
+[0:33]
+characters and is the most important
+
+[0:35]
+field. Claude uses this for matching.
+
+[0:37]
+But we can also add other optional
+
+[0:38]
+fields. One of them is the allowed tools
+
+[0:41]
+field which restricts which tools Claude
+
+[0:43]
+can use when the skill is active. The
+
+[0:45]
+model field which specifies which cla
+
+[0:47]
+model to use for the skill. Try to be
+
+[0:50]
+explicit with your instructions. For
+
+[0:52]
+example, if someone told me my job was
+
+[0:54]
+to help with dogs, I wouldn't know what
+
+[0:57]
+to do. So, we have to assume Claude
+
+[1:00]
+would think the same way. A good
+
+[1:02]
+description answers two questions. What
+
+[1:04]
+does this skill do? And when should
+
+[1:06]
+Claus use it?
+
+[1:08]
+Now, if this job description was given
+
+[1:10]
+to me, I feel a little bit more
+
+[1:12]
+confident that I could get the job done.
+
+[1:14]
+If your skill isn't triggering, add more
+
+[1:16]
+keywords that match how you phrase
+
+[1:17]
+requests.
+
+[1:20]
+Sometimes you want a skill that can only
+
+[1:22]
+read files, not modify them. This could
+
+[1:26]
+be for security sensitive workflows,
+
+[1:28]
+read only tasks or more. We have the
+
+[1:31]
+allowed tools field to make this
+
+[1:33]
+possible. When this skill is active,
+
+[1:35]
+Claw can only use those tools without
+
+[1:37]
+asking permission. No editing, no
+
+[1:39]
+writing, no bash commands. If you omit
+
+[1:42]
+allowed tools, the skill doesn't
+
+[1:43]
+restrict anything. Claude uses its
+
+[1:45]
+normal permission model.
+
+[1:49]
+Skills share Claw's context window with
+
+[1:51]
+your conversation. When Claude wants to
+
+[1:54]
+use a skill, it will decide to load the
+
+[1:56]
+contents of that skill into context.
+
+[1:58]
+However, sometimes you'll need some
+
+[2:00]
+references, examples, or some utility
+
+[2:03]
+scripts that are required by the skill.
+
+[2:06]
+But cramming it all into one 20,000 line
+
+[2:09]
+text file means you take up a lot of
+
+[2:10]
+space in the context window. And let's
+
+[2:13]
+be real here, it's just not a lot of fun
+
+[2:15]
+to maintain that. This is where
+
+[2:17]
+progressive disclosure comes in. Put
+
+[2:19]
+your essential instructions in skill.mmp
+
+[2:21]
+and detailed reference material in
+
+[2:23]
+separate files that Claude reads only
+
+[2:25]
+when needed. The open standard also
+
+[2:27]
+suggests having a scripts folder for
+
+[2:29]
+executable code, references for
+
+[2:31]
+additional documentation and assets for
+
+[2:34]
+images, templates or other data files
+
+[2:37]
+that would be relevant for that skill.
+
+[2:39]
+Then in skill.md link to the supporting
+
+[2:42]
+files. Here, Claude reads
+
+[2:44]
+architecture.md only when someone asks
+
+[2:46]
+about system design. If they're asking
+
+[2:48]
+where to add a component, let's say, it
+
+[2:51]
+just never loads. It's like having a
+
+[2:53]
+table of contents in the context window
+
+[2:56]
+rather than fitting the whole entire
+
+[2:57]
+document in there. Keep skill.md under
+
+[3:00]
+500 lines. If you're exceeding that,
+
+[3:02]
+then maybe consider should this be split
+
+[3:05]
+up into different content.
+
+[3:08]
+Scripts in your skill directory can run
+
+[3:10]
+without loading their contents into
+
+[3:12]
+context. The script executes and only
+
+[3:14]
+the output consumes tokens. Tell claw to
+
+[3:16]
+run the script, not read it. This is
+
+[3:19]
+very useful for environment validation,
+
+[3:22]
+data transformations that need to be
+
+[3:24]
+consistent, operations that are more
+
+[3:26]
+reliable as tested code than generated
+
+[3:28]
+code.
+
+[3:31]
+Skills support metadata fields. Name and
+
+[3:33]
+description which are required. Allowed
+
+[3:36]
+tools restricts available tools and
+
+[3:38]
+model specifies which claw to use.
+
+[3:40]
+Descriptions need specific actions and
+
+[3:42]
+trigger phrases to match for
+
+[3:44]
+reliability. For larger skills, use
+
+[3:46]
+progressive disclosure. Keep your
+
+[3:48]
+skill.md file under 500 lines and link
+
+[3:50]
+to the supporting files that load only
+
+[3:52]
+when needed. Scripts [music] can execute
+
+[3:55]
+without loading their contents, keeping
+
+[3:57]
+context efficient.

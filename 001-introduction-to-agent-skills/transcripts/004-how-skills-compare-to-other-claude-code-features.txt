@@ -1,0 +1,215 @@
+[0:02]
+Claw Code offers several customization
+
+[0:05]
+options. Skills, claw.md, sub aents,
+
+[0:08]
+hooks, MCP servers. They solve different
+
+[0:11]
+problems. Knowing when to use each
+
+[0:13]
+prevents you from building the wrong
+
+[0:15]
+thing. So, let's run them down.
+
+[0:18]
+Cloud.md loads into every conversation
+
+[0:22]
+always. So, if you want claude to use
+
+[0:24]
+TypeScript strict mode in this project,
+
+[0:26]
+then put it in your cloud. MD file
+
+[0:29]
+skills load on demand. When Claude
+
+[0:32]
+matches a request, your PR review
+
+[0:34]
+checklist doesn't need to be in the
+
+[0:36]
+context when you're writing a new code.
+
+[0:38]
+It activates when you ask for a review.
+
+[0:42]
+So, use Claude MD for project-wise
+
+[0:45]
+standards that always apply constraints
+
+[0:47]
+like never modify the database schema,
+
+[0:50]
+framework preferences, and coding style.
+
+[0:53]
+Then use skills for task specific
+
+[0:55]
+expertise, knowledge that's only
+
+[0:57]
+relevant sometimes, and detailed
+
+[1:00]
+procedures that would clutter every
+
+[1:02]
+conversation.
+
+[1:04]
+Skills add knowledge to your current
+
+[1:06]
+conversation. When a skill activates,
+
+[1:08]
+its instructions join the existing
+
+[1:10]
+context. Sub aents run in a separate
+
+[1:13]
+context. They receive a task, work on it
+
+[1:16]
+independently, and return results.
+
+[1:18]
+They're isolated from your main
+
+[1:19]
+conversation. Use sub agents when you
+
+[1:23]
+want to delegate a task to a separate
+
+[1:25]
+execution context. You need different
+
+[1:26]
+tool access that the main conversation
+
+[1:29]
+does. You want isolation between
+
+[1:31]
+delegated work and your main context.
+
+[1:34]
+Use skills when you want to enhance
+
+[1:35]
+cla's knowledge for the current task.
+
+[1:37]
+The expertise applies throughout a
+
+[1:39]
+conversation.
+
+[1:42]
+Hooks fire on events. A hook might run a
+
+[1:45]
+llinter every time Claude saves a file
+
+[1:47]
+or validate input before certain tool
+
+[1:49]
+calls. They're all event driven, while
+
+[1:52]
+skills, they're request driven. They
+
+[1:55]
+activate based on what you're asking. So
+
+[1:58]
+use hooks for operations that should run
+
+[2:00]
+on every file save, validation before
+
+[2:03]
+specific tool calls, or automated side
+
+[2:05]
+effects of clause actions. Then use
+
+[2:07]
+skills for knowledge that informs how
+
+[2:09]
+claw handles requests, guidelines that
+
+[2:11]
+affect clause reasoning.
+
+[2:15]
+A typical setup might include a claw.md
+
+[2:18]
+file for always on project standards,
+
+[2:20]
+skills for task specific expertise,
+
+[2:22]
+hooks for automated operations. Each
+
+[2:25]
+handles its own specialty. Don't force
+
+[2:27]
+everything into skills when another
+
+[2:29]
+option fits best. You can use multiple
+
+[2:32]
+at a time.
+
+[2:34]
+Skills provide automatic task specific
+
+[2:36]
+expertise. CloudMD is for always on
+
+[2:39]
+instructions. Sub aents run in isolated
+
+[2:42]
+context. [music] Hooks fire on events.
+
+[2:45]
+MCP provides external tools. Use skills
+
+[2:48]
+when you have knowledge that Claude
+
+[2:50]
+should apply automatically when the
+
+[2:51]
+topic is relevant and combine them with
+
+[2:53]
+other features for comprehensive
+
+[2:55]
+customization.

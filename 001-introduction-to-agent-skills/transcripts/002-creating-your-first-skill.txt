@@ -1,0 +1,272 @@
+[0:03]
+So, let's create a skill. This skill
+
+[0:06]
+will teach Claude how we would like it
+
+[0:08]
+to explain code using visual diagrams
+
+[0:10]
+and analogies. [music]
+
+[0:11]
+Then, we'll look at what happens under
+
+[0:14]
+the hood when Claude uses it.
+
+[0:18]
+First, [music] let's create a directory
+
+[0:20]
+for your skill. We're going to be making
+
+[0:22]
+a personal skill, so it'll live in many
+
+[0:24]
+projects, so it will go in your home
+
+[0:26]
+directory. Take into consideration that
+
+[0:28]
+we're creating a directory with the
+
+[0:29]
+skill name inside of the skills
+
+[0:31]
+directory.
+
+[0:33]
+Now create the skill.
+
+[0:38]
+The name identifies your skill. The
+
+[0:41]
+description tells Claude when to use it.
+
+[0:43]
+This is the matching criteria. And then
+
+[0:46]
+everything after the second dashes is
+
+[0:49]
+the instructions that Claude follows.
+
+[0:52]
+Cloud code loads skills at startup. So
+
+[0:55]
+restart your session. Then verify it's
+
+[0:57]
+available.
+
+[1:00]
+You should see PR description in the
+
+[1:02]
+list.
+
+[1:04]
+Now test it. Make some changes on a
+
+[1:07]
+branch and say, "Write a PR description
+
+[1:09]
+for my changes."
+
+[1:11]
+Claude will then show you that it's
+
+[1:13]
+using the PR description skill.
+
+[1:17]
+After that, it'll check your diff and
+
+[1:18]
+write a description following your
+
+[1:20]
+template. Same format every single time.
+
+[1:24]
+When Cloud Code starts, it scans four
+
+[1:26]
+locations for skills. Enterprise paths,
+
+[1:29]
+your personal Claude skills, the
+
+[1:31]
+project's Claude skills, and installed
+
+[1:33]
+plugins. It loads only the name and
+
+[1:35]
+description of each skill, not the full
+
+[1:37]
+content. This is important later. When
+
+[1:40]
+you send a request, Claude compares it
+
+[1:41]
+to the descriptions of your skills.
+
+[1:43]
+Explain what this function does matches
+
+[1:45]
+a skill described as explain code with
+
+[1:47]
+visual diagrams because the intent
+
+[1:49]
+overlaps. It will then ask you to
+
+[1:51]
+confirm loading up the skill. This
+
+[1:53]
+confirmation step keeps you aware of
+
+[1:55]
+what context Claude is using. After you
+
+[1:58]
+confirm, Claude reads the complete file
+
+[2:00]
+and follows its instructions. Now, let's
+
+[2:02]
+say you clone a Git repository and have
+
+[2:04]
+an overlapping skill name. Well, which
+
+[2:07]
+one wins? Here's the priority list. The
+
+[2:11]
+highest is enterprise, which lives in
+
+[2:13]
+the manage settings. Two is the
+
+[2:15]
+personal, which lives in your root
+
+[2:17]
+directory configuration like we're doing
+
+[2:19]
+right now. Three is the project which is
+
+[2:21]
+the claw directory inside of your
+
+[2:23]
+repository. And the lowest is the
+
+[2:25]
+plugins where you store your plugins
+
+[2:27]
+that you got online. This lets
+
+[2:29]
+organizations enforce standards while
+
+[2:31]
+allowing individual customization
+
+[2:33]
+through differently named skills. If
+
+[2:35]
+your company has an enterprise code
+
+[2:38]
+review skill and you create a personal
+
+[2:40]
+code review skill, the enterprise
+
+[2:42]
+version of that takes precedence. To
+
+[2:44]
+avoid conflicts, use descriptive names.
+
+[2:47]
+Instead of review, use front-end PR
+
+[2:50]
+review or security review. To update a
+
+[2:53]
+skill, edit it skill.md file. Simple. To
+
+[2:57]
+remove one, delete its directory.
+
+[3:00]
+Restart clock code after changes for
+
+[3:02]
+them to take effect.
+
+[3:06]
+Creating a skill means making a
+
+[3:08]
+directory with a skill.md file
+
+[3:10]
+containing metadata and instructions.
+
+[3:13]
+Claude loads skill names and
+
+[3:15]
+descriptions at startup. matches
+
+[3:17]
+incoming requests against those
+
+[3:19]
+descriptions and asks for confirmation
+
+[3:22]
+before loading the full content.
+
+[3:25]
+Priority rules handling name conflicts.
+
+[3:27]
+Enterprise overrides personal personal
+
+[3:29]
+overrides project overrides plugins.
+
+[3:32]
+[music] Edit the skill.md file to update
+
+[3:34]
+a skill and restart cloud code for
+
+[3:36]
+changes to take effect.

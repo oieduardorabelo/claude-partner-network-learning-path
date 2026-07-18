@@ -1,0 +1,275 @@
+1
+00:00:00,318 --> 00:00:03,343
+If you have made it through this course, you have put in a tremendous
+
+2
+00:00:03,403 --> 00:00:06,128
+amount of effort, and I congratulate you. Before
+
+3
+00:00:06,168 --> 00:00:08,952
+we close things out, I want to very quickly recap some of the major
+
+4
+00:00:08,993 --> 00:00:11,717
+topics we discussed and give you some recommended follow-up
+
+5
+00:00:11,756 --> 00:00:14,301
+topics to research in the future. First, a
+
+6
+00:00:14,342 --> 00:00:17,065
+quick recap of what we have covered. We began this course
+
+7
+00:00:17,106 --> 00:00:19,690
+by discussing some of the different models offered by Anthropic.
+
+8
+00:00:20,091 --> 00:00:22,936
+Remember, we have access to Haiku for fast, smaller requests,
+
+9
+00:00:23,256 --> 00:00:25,881
+and Sonnet for greater intelligence. We then spend
+
+10
+00:00:25,900 --> 00:00:28,864
+a lot of time discussing how to access Claude via the API
+
+11
+00:00:29,225 --> 00:00:31,827
+and different parameters we could feed into Claude in order
+
+12
+00:00:31,867 --> 00:00:34,610
+to adjust its response. For example, we discussed
+
+13
+00:00:34,792 --> 00:00:37,615
+temperature and stop sequences, message prefilling.
+
+14
+00:00:38,076 --> 00:00:40,579
+All these are parameters we can use to direct Claude in
+
+15
+00:00:40,639 --> 00:00:43,161
+certain directions, control its creativity, and ensure
+
+16
+00:00:43,182 --> 00:00:46,625
+that we get the correct format of data or output that we expect.
+
+17
+00:00:46,606 --> 00:00:49,331
+We then spend a good amount of time talking about prompt evaluations.
+
+18
+00:00:49,972 --> 00:00:52,837
+I cannot stress it enough. Prompt evaluations is,
+
+19
+00:00:53,076 --> 00:00:55,720
+by far, the most important practice for you to implement on
+
+20
+00:00:55,762 --> 00:00:58,466
+your own projects. You might sit down and run
+
+21
+00:00:58,506 --> 00:01:01,131
+a prompt 10 times on your own and think everything is okay,
+
+22
+00:01:01,430 --> 00:01:04,215
+but as soon as you deploy it in production, your users might
+
+23
+00:01:04,256 --> 00:01:06,900
+not get the results that you want them to get. The only
+
+24
+00:01:06,941 --> 00:01:09,465
+way to make sure that you are writing effective prompts is
+
+25
+00:01:09,525 --> 00:01:12,188
+by evaluating them. And remember, prompt devals, they
+
+26
+00:01:12,248 --> 00:01:14,754
+don't have to be hard. You do not have to make use
+
+27
+00:01:14,873 --> 00:01:17,597
+of a fancy framework or do any kind of a big complicated
+
+28
+00:01:17,679 --> 00:01:20,183
+setup. You can use Claude to generate
+
+29
+00:01:20,322 --> 00:01:22,968
+a prompt evaluation framework on your own. And that's
+
+30
+00:01:23,087 --> 00:01:25,591
+kind of what you saw inside this course. The prompt deval framework
+
+31
+00:01:25,632 --> 00:01:28,236
+that we made use of, a lot of that code was written directly by
+
+32
+00:01:28,337 --> 00:01:30,859
+Claude. We then spent some time discussing prompt
+
+33
+00:01:30,900 --> 00:01:33,501
+engineering. Remember, there's a handful of techniques for
+
+34
+00:01:33,542 --> 00:01:36,284
+you to keep in mind. Chief among them is just simply being
+
+35
+00:01:36,405 --> 00:01:39,188
+clear and directly telling Claude what you expect
+
+36
+00:01:39,248 --> 00:01:41,911
+of it. After that, we spent a lot of effort on
+
+37
+00:01:41,971 --> 00:01:44,653
+tool use, and that was probably one of the more complicated sections
+
+38
+00:01:44,834 --> 00:01:47,496
+inside the course. Tool use is extremely important
+
+39
+00:01:47,576 --> 00:01:50,480
+because it dramatically expands the capabilities of Claude.
+
+40
+00:01:50,879 --> 00:01:53,623
+We then spent some time with two important applications
+
+41
+00:01:53,662 --> 00:01:56,346
+that then released by Anthropic Directly, Claude code
+
+42
+00:01:56,486 --> 00:01:59,049
+and Computer use. I hope you enjoyed getting
+
+43
+00:01:59,108 --> 00:02:01,754
+some hands-on experience with Claude Code. Personally, it is
+
+44
+00:02:01,793 --> 00:02:04,317
+what I use to help me author code and projects.
+
+45
+00:02:04,698 --> 00:02:07,563
+I don't actually use a fancy in-editor assistant
+
+46
+00:02:07,603 --> 00:02:10,228
+that much. I really just run Claude Code at the terminal
+
+47
+00:02:10,549 --> 00:02:13,092
+in the exact same style that you saw in those videos.
+
+48
+00:02:13,326 --> 00:02:16,170
+And then finally, we spent a decent amount of time discussing workflows
+
+49
+00:02:16,372 --> 00:02:18,955
+and agents. Now, remember, agents are
+
+50
+00:02:18,996 --> 00:02:21,539
+definitely interesting. It's a very exciting topic, but
+
+51
+00:02:21,580 --> 00:02:24,143
+you very often are going to get better results and higher
+
+52
+00:02:24,223 --> 00:02:26,948
+accuracy by the use of workflows.
+
+53
+00:02:26,967 --> 00:02:29,632
+For a lack of time, we were not able to cover every topic
+
+54
+00:02:29,731 --> 00:02:32,455
+inside of this course. There are some big ticket
+
+55
+00:02:32,556 --> 00:02:35,120
+items that I recommend you follow up and do some research on your
+
+56
+00:02:35,199 --> 00:02:37,883
+own. Chief among them is a lot of topics around
+
+57
+00:02:37,924 --> 00:02:40,587
+agents. Understanding how to get agents to work
+
+58
+00:02:40,628 --> 00:02:43,132
+together with agent orchestration, understanding
+
+59
+00:02:43,192 --> 00:02:46,097
+how to evaluate an agent's performance and monitor
+
+60
+00:02:46,116 --> 00:02:48,760
+it, and a variation on RAG, known as
+
+61
+00:02:48,781 --> 00:02:51,304
+agentic RAG, are all topics that I recommend you
+
+62
+00:02:51,343 --> 00:02:53,867
+spend some time to research on your own. I
+
+63
+00:02:53,927 --> 00:02:56,752
+also recommend you take a look at some different techniques for RAG
+
+64
+00:02:56,853 --> 00:02:59,456
+evaluation and tool evaluation. Tool
+
+65
+00:02:59,477 --> 00:03:02,081
+evaluation is similar to prompt eVals. We want to make
+
+66
+00:03:02,122 --> 00:03:04,687
+sure that our tool descriptions are helping Claude in the
+
+67
+00:03:04,707 --> 00:03:07,413
+way we really expect. Well, that's it for now. Like
+
+68
+00:03:07,454 --> 00:03:10,099
+I said, I hope you enjoyed this course and I appreciate your time
+
+69
+00:03:10,240 --> 00:03:11,682
+in working through this content.

@@ -3,8 +3,8 @@
 Notes and video transcripts from the [Claude Partner Network Learning Path](https://anthropic-partners.skilljar.com/page/claude-partner-network-learning-path), organized one directory per course module.
 
 Each module folder contains:
-- `transcripts/` — raw transcript files for that module's videos.
-- `README.md` — a distilled write-up of the module's content, meant to be read on its own without watching the videos.
+- `transcripts/`: raw transcript files for that module's videos.
+- `README.md`: a distilled write-up of the module's content, meant to be read on its own without watching the videos.
 
 ## Modules
 

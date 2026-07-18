@@ -1,0 +1,607 @@
+1
+00:00:00,031 --> 00:00:02,595
+There's another tool built directly into Claude
+
+2
+00:00:02,734 --> 00:00:05,238
+named the web search tool. As the name
+
+3
+00:00:05,278 --> 00:00:07,923
+implies, this tool allows Claude to search the web
+
+4
+00:00:08,183 --> 00:00:10,707
+for up-to-date or specialized information to answer
+
+5
+00:00:10,727 --> 00:00:13,371
+a user's question. For example, if we ask about
+
+6
+00:00:13,471 --> 00:00:16,295
+current events in quantum computing, Claude might decide
+
+7
+00:00:16,335 --> 00:00:19,361
+to use this tool to find some up-to-date articles related
+
+8
+00:00:19,400 --> 00:00:21,925
+to quantum computing and then use that content to
+
+9
+00:00:21,984 --> 00:00:24,708
+formulate an answer. Unlike the text editor
+
+10
+00:00:24,768 --> 00:00:27,632
+tool, we do not have to provide an implementation
+
+11
+00:00:27,792 --> 00:00:30,678
+to actually run the search. The search is done entirely
+
+12
+00:00:30,737 --> 00:00:33,301
+by Claude, and this makes this tool really easy
+
+13
+00:00:33,362 --> 00:00:35,945
+to run and use. Let's write out some code to
+
+14
+00:00:36,006 --> 00:00:38,570
+understand how this tool works. I'm back inside of a
+
+15
+00:00:38,630 --> 00:00:41,514
+notebook. I've created a new one called 006 web
+
+16
+00:00:41,554 --> 00:00:44,317
+search. And I've got a cell down here at the bottom with some typical
+
+17
+00:00:44,398 --> 00:00:47,302
+code for running a request off to Claude. In
+
+18
+00:00:47,323 --> 00:00:50,186
+the cell right above, I'm going to create a new variable called
+
+19
+00:00:50,546 --> 00:00:53,073
+web search schema. This is
+
+20
+00:00:53,112 --> 00:00:55,758
+going to be a schema that we author that we are going to include
+
+21
+00:00:55,798 --> 00:00:58,362
+in our request off to Claude, and we're going to list
+
+22
+00:00:58,402 --> 00:01:01,206
+it as a tool. This schema is going to enable
+
+23
+00:01:01,246 --> 00:01:04,010
+the web search functionality. So just like the text editor
+
+24
+00:01:04,070 --> 00:01:06,655
+tool, we have to provide this very small schema that
+
+25
+00:01:06,674 --> 00:01:09,399
+behind the scenes is going to get expanded into a much larger
+
+26
+00:01:09,438 --> 00:01:12,082
+schema. We're going to add in a couple of fields here,
+
+27
+00:01:12,444 --> 00:01:15,048
+in particular a type with web
+
+28
+00:01:15,427 --> 00:01:20,376
+search_2025-03-05
+
+29
+00:01:21,334 --> 00:01:24,597
+then a name of web_search, a
+
+30
+00:01:24,698 --> 00:01:27,260
+max uses of five, and
+
+31
+00:01:27,301 --> 00:01:29,864
+that's it for right now. Now the max uses is
+
+32
+00:01:29,903 --> 00:01:32,447
+the number of times that Claude can run a search.
+
+33
+00:01:32,927 --> 00:01:35,909
+A single search can return multiple different search results, but
+
+34
+00:01:35,950 --> 00:01:38,453
+depending upon the content in those search results, Claude
+
+35
+00:01:38,492 --> 00:01:41,016
+might decide to do a follow-up research. This
+
+36
+00:01:41,055 --> 00:01:43,718
+process can repeat several times, so we are capping the number
+
+37
+00:01:43,778 --> 00:01:46,802
+of times that Claude can search in total to just five.
+
+38
+00:01:47,591 --> 00:01:50,176
+I'm going to go down here after running
+
+39
+00:01:50,215 --> 00:01:53,040
+that cell. And I'm going to ask Claude what's
+
+40
+00:01:53,100 --> 00:01:55,864
+the best exercise for gaining
+
+41
+00:01:56,126 --> 00:01:58,769
+leg muscle. And I'm going to add
+
+42
+00:01:58,790 --> 00:02:01,353
+in that schema that we
+
+43
+00:02:01,394 --> 00:02:04,920
+just put together. So web search schema
+
+44
+00:02:05,260 --> 00:02:07,780
+like so. Now I'm going to
+
+45
+00:02:07,799 --> 00:02:10,462
+run this, and it's going to take a little bit of time to
+
+46
+00:02:10,503 --> 00:02:13,206
+get a response back. The response we get back
+
+47
+00:02:13,247 --> 00:02:15,750
+is going to be quite large, so I can scroll through
+
+48
+00:02:15,789 --> 00:02:18,473
+it here, and we're going to see that there is just a tremendous amount
+
+49
+00:02:18,532 --> 00:02:21,116
+of information here. So to help you understand the response we
+
+50
+00:02:21,156 --> 00:02:23,778
+got back, I want to show you a little part-down version
+
+51
+00:02:23,838 --> 00:02:26,481
+of this response, where I took this messages,
+
+52
+00:02:26,942 --> 00:02:29,444
+content list, and I removed a ton of content out of
+
+53
+00:02:29,504 --> 00:02:32,068
+it just so we can better understand what is going on. So here
+
+54
+00:02:32,087 --> 00:02:34,811
+is a slightly redacted form. Again,
+
+55
+00:02:34,850 --> 00:02:37,555
+this is the content list inside the response message.
+
+56
+00:02:38,134 --> 00:02:41,158
+The content list is going to contain several different blocks, several
+
+57
+00:02:41,179 --> 00:02:43,782
+blocks we have not seen before. Initially, we
+
+58
+00:02:43,822 --> 00:02:46,564
+get back a text block, which is kind of framing the entire
+
+59
+00:02:46,585 --> 00:02:49,087
+response that Claude is giving us. Claude is saying that it's
+
+60
+00:02:49,108 --> 00:02:51,610
+going to do a web search to better understand how to answer
+
+61
+00:02:51,631 --> 00:02:54,234
+the question. Then we're going to see a server
+
+62
+00:02:54,313 --> 00:02:56,917
+tool use block. And inside there is the
+
+63
+00:02:57,056 --> 00:02:59,780
+input to the search tool. We can see that's the exact
+
+64
+00:02:59,819 --> 00:03:02,502
+query that Claude is going to use to search the web.
+
+65
+00:03:02,634 --> 00:03:05,179
+After that, we're going to see a listing of web
+
+66
+00:03:05,218 --> 00:03:07,901
+search tool result block, and inside there are going to be many
+
+67
+00:03:07,943 --> 00:03:10,545
+different web search result block. These are
+
+68
+00:03:10,566 --> 00:03:13,530
+the different search results that Claude has received
+
+69
+00:03:13,631 --> 00:03:16,274
+from that initial query. Now, an actual query
+
+70
+00:03:16,313 --> 00:03:18,918
+response will probably have many different search results. In this
+
+71
+00:03:18,957 --> 00:03:21,701
+case, I removed all of them, but one, just to better understand
+
+72
+00:03:21,762 --> 00:03:24,586
+what's going on here. So this is an actual web
+
+73
+00:03:24,986 --> 00:03:27,569
+search result. We can see the title of the page that
+
+74
+00:03:27,610 --> 00:03:30,294
+Claude fetch, and the actual URL. There's
+
+75
+00:03:30,335 --> 00:03:32,925
+no content inside of here just yet. This is just telling us
+
+76
+00:03:33,066 --> 00:03:36,539
+exactly what Claude found when it did this search.
+
+77
+00:03:37,177 --> 00:03:39,721
+Then Claude is going to begin by answering the user's question.
+
+78
+00:03:40,502 --> 00:03:43,045
+And it's going to answer the user's question with a variety of different
+
+79
+00:03:43,086 --> 00:03:45,808
+text blocks that might include a citations list.
+
+80
+00:03:46,270 --> 00:03:49,213
+The citations list is text that is supposed to support
+
+81
+00:03:49,234 --> 00:03:51,776
+the statements that Claude is making in some way. So
+
+82
+00:03:51,817 --> 00:03:54,419
+in this case, Claude has cited some particular web
+
+83
+00:03:54,439 --> 00:03:57,084
+page right here. And it is using this specific
+
+84
+00:03:57,123 --> 00:03:59,667
+text to support the point or the argument
+
+85
+00:03:59,687 --> 00:04:02,408
+that it's trying to make. When we define the web
+
+86
+00:04:02,449 --> 00:04:05,173
+search schema, there are a variety of different fields that we can add
+
+87
+00:04:05,312 --> 00:04:07,856
+in. There's one field in particular that I really
+
+88
+00:04:07,917 --> 00:04:10,721
+recommend you consider using if you ever have a good understanding
+
+89
+00:04:10,760 --> 00:04:13,283
+of exactly what your users are going to be asking
+
+90
+00:04:13,324 --> 00:04:15,948
+about. So in our case, we asked about
+
+91
+00:04:15,967 --> 00:04:19,132
+the best leg exercises for gaining leg muscle.
+
+92
+00:04:19,112 --> 00:04:21,819
+I don't know if you've ever searched online for exercise advice,
+
+93
+00:04:22,079 --> 00:04:24,685
+but there are a tremendous number of blogs out there
+
+94
+00:04:24,826 --> 00:04:28,014
+with probably just AI-generated content. And
+
+95
+00:04:28,053 --> 00:04:30,800
+the advice that you get out of those blogs might not actually
+
+96
+00:04:30,839 --> 00:04:33,586
+be the most accurate, or even the best idea of how to actually
+
+97
+00:04:33,627 --> 00:04:36,132
+gain leg muscle. On the other hand, there
+
+98
+00:04:36,211 --> 00:04:39,357
+are some websites that collect different publications such
+
+99
+00:04:39,516 --> 00:04:42,321
+as PubMed. So this is a website maintained
+
+100
+00:04:42,360 --> 00:04:44,904
+by the US government. It contains a ton of
+
+101
+00:04:44,944 --> 00:04:47,970
+different scholarly articles around medicine. So
+
+102
+00:04:47,990 --> 00:04:51,654
+we could search through here and find a tremendous amount of evidence-supported
+
+103
+00:04:51,716 --> 00:04:54,319
+exercise advice. So it would be really
+
+104
+00:04:54,379 --> 00:04:56,942
+fantastic if we could somehow tell Claude to only search
+
+105
+00:04:57,002 --> 00:04:59,624
+this web page and content inside of it. That would
+
+106
+00:04:59,704 --> 00:05:02,286
+allow us to make sure that we are giving the best possible advice to
+
+107
+00:05:02,326 --> 00:05:05,230
+our users and not just some randomly generated stuff
+
+108
+00:05:05,250 --> 00:05:07,872
+that we found online. In order to get Claude
+
+109
+00:05:07,911 --> 00:05:10,714
+to only search this page, we're going to find the domain,
+
+110
+00:05:10,875 --> 00:05:14,137
+which is nih.gov. I'm
+
+111
+00:05:14,278 --> 00:05:17,021
+going to go back over to my notebook. I'm going to find my web
+
+112
+00:05:17,040 --> 00:05:19,663
+search schema, and I'm going to add in an additional field here
+
+113
+00:05:20,103 --> 00:05:22,639
+of allowed domains. I'm going to put in
+
+114
+00:05:22,658 --> 00:05:26,045
+a list with NIH.gov. This
+
+115
+00:05:26,105 --> 00:05:28,870
+is going to constrain Claude Search to only that
+
+116
+00:05:28,910 --> 00:05:32,036
+domain right there, and it won't try to find anything else. So
+
+117
+00:05:32,096 --> 00:05:34,721
+now if I run this cell again, and then
+
+118
+00:05:34,761 --> 00:05:37,605
+make my request off to Claude again, I'm going to have to wait
+
+119
+00:05:37,625 --> 00:05:40,130
+for the response to come back. But when we
+
+120
+00:05:40,372 --> 00:05:42,976
+do get a response, we should be able to scroll through it a little bit
+
+121
+00:05:43,718 --> 00:05:46,283
+and eventually see that we have a URL right
+
+122
+00:05:46,324 --> 00:05:50,252
+here. And we should only have URLs belonging to the NIH.gov
+
+123
+00:05:50,291 --> 00:05:52,817
+domain. We shouldn't see anything else. So again, this
+
+124
+00:05:52,858 --> 00:05:55,783
+will allow us to make sure that we are giving at least some scientifically
+
+125
+00:05:55,843 --> 00:05:58,488
+supported advice to our users. Now, last
+
+126
+00:05:58,528 --> 00:06:01,192
+thing I'm going to do is show you exactly how we are really intended
+
+127
+00:06:01,232 --> 00:06:03,935
+to use this giant list of different types of blocks
+
+128
+00:06:03,954 --> 00:06:06,918
+that we get back when we make use of this tool. The
+
+129
+00:06:06,997 --> 00:06:09,560
+thought process here is that you're going to render all
+
+130
+00:06:09,600 --> 00:06:12,103
+the text blocks as plain text, and then
+
+131
+00:06:12,124 --> 00:06:14,627
+whenever you get a web search result block or
+
+132
+00:06:14,646 --> 00:06:17,269
+a citation web search result location,
+
+133
+00:06:17,610 --> 00:06:20,173
+you might render those out inside the UI in such a way that makes
+
+134
+00:06:20,233 --> 00:06:23,096
+it obvious to a user that you are trying to support your information
+
+135
+00:06:23,197 --> 00:06:25,779
+in some way. Here's an example of how you might do that.
+
+136
+00:06:25,759 --> 00:06:28,487
+I wrote out a small page that is going to take all
+
+137
+00:06:28,526 --> 00:06:31,413
+those different blocks we saw inside the response message and render
+
+138
+00:06:31,434 --> 00:06:34,060
+them out. At the very top right here, I've got a list
+
+139
+00:06:34,240 --> 00:06:37,447
+of all my web search tool result blocks.
+
+140
+00:06:37,468 --> 00:06:40,254
+So these are the different pages that Claude found when it did the web
+
+141
+00:06:40,295 --> 00:06:42,939
+search. I'm then going to iterate through the entire
+
+142
+00:06:42,959 --> 00:06:45,620
+list of blocks and show the text out of every single
+
+143
+00:06:45,701 --> 00:06:48,244
+text block. Whenever I found a text block
+
+144
+00:06:48,543 --> 00:06:51,346
+that has a citation web search result
+
+145
+00:06:51,487 --> 00:06:54,009
+location, I know that's a long term, so
+
+146
+00:06:54,069 --> 00:06:56,572
+it's one of these right here. Whenever I find
+
+147
+00:06:56,653 --> 00:06:59,274
+one of those, I might render it with a little citation
+
+148
+00:06:59,435 --> 00:07:01,997
+like so, where I'll show the domain, show the
+
+149
+00:07:02,038 --> 00:07:04,880
+title of the page that I found, show the exact address
+
+150
+00:07:04,920 --> 00:07:07,983
+of it, and then the exact cited text as well.
+
+151
+00:07:07,963 --> 00:07:10,480
+Again, this just allows our users to better understand
+
+152
+00:07:10,519 --> 00:07:12,995
+how Claude is actually getting its information.

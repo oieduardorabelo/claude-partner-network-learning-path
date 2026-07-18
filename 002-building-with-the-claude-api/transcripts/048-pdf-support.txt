@@ -1,0 +1,127 @@
+1
+00:00:00,031 --> 00:00:02,615
+Besides images, Claude can also read content
+
+2
+00:00:02,654 --> 00:00:05,177
+directly out of a PDF file. I'm going to show you how you
+
+3
+00:00:05,217 --> 00:00:07,862
+do that in this video. Attached to this video, you will
+
+4
+00:00:07,942 --> 00:00:10,826
+find a document called earth.pdf.
+
+5
+00:00:10,846 --> 00:00:13,368
+If you open it up, you'll see that it's just a couple of pages out of
+
+6
+00:00:13,388 --> 00:00:15,893
+the Wikipedia article on Earth. So make
+
+7
+00:00:15,913 --> 00:00:18,637
+sure you download this PDF file and place it inside the same
+
+8
+00:00:18,657 --> 00:00:21,341
+directory as your notebook. To read a PDF
+
+9
+00:00:21,382 --> 00:00:23,888
+file, we use almost the exact same code that we use for
+
+10
+00:00:23,928 --> 00:00:26,978
+reading an image and feeding the image into Claude. So
+
+11
+00:00:27,018 --> 00:00:29,585
+I'm going to find where we are currently opening up an image right
+
+12
+00:00:29,605 --> 00:00:33,396
+here, and I'm going to change it to earth.pdf.
+
+13
+00:00:34,506 --> 00:00:37,030
+I'm going to rename this variable from image bytes to
+
+14
+00:00:37,070 --> 00:00:39,875
+how about file bytes, because no longer are we reading
+
+15
+00:00:39,895 --> 00:00:42,478
+an image. I'm going to make sure I update the variable down here
+
+16
+00:00:42,518 --> 00:00:45,121
+as well. I'm going to change the
+
+17
+00:00:45,262 --> 00:00:47,987
+type right here from image to document, and
+
+18
+00:00:48,006 --> 00:00:50,850
+then the media type will go from image slash
+
+19
+00:00:50,970 --> 00:00:53,814
+png to application slash pdf.
+
+20
+00:00:54,892 --> 00:00:57,459
+And then finally, the question that we're asking of Claude
+
+21
+00:00:57,579 --> 00:01:00,125
+about this document, rather than feeding in our big
+
+22
+00:01:00,225 --> 00:01:02,874
+prompt that we have in the previous cell, I'm going to ask Claude to
+
+23
+00:01:02,973 --> 00:01:05,981
+summarize the document in one
+
+24
+00:01:06,046 --> 00:01:08,891
+sentence. And let's see what we get out of Claude. So
+
+25
+00:01:08,912 --> 00:01:11,558
+I'm going to run this. And there's
+
+26
+00:01:11,597 --> 00:01:14,242
+the summary. It looks like it successfully read the contents of
+
+27
+00:01:14,284 --> 00:01:16,808
+that PDF file. Now, Claude has the ability to
+
+28
+00:01:16,888 --> 00:01:19,515
+not only read text out of a PDF, it can also read
+
+29
+00:01:19,534 --> 00:01:22,581
+images or charts, tables, and so on. So
+
+30
+00:01:22,620 --> 00:01:25,167
+you should really think of Claude as being like a one stop shop
+
+31
+00:01:25,227 --> 00:01:28,072
+for extracting just about any kind of information out
+
+32
+00:01:28,212 --> 00:01:29,555
+of a PDF document.

@@ -1,0 +1,483 @@
+1
+00:00:00,031 --> 00:00:02,835
+On to step three, we're going to call Claude with
+
+2
+00:00:02,895 --> 00:00:05,519
+his JSON schema and some user message. So
+
+3
+00:00:05,618 --> 00:00:08,141
+from our server, we're going to make a request off to Claude just as
+
+4
+00:00:08,182 --> 00:00:10,746
+we've been doing before, but now we're going to also include this
+
+5
+00:00:10,785 --> 00:00:13,349
+tool schema. This helps Claude understand that there is
+
+6
+00:00:13,410 --> 00:00:16,013
+a tool available to it. Let's go back over to our notebook and
+
+7
+00:00:16,033 --> 00:00:18,617
+we're going to try to make this request by hand without using any
+
+8
+00:00:18,716 --> 00:00:21,300
+of those helper functions we previously put together, like the
+
+9
+00:00:21,460 --> 00:00:24,045
+chat function. Okay, so back over here, I'm
+
+10
+00:00:24,065 --> 00:00:26,570
+going to go down and create a new cell. I'm going
+
+11
+00:00:26,589 --> 00:00:29,434
+to make an empty list of messages. I'm going to append
+
+12
+00:00:29,454 --> 00:00:32,000
+in there manually a new
+
+13
+00:00:32,039 --> 00:00:35,686
+message with a role of user and
+
+14
+00:00:35,746 --> 00:00:38,612
+a content of what is the exact time
+
+15
+00:00:39,393 --> 00:00:42,057
+formatted as our
+
+16
+00:00:42,738 --> 00:00:46,344
+minute seconds. Then,
+
+17
+00:00:46,723 --> 00:00:50,212
+underneath that, I'm going to do a call off to the clientmessages.create
+
+18
+00:00:50,252 --> 00:00:54,420
+function. So I get a response from clientmessagescreate,
+
+19
+00:00:55,704 --> 00:00:58,610
+all designate my model, my max
+
+20
+00:00:58,631 --> 00:01:01,811
+tokens, My
+
+21
+00:01:01,890 --> 00:01:04,814
+list of messages, and now we want to also include
+
+22
+00:01:04,855 --> 00:01:07,638
+this JSON schema that tells Claude that it has
+
+23
+00:01:07,658 --> 00:01:10,340
+a tool available to it. To do so, we'll include
+
+24
+00:01:10,361 --> 00:01:12,903
+a Tools keyword argument. This is going to be
+
+25
+00:01:12,944 --> 00:01:15,686
+a list, and inside of it is going to be all the different JSON
+
+26
+00:01:15,706 --> 00:01:18,329
+schema specs that we have created. At this point in time,
+
+27
+00:01:18,450 --> 00:01:20,953
+you and I have only created one, and it's called Get
+
+28
+00:01:21,013 --> 00:01:24,117
+Current Daytime Schema. So we're going to take that and
+
+29
+00:01:24,216 --> 00:01:26,751
+put it in right here. Then I'm going to print
+
+30
+00:01:26,790 --> 00:01:29,373
+out response at the very bottom and let's run this and see
+
+31
+00:01:29,394 --> 00:01:31,996
+what happens. We're going to get a response message
+
+32
+00:01:32,037 --> 00:01:34,960
+back here that has a structure that we have not quite seen before.
+
+33
+00:01:35,361 --> 00:01:38,043
+All the messages that we have ever received before would have a
+
+34
+00:01:38,203 --> 00:01:40,766
+content field that has a list and inside there would be
+
+35
+00:01:40,787 --> 00:01:43,349
+a text block. And as I mentioned many times
+
+36
+00:01:43,390 --> 00:01:45,912
+before inside the text block is the text that we actually
+
+37
+00:01:45,953 --> 00:01:48,496
+want to display to the user. But now that we are making
+
+38
+00:01:48,537 --> 00:01:51,102
+use of tools, this content list is going to be a little bit
+
+39
+00:01:51,182 --> 00:01:53,727
+different. So you might notice that inside the content list,
+
+40
+00:01:53,887 --> 00:01:56,612
+there's a second block called a tool use
+
+41
+00:01:56,653 --> 00:01:59,718
+block. So here's that entire structure right here. Let
+
+42
+00:01:59,739 --> 00:02:02,343
+me show you a diagram just to make sure this thing is really clear.
+
+43
+00:02:03,471 --> 00:02:06,575
+Okay, so this is our first experience with a multi-block
+
+44
+00:02:06,754 --> 00:02:09,538
+message. Remember, a message is either an assistant
+
+45
+00:02:09,557 --> 00:02:12,061
+message or a user message. We are often going to
+
+46
+00:02:12,100 --> 00:02:14,604
+have some amount of text stored inside of a message, and
+
+47
+00:02:14,623 --> 00:02:17,186
+that's what we've always seen previously. But in addition to
+
+48
+00:02:17,286 --> 00:02:19,788
+just text, there are other types of data that can be
+
+49
+00:02:19,829 --> 00:02:22,352
+stored inside of a message. When Claude decides to
+
+50
+00:02:22,412 --> 00:02:24,993
+make use of a tool, it's very often going to send us back an
+
+51
+00:02:25,033 --> 00:02:27,937
+assistant message that contains both a text block and
+
+52
+00:02:27,956 --> 00:02:30,640
+a tool use block. The text block is intended
+
+53
+00:02:30,681 --> 00:02:33,264
+to be some text that is displayed to the user to
+
+54
+00:02:33,283 --> 00:02:35,788
+help them understand what is going on. So in this
+
+55
+00:02:35,848 --> 00:02:38,431
+case, the text block might contain something like, I can help you
+
+56
+00:02:38,491 --> 00:02:41,735
+find the current time. Let me find that information for you. Then
+
+57
+00:02:41,855 --> 00:02:45,161
+in addition to this text block is the tool use block.
+
+58
+00:02:45,181 --> 00:02:47,723
+This tool use block is a sign to a UNI as
+
+59
+00:02:47,764 --> 00:02:50,367
+developers that Claude wants to make use of a tool.
+
+60
+00:02:50,927 --> 00:02:53,611
+The tool use block is going to list out the name of the tool
+
+61
+00:02:53,651 --> 00:02:56,175
+function that it wants to call. So in this case, Claude wants to
+
+62
+00:02:56,216 --> 00:02:59,080
+call the Get Current Daytime function we put together. And
+
+63
+00:02:59,099 --> 00:03:02,126
+then it also provides some inputs or essentially arguments
+
+64
+00:03:02,425 --> 00:03:04,931
+that we need to pass into that function. So the next thing
+
+65
+00:03:04,950 --> 00:03:07,575
+we're going to do as a part of this entire process is to find
+
+66
+00:03:07,596 --> 00:03:10,121
+the appropriate tool and actually run it. But before
+
+67
+00:03:10,181 --> 00:03:12,725
+that, there's something really critical that we need to
+
+68
+00:03:12,765 --> 00:03:15,431
+take care of around this idea of having a content
+
+69
+00:03:15,450 --> 00:03:18,135
+list with multiple blocks inside of it. Okay,
+
+70
+00:03:18,156 --> 00:03:20,794
+so here's just a quick reminder for you. At
+
+71
+00:03:20,835 --> 00:03:23,360
+this point in time, we have made a request from our server
+
+72
+00:03:23,420 --> 00:03:26,046
+off to Claude, and in that request we had a single user message
+
+73
+00:03:26,427 --> 00:03:28,992
+that also included a tool schema. We
+
+74
+00:03:29,013 --> 00:03:31,718
+have now gotten a response back. And inside this response,
+
+75
+00:03:31,979 --> 00:03:34,725
+there is the assistant message, and it has two separate blocks
+
+76
+00:03:34,866 --> 00:03:37,491
+inside the content list, a text block and a tool use
+
+77
+00:03:37,532 --> 00:03:40,221
+block. Now, there's something I want to remind you about
+
+78
+00:03:40,281 --> 00:03:42,943
+Claude. Remember that Claude does not store any message
+
+79
+00:03:42,983 --> 00:03:45,566
+history or anything about the conversation you are having.
+
+80
+00:03:46,066 --> 00:03:48,588
+If you ever want to maintain a conversation or a history with
+
+81
+00:03:48,628 --> 00:03:51,231
+Claude, you have to manage it manually. And what
+
+82
+00:03:51,252 --> 00:03:54,093
+this means is that when we eventually take this tool use block
+
+83
+00:03:54,455 --> 00:03:57,037
+and eventually call some actual function, we need to eventually
+
+84
+00:03:57,076 --> 00:03:59,900
+respond back to Claude. And when we do so, here's
+
+85
+00:03:59,939 --> 00:04:02,562
+the critical part, we need to make sure we include the
+
+86
+00:04:02,643 --> 00:04:05,265
+entire conversation history just as we've
+
+87
+00:04:05,286 --> 00:04:07,889
+been doing throughout the course. So we already have an idea
+
+88
+00:04:07,989 --> 00:04:10,513
+of how to do this. The only difference this time around is that
+
+89
+00:04:10,573 --> 00:04:13,217
+we need to make sure that we deal with messages that might have
+
+90
+00:04:13,296 --> 00:04:15,920
+multiple blocks inside them. So let me show you how we would
+
+91
+00:04:15,941 --> 00:04:18,605
+do this by hand. And then eventually a little bit later on
+
+92
+00:04:18,625 --> 00:04:21,269
+inside this section, we are going to go back to our helper
+
+93
+00:04:21,309 --> 00:04:23,812
+functions, specifically add user message and
+
+94
+00:04:23,913 --> 00:04:26,637
+add assistant message and make sure that these can support
+
+95
+00:04:26,877 --> 00:04:29,482
+messages that have multiple blocks inside them. Because right
+
+96
+00:04:29,521 --> 00:04:33,697
+now they only support single text blocks. Okay,
+
+97
+00:04:33,718 --> 00:04:36,321
+so to manage these messages, I'm
+
+98
+00:04:36,341 --> 00:04:38,925
+going to go back down to our bottom code cell where we are currently
+
+99
+00:04:38,964 --> 00:04:41,827
+getting our response. I'm going to take our
+
+100
+00:04:41,889 --> 00:04:44,451
+response and make sure I append in a new
+
+101
+00:04:44,492 --> 00:04:47,295
+assistant message to our list of messages. So
+
+102
+00:04:47,315 --> 00:04:49,819
+I'm going to delete response right there. We'll say messages
+
+103
+00:04:49,879 --> 00:04:52,482
+dot append. I'm going to put in a new
+
+104
+00:04:52,502 --> 00:04:55,882
+role of assistant. And
+
+105
+00:04:55,922 --> 00:04:58,807
+then our content is going to be the exact list
+
+106
+00:04:59,026 --> 00:05:01,630
+of content blocks out of the response we
+
+107
+00:05:01,670 --> 00:05:04,415
+just got back. So all we have to do is add in response
+
+108
+00:05:04,875 --> 00:05:07,521
+dot content. There
+
+109
+00:05:07,560 --> 00:05:10,064
+we go. So now if I print
+
+110
+00:05:10,105 --> 00:05:14,247
+out messages and run the cell again, We
+
+111
+00:05:14,288 --> 00:05:16,934
+should see that we end up with our user. So
+
+112
+00:05:16,954 --> 00:05:19,641
+that's our original message right there. We now have our assistant
+
+113
+00:05:19,661 --> 00:05:22,666
+message. And inside there is a text block and
+
+114
+00:05:22,708 --> 00:05:25,613
+the tool use block. So now we are correctly building
+
+115
+00:05:25,774 --> 00:05:28,581
+up our conversation history over time by including
+
+116
+00:05:28,620 --> 00:05:31,307
+all the different blocks from all these different messages that
+
+117
+00:05:31,346 --> 00:05:33,879
+we are collecting. So once again, I just want
+
+118
+00:05:33,899 --> 00:05:36,754
+to remind you that we are going to eventually have to go back to the add
+
+119
+00:05:36,875 --> 00:05:39,427
+user message and add assistant message, those
+
+120
+00:05:39,487 --> 00:05:42,201
+two helper functions, and update them to account for
+
+121
+00:05:42,242 --> 00:05:44,553
+dealing with multiple blocks like this.

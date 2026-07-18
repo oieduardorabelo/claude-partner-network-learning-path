@@ -1,0 +1,271 @@
+1
+00:00:00,031 --> 00:00:02,633
+The next idea around agents that we are going to discuss is
+
+2
+00:00:02,653 --> 00:00:05,197
+environment inspection. When we were taking a
+
+3
+00:00:05,216 --> 00:00:08,259
+look at computer use previously, you might recall something interesting.
+
+4
+00:00:08,539 --> 00:00:11,042
+After every single action that we saw logged out on the left
+
+5
+00:00:11,063 --> 00:00:13,805
+hand side, like typing or moving the mouse, we
+
+6
+00:00:13,865 --> 00:00:16,509
+always seem to see a screenshot immediately after, and
+
+7
+00:00:16,528 --> 00:00:19,071
+that's what I'm showing you in this diagram right here. Claude,
+
+8
+00:00:19,111 --> 00:00:21,754
+attempted to type out some text, and we see that logged in
+
+9
+00:00:21,774 --> 00:00:24,718
+the first panel up here, and then right after it, we saw a screenshot
+
+10
+00:00:24,798 --> 00:00:27,341
+appear immediately. I'd like you to look at
+
+11
+00:00:27,402 --> 00:00:29,946
+computer use from Claude's perspective. Claude
+
+12
+00:00:29,986 --> 00:00:32,792
+attempts to type or click somewhere and presumably
+
+13
+00:00:32,832 --> 00:00:35,597
+the page is going to change, but Claude doesn't really understand
+
+14
+00:00:35,677 --> 00:00:38,302
+how. Clicking on a button might navigate to a new
+
+15
+00:00:38,323 --> 00:00:41,188
+page or it might open up a menu. In order to understand
+
+16
+00:00:41,207 --> 00:00:43,813
+the result of any action it took, Claude needed
+
+17
+00:00:43,853 --> 00:00:46,478
+a screenshot to understand the new state or the
+
+18
+00:00:46,618 --> 00:00:49,182
+environment that it was in. This same
+
+19
+00:00:49,323 --> 00:00:52,267
+idea holds for any agent that we assemble. After
+
+20
+00:00:52,326 --> 00:00:55,110
+taking inaction, and sometimes before taking inaction,
+
+21
+00:00:55,530 --> 00:00:58,075
+Claude really needs a way of evaluating the result of the
+
+22
+00:00:58,174 --> 00:01:00,899
+action, often beyond whatever just a tool returns.
+
+23
+00:01:01,479 --> 00:01:04,162
+By helping Claude understand its environment, it can better
+
+24
+00:01:04,203 --> 00:01:06,906
+gauge its progress towards completing a task, and
+
+25
+00:01:06,947 --> 00:01:09,710
+also better deal with unexpected results or errors.
+
+26
+00:01:10,171 --> 00:01:12,715
+We can see a very similar idea when we make use of Claude
+
+27
+00:01:12,775 --> 00:01:15,399
+code. So in this screenshot, at the very top, I've
+
+28
+00:01:15,438 --> 00:01:18,503
+asked Claude to update the main.py file.
+
+29
+00:01:18,483 --> 00:01:20,986
+Now, the task I've given Claude here of adding in an
+
+30
+00:01:21,027 --> 00:01:23,551
+additional route is really simple. But before we
+
+31
+00:01:23,590 --> 00:01:26,135
+can ever modify that file in any way, this is going to
+
+32
+00:01:26,155 --> 00:01:28,939
+seem really obvious. Well, Claude needs to understand what
+
+33
+00:01:28,959 --> 00:01:31,623
+the current code is inside the file first. So
+
+34
+00:01:31,664 --> 00:01:34,347
+Claude needs some way of reading the contents of a file.
+
+35
+00:01:34,588 --> 00:01:37,132
+Now again, I know it seems really obvious, but I
+
+36
+00:01:37,173 --> 00:01:39,736
+would encourage you to think about this idea around reading
+
+37
+00:01:39,777 --> 00:01:42,561
+a file before writing to it anytime you're building an agent
+
+38
+00:01:42,680 --> 00:01:45,364
+of your own. This idea is even applicable to
+
+39
+00:01:45,406 --> 00:01:48,088
+our social media video agent. So whenever
+
+40
+00:01:48,129 --> 00:01:50,852
+we make a request off to Claude, we might give it a task like create
+
+41
+00:01:50,873 --> 00:01:53,778
+a video on Python and post it to my social media account, along
+
+42
+00:01:53,798 --> 00:01:56,361
+with our list of tools. Then we might provide some
+
+43
+00:01:56,421 --> 00:01:59,025
+special instructions inside of a system prompt, helping
+
+44
+00:01:59,084 --> 00:02:02,049
+Claude understand how can inspect its environment after
+
+45
+00:02:02,109 --> 00:02:04,673
+generating a video. Personally, if I
+
+46
+00:02:04,712 --> 00:02:07,234
+was relying upon Claude to use FFimPig to
+
+47
+00:02:07,275 --> 00:02:09,776
+generate a video, I would kind of expect it to maybe
+
+48
+00:02:09,817 --> 00:02:12,659
+sometimes make mistakes around the placement of dialogue.
+
+49
+00:02:12,800 --> 00:02:15,322
+So specifically, when audio clips would play, that
+
+50
+00:02:15,361 --> 00:02:18,284
+it generated using some text-to-speech functionality. To
+
+51
+00:02:18,324 --> 00:02:21,127
+help Claude better understand its progress around completing
+
+52
+00:02:21,146 --> 00:02:23,669
+a task when making one of these videos, I might
+
+53
+00:02:23,688 --> 00:02:26,431
+give it some instructions to make use of the BASH tool
+
+54
+00:02:26,472 --> 00:02:29,354
+specifically to run a program called, specifically Whisper
+
+55
+00:02:29,394 --> 00:02:31,997
+CPP. This is a program we can use to generate caption
+
+56
+00:02:32,016 --> 00:02:34,579
+files automatically out of a video. And those caption
+
+57
+00:02:34,599 --> 00:02:37,104
+files have timestamps inside them, so Claude could
+
+58
+00:02:37,204 --> 00:02:39,728
+use this program to make sure the dialog was placed
+
+59
+00:02:39,788 --> 00:02:42,331
+correctly. We might also advise Claude to
+
+60
+00:02:42,432 --> 00:02:45,076
+use the bash tool to run ffimpeg, which has
+
+61
+00:02:45,097 --> 00:02:47,621
+the ability to extract screenshots out of a video.
+
+62
+00:02:48,081 --> 00:02:50,665
+We might tell Claude to extract a screenshot from every
+
+63
+00:02:50,746 --> 00:02:53,251
+second or every 10 seconds, and take a look at the
+
+64
+00:02:53,270 --> 00:02:55,914
+screenshots just to make sure that the video looks as
+
+65
+00:02:55,995 --> 00:02:58,824
+it kind of expects it to look. This allows Claude to
+
+66
+00:02:58,866 --> 00:03:01,563
+inspect the results of its actions, the actual
+
+67
+00:03:01,604 --> 00:03:04,424
+video I created, and make sure that it's completing the task
+
+68
+00:03:04,725 --> 00:03:05,592
+as it should.

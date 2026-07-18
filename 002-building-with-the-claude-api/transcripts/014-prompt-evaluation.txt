@@ -1,0 +1,151 @@
+1
+00:00:00,031 --> 00:00:02,696
+Now that we understand how to access Claude, we're going to shift
+
+2
+00:00:02,736 --> 00:00:05,240
+our focus a little bit and look at two new topics,
+
+3
+00:00:05,682 --> 00:00:08,207
+prompt engineering and prompt evaluation. These
+
+4
+00:00:08,246 --> 00:00:10,811
+two topics are all about making sure that we are writing
+
+5
+00:00:10,872 --> 00:00:13,698
+prompts that will get us the best possible output from Claude.
+
+6
+00:00:14,400 --> 00:00:17,024
+Prompt Engineering is a series of techniques that will use any
+
+7
+00:00:17,065 --> 00:00:19,710
+time that we want to write or edit a prompt.
+
+8
+00:00:19,690 --> 00:00:22,393
+These techniques will aid Claude in understanding what
+
+9
+00:00:22,434 --> 00:00:25,818
+we're asking of it and how we want it to respond. Prompt
+
+10
+00:00:25,859 --> 00:00:28,862
+evaluation, on the other hand, is where we do some automated
+
+11
+00:00:28,943 --> 00:00:31,466
+testing of a prompt with a goal of getting
+
+12
+00:00:31,606 --> 00:00:34,191
+some kind of objective metric that tells us
+
+13
+00:00:34,390 --> 00:00:37,075
+if our prompt is effective or not.
+
+14
+00:00:37,240 --> 00:00:40,183
+In this section, we're going to be mostly focused on prompt evaluation.
+
+15
+00:00:40,664 --> 00:00:43,468
+After we understand how to measure the effectiveness of a prompt,
+
+16
+00:00:43,707 --> 00:00:46,231
+we'll then take a look at some prompt engineering techniques.
+
+17
+00:00:46,491 --> 00:00:49,335
+So let's get to it. The first thing I want to do is help you understand
+
+18
+00:00:49,375 --> 00:00:52,158
+where prompt evaluation fits in to the prompt writing
+
+19
+00:00:52,219 --> 00:00:54,962
+process in general. Whenever you first write a prompt,
+
+20
+00:00:55,021 --> 00:00:57,646
+you generally have three different paths ahead of you. Three different
+
+21
+00:00:57,686 --> 00:01:00,210
+ways you can go from there. With option number one, you might
+
+22
+00:01:00,331 --> 00:01:02,837
+take that prompt you put together, maybe test it once or
+
+23
+00:01:02,877 --> 00:01:05,543
+twice and decide it is good enough to use in production.
+
+24
+00:01:05,905 --> 00:01:08,772
+With option number two, you might test the prompt a couple of times
+
+25
+00:01:08,831 --> 00:01:11,778
+with your own custom inputs, and maybe tweak
+
+26
+00:01:11,838 --> 00:01:15,027
+it a little bit to handle a corner case or two that you've noticed.
+
+27
+00:01:15,007 --> 00:01:17,570
+Right away, I want you to understand that options, number one
+
+28
+00:01:17,590 --> 00:01:20,555
+and number two, are kind of traps that all engineers
+
+29
+00:01:20,596 --> 00:01:23,421
+fall into, myself included. It happens
+
+30
+00:01:23,441 --> 00:01:25,945
+to everybody. We all start writing out prompts that
+
+31
+00:01:25,986 --> 00:01:28,730
+are going to eventually be used in serious applications, and
+
+32
+00:01:28,769 --> 00:01:31,795
+we don't really test them enough to make sure that they are working as expected.
+
+33
+00:01:32,156 --> 00:01:34,900
+So whenever you write a prompt, I highly recommend going with option
+
+34
+00:01:34,921 --> 00:01:37,430
+number three. Run your prompt through an evaluation
+
+35
+00:01:37,490 --> 00:01:40,165
+pipeline to get an objective score that will tell you
+
+36
+00:01:40,185 --> 00:01:42,778
+how well your prompt is performing. You
+
+37
+00:01:42,819 --> 00:01:45,572
+can then try to iterate on your prompt a little bit and make
+
+38
+00:01:45,612 --> 00:01:48,186
+sure that it's performing as well as it possibly can.

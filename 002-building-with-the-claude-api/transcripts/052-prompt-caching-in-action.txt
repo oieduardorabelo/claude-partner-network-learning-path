@@ -1,0 +1,607 @@
+1
+00:00:00,031 --> 00:00:02,794
+Time to get our hands dirty with prompt caching. I've
+
+2
+00:00:02,835 --> 00:00:05,339
+created a new notebook called 003 caching.
+
+3
+00:00:05,660 --> 00:00:08,423
+You will of course find it attached to this lecture. Inside
+
+4
+00:00:08,484 --> 00:00:11,148
+here, you'll find a section called prompt with 6K
+
+5
+00:00:11,169 --> 00:00:14,032
+tokens. So this is meant to serve as a system prompt.
+
+6
+00:00:14,374 --> 00:00:16,937
+We're going to use it in a little bit. In addition, there is a
+
+7
+00:00:17,057 --> 00:00:19,621
+tool schema section. It has several different tool schemas to
+
+8
+00:00:19,641 --> 00:00:22,166
+find inside of it. All these different tool schemas put together
+
+9
+00:00:22,185 --> 00:00:25,431
+total it to about 1.7K tokens.
+
+10
+00:00:25,411 --> 00:00:28,015
+We're going to work on updating our chat function,
+
+11
+00:00:28,414 --> 00:00:31,079
+which is inside the cell up here called helper functions. We're
+
+12
+00:00:31,099 --> 00:00:33,942
+going to make sure that our chat function always enables prompt
+
+13
+00:00:33,982 --> 00:00:36,726
+caching for our tool schemas and our system
+
+14
+00:00:36,767 --> 00:00:39,290
+prompt by default. So let me show you how you would
+
+15
+00:00:39,310 --> 00:00:42,134
+do that. Inside the helper function cell, I'm
+
+16
+00:00:42,174 --> 00:00:44,719
+going to scroll down to our chat function. Here it is right
+
+17
+00:00:44,738 --> 00:00:47,362
+here. I'm going to scroll down a little bit further and you'll notice
+
+18
+00:00:47,482 --> 00:00:50,106
+I added in two to-do items. First,
+
+19
+00:00:50,447 --> 00:00:53,290
+if a tools list is provided, I want to always cache
+
+20
+00:00:53,331 --> 00:00:56,195
+the list of tools. Secondly, if we provide a system
+
+21
+00:00:56,255 --> 00:00:59,200
+prompt, I want to cache that as well. Remember
+
+22
+00:00:59,240 --> 00:01:01,823
+that we can have multiple different cache breakpoints inside
+
+23
+00:01:01,902 --> 00:01:04,466
+of a single request. So if we end up passing both
+
+24
+00:01:04,566 --> 00:01:07,150
+a system prompt and a list of tools, we're going to set two
+
+25
+00:01:07,271 --> 00:01:09,915
+different cache breakpots. Let's first take care
+
+26
+00:01:09,935 --> 00:01:12,570
+of caching our list of tools. Now,
+
+27
+00:01:12,611 --> 00:01:15,234
+to do so, remember, we need to modify the very
+
+28
+00:01:15,355 --> 00:01:17,878
+last tool schema that we pass into Claude.
+
+29
+00:01:18,257 --> 00:01:21,022
+We need to, in particular, add on that cache
+
+30
+00:01:21,061 --> 00:01:23,584
+control field. But we could do something like
+
+31
+00:01:23,605 --> 00:01:26,447
+this. We could just say tools, negative
+
+32
+00:01:26,588 --> 00:01:29,412
+one, and then set a cache control
+
+33
+00:01:29,632 --> 00:01:33,436
+field on it of type ephemeral.
+
+34
+00:01:33,417 --> 00:01:35,998
+Like so. As we definitely work, but it's not
+
+35
+00:01:36,058 --> 00:01:38,701
+the best coding technique. You see, this will
+
+36
+00:01:38,781 --> 00:01:41,625
+actually modify our tool schema by adding in the cache
+
+37
+00:01:41,665 --> 00:01:44,266
+control field to it. There might be some scenario in
+
+38
+00:01:44,346 --> 00:01:46,969
+our application where we later on decide to change
+
+39
+00:01:47,030 --> 00:01:49,572
+the order of our tool schemas that we're passing in. And if
+
+40
+00:01:49,611 --> 00:01:52,135
+we did so, we would then end up with multiple different cache
+
+41
+00:01:52,234 --> 00:01:54,757
+breakpoints being set up inside of our tool schema, which
+
+42
+00:01:54,856 --> 00:01:57,439
+might not be exactly what we desire. So a little
+
+43
+00:01:57,459 --> 00:02:00,061
+bit better way of doing this would be to
+
+44
+00:02:00,102 --> 00:02:03,204
+first create a copy of our tools list.
+
+45
+00:02:03,185 --> 00:02:05,688
+Then we will clone the last tool schema inside
+
+46
+00:02:05,707 --> 00:02:08,311
+there and add the cache control field to it. So
+
+47
+00:02:08,431 --> 00:02:11,193
+let me see how to do that. I'm going to make a new variable
+
+48
+00:02:11,253 --> 00:02:14,457
+called tools clone, which will come from calling tools.copy.
+
+49
+00:02:14,798 --> 00:02:17,381
+So that's going to make a total copy of the list. Next,
+
+50
+00:02:17,520 --> 00:02:23,407
+I'm going to copy the very last tool inside there. I'm
+
+51
+00:02:23,427 --> 00:02:26,031
+then going to add on the cache control field to
+
+52
+00:02:26,091 --> 00:02:30,710
+the last tool schema. So
+
+53
+00:02:30,729 --> 00:02:33,556
+that will be type ephemeral.
+
+54
+00:02:35,341 --> 00:02:38,247
+Then I'm going to overwrite the last element inside
+
+55
+00:02:38,287 --> 00:02:40,913
+tools clone with the tool schema copy that
+
+56
+00:02:40,932 --> 00:02:44,163
+I just made tools. clone
+
+57
+00:02:44,483 --> 00:02:47,449
+at negative one will be the last tool. And
+
+58
+00:02:47,468 --> 00:02:50,473
+I'm going to assign my tools clone to
+
+59
+00:02:50,514 --> 00:02:53,038
+the tools program. Now, just to repeat here really
+
+60
+00:02:53,057 --> 00:02:55,703
+quickly, all this copulogic I have inside of here is
+
+61
+00:02:55,742 --> 00:02:58,527
+not strictly necessary. It's just good practice, again,
+
+62
+00:02:58,568 --> 00:03:01,151
+in case we ever decide to change our list of tools
+
+63
+00:03:01,312 --> 00:03:04,116
+at some point in time. Next up, we'll take care of the second
+
+64
+00:03:04,157 --> 00:03:06,900
+to do. So if we pass in a system prompt, I
+
+65
+00:03:06,919 --> 00:03:10,002
+want to make sure that we always set a cache breakpoint on it. To
+
+66
+00:03:10,043 --> 00:03:12,545
+do so, I'm going to remove the comment. I will
+
+67
+00:03:12,586 --> 00:03:15,169
+replace system with a list. We're going to put
+
+68
+00:03:15,229 --> 00:03:17,812
+inside of here a text block. So we'll be
+
+69
+00:03:17,831 --> 00:03:20,414
+a dictionary with a type of text,
+
+70
+00:03:21,836 --> 00:03:24,560
+text of system, and then finally
+
+71
+00:03:24,599 --> 00:03:28,204
+a cache control type
+
+72
+00:03:29,872 --> 00:03:33,848
+ephemeral. And that's it. Alright,
+
+73
+00:03:33,867 --> 00:03:36,498
+so let's now run the cell. We're going to go down to the very bottom
+
+74
+00:03:36,881 --> 00:03:39,816
+and test out this caching that we have set up. So
+
+75
+00:03:39,855 --> 00:03:42,961
+down here at the very bottom, I've already defined a list of tools. These
+
+76
+00:03:43,043 --> 00:03:46,408
+are tool schemas that are defined inside the cell right above. We've
+
+77
+00:03:46,429 --> 00:03:49,054
+also got that very large system prompt right here
+
+78
+00:03:49,354 --> 00:03:52,139
+of code prompt. So let's first try just passing
+
+79
+00:03:52,341 --> 00:03:55,006
+in nothing at all. So no list of tools, no prompt
+
+80
+00:03:55,045 --> 00:03:57,550
+whatsoever. We're just going to see the number of tokens that are
+
+81
+00:03:57,670 --> 00:04:00,316
+used to process the message of was one plus one and
+
+82
+00:04:00,355 --> 00:04:03,100
+generate a response. So if I run this, I'll
+
+83
+00:04:03,121 --> 00:04:05,686
+get back in output and we can notice that there is a usage
+
+84
+00:04:05,725 --> 00:04:08,951
+field inside of here. So it looks like we sent in 14 tokens
+
+85
+00:04:09,051 --> 00:04:11,736
+and we got 11 out. Let's now try adding
+
+86
+00:04:11,896 --> 00:04:15,022
+in our list of tools. So
+
+87
+00:04:15,043 --> 00:04:17,588
+when I add that in and run this, we're now going to
+
+88
+00:04:17,608 --> 00:04:20,507
+see a very different usage field. Now
+
+89
+00:04:20,547 --> 00:04:23,290
+our usage has a cache creation input tokens
+
+90
+00:04:23,470 --> 00:04:26,052
+of 1700. That means that Claude has
+
+91
+00:04:26,091 --> 00:04:28,694
+seen that we want to do cache our schemas. So
+
+92
+00:04:28,713 --> 00:04:31,476
+it has written into the cache a total of about 1700
+
+93
+00:04:31,617 --> 00:04:34,338
+tokens. So now if we make a follow-up request
+
+94
+00:04:34,439 --> 00:04:37,442
+immediately, without changing anything about it, we'll
+
+95
+00:04:37,461 --> 00:04:40,163
+see that we are now going to read a certain number of tokens
+
+96
+00:04:40,264 --> 00:04:42,786
+out of our cache. So now we've got a cache read
+
+97
+00:04:42,826 --> 00:04:45,509
+of 1700. That means that we have successfully
+
+98
+00:04:45,608 --> 00:04:48,391
+stored our schemas inside the cache and then retrieve
+
+99
+00:04:48,411 --> 00:04:50,973
+them at some point in time in the future. Now, if
+
+100
+00:04:51,014 --> 00:04:53,557
+we change our user message here in any way,
+
+101
+00:04:53,716 --> 00:04:56,240
+maybe by deleting that question mark at the end,
+
+102
+00:04:56,680 --> 00:04:59,244
+and then rerun this, we are still going to read out
+
+103
+00:04:59,283 --> 00:05:01,947
+of the cache because remember the caching order is the list
+
+104
+00:05:01,987 --> 00:05:04,571
+of tools, then our system prompt, and then our different
+
+105
+00:05:04,610 --> 00:05:07,113
+messages. So we'll still read out of the cache like
+
+106
+00:05:07,153 --> 00:05:09,937
+so. However, if we change any
+
+107
+00:05:10,057 --> 00:05:12,581
+of our tools in any way whatsoever, we're
+
+108
+00:05:12,600 --> 00:05:15,144
+going to invalidate the cache. So if I go to my
+
+109
+00:05:15,204 --> 00:05:17,862
+list of tools, I'm going to change the
+
+110
+00:05:17,944 --> 00:05:20,492
+description on the very first tool. I'm going to remove the
+
+111
+00:05:20,834 --> 00:05:23,846
+S on the word ads. So now let's just add a specified
+
+112
+00:05:23,886 --> 00:05:26,540
+duration. Now if I rerun cell,
+
+113
+00:05:27,000 --> 00:05:29,584
+I've changed my tool schema. And that means that
+
+114
+00:05:29,624 --> 00:05:32,288
+the cache breakpoint that we have applied to all of our different tools
+
+115
+00:05:32,627 --> 00:05:35,351
+is no longer going to apply. If I run the very bottom
+
+116
+00:05:35,391 --> 00:05:37,935
+cell again, we'll see an updated value
+
+117
+00:05:38,074 --> 00:05:40,598
+of usage. So now we're going to have a cache
+
+118
+00:05:40,838 --> 00:05:43,401
+write once again. So no longer reading. We're now back to
+
+119
+00:05:43,422 --> 00:05:46,026
+writing because we have sent in a list of tools that
+
+120
+00:05:46,065 --> 00:05:49,110
+as far as Claude is concerned is completely different.
+
+121
+00:05:49,596 --> 00:05:52,302
+All right, so now let's try adding in our system prompt. I'm
+
+122
+00:05:52,322 --> 00:05:55,148
+going to go to our chat function, and I'll add in system
+
+123
+00:05:55,809 --> 00:05:58,434
+code prompt. So now when we make
+
+124
+00:05:58,473 --> 00:06:01,139
+this request, remember the order of caching, it is tools,
+
+125
+00:06:01,480 --> 00:06:04,685
+then the system prompt, and then our list of messages.
+
+126
+00:06:04,665 --> 00:06:07,529
+Because we are leaving our list of tools completely identical,
+
+127
+00:06:07,870 --> 00:06:10,494
+but we are changing the system prompt, I would expect to see
+
+128
+00:06:10,533 --> 00:06:13,117
+a partial cache read and then a cache
+
+129
+00:06:13,237 --> 00:06:15,781
+write at the same time. The cache read that we're going
+
+130
+00:06:15,800 --> 00:06:18,725
+to see is because we are making use of the same list of tools. And
+
+131
+00:06:18,745 --> 00:06:21,428
+the cache write is going to because we are sending up a new
+
+132
+00:06:21,509 --> 00:06:24,392
+cache breakpoint by sending in this new prompt.
+
+133
+00:06:24,932 --> 00:06:27,466
+So I'm going to run this. And now we should see a,
+
+134
+00:06:28,245 --> 00:06:31,329
+there we go, a cache read of 1700 and a
+
+135
+00:06:31,569 --> 00:06:34,851
+cache write of 6.3. Now,
+
+136
+00:06:35,012 --> 00:06:37,634
+just like our list of tools, if we go up to our system
+
+137
+00:06:37,673 --> 00:06:40,617
+prompt and we change this prompt in any way, maybe
+
+138
+00:06:40,677 --> 00:06:43,278
+by just removing the word builder at the very end here
+
+139
+00:06:43,439 --> 00:06:46,261
+and then rerunning that cell. Now, once again, as far
+
+140
+00:06:46,341 --> 00:06:49,103
+as Claude is concerned, if we send in another request,
+
+141
+00:06:49,223 --> 00:06:51,985
+this will be a completely different system prompt.
+
+142
+00:06:52,005 --> 00:06:54,588
+So we are going to lose out on all the cache data we had
+
+143
+00:06:54,648 --> 00:06:57,180
+previously around the system prompt. So now I'll send
+
+144
+00:06:57,220 --> 00:07:00,648
+this again, and we will once again see a cache
+
+145
+00:07:00,668 --> 00:07:03,233
+read of about 1.7, there
+
+146
+00:07:03,495 --> 00:07:06,081
+we go. And then we are once again writing this brand
+
+147
+00:07:06,100 --> 00:07:09,548
+new system prompt, so that's another 6.3. All
+
+148
+00:07:09,610 --> 00:07:12,175
+right, my friends, that is prompt caching. Again, you're
+
+149
+00:07:12,196 --> 00:07:14,721
+going to very often use prompt caching anytime you are sending
+
+150
+00:07:14,802 --> 00:07:17,408
+in identical content, either in the form of the same
+
+151
+00:07:17,427 --> 00:07:20,254
+list of messages, the same tool schemas, or the same
+
+152
+00:07:20,334 --> 00:07:21,197
+system prompt.

@@ -1,0 +1,411 @@
+1
+00:00:00,031 --> 00:00:02,677
+Let's go through a very quick exercise just to make sure
+
+2
+00:00:02,717 --> 00:00:05,242
+the idea of stop sequences and message prefilling are
+
+3
+00:00:05,302 --> 00:00:07,868
+super clear. So in this exercise, I'd like you
+
+4
+00:00:07,908 --> 00:00:10,734
+to write out the exact code I've got right here on the screen. All
+
+5
+00:00:10,755 --> 00:00:13,701
+this code should be really familiar. If you take a look at the prompt,
+
+6
+00:00:13,981 --> 00:00:16,827
+it says generate three different sample AWS CLI
+
+7
+00:00:16,867 --> 00:00:19,452
+commands. Now, when you run this code, you're probably
+
+8
+00:00:19,472 --> 00:00:22,018
+going to get back some output that looks vaguely like this
+
+9
+00:00:22,079 --> 00:00:24,963
+right here. Just make it a little bit easier to read. I rendered
+
+10
+00:00:25,024 --> 00:00:27,690
+it as markdown down here. So here's the
+
+11
+00:00:28,170 --> 00:00:30,716
+sample starting output that I get. You'll
+
+12
+00:00:30,736 --> 00:00:33,561
+notice that it does give us three different sample commands, but
+
+13
+00:00:33,601 --> 00:00:36,347
+has a lot of commentary around them. So I've got a header
+
+14
+00:00:36,487 --> 00:00:39,353
+and then some numbers listing out each individual command.
+
+15
+00:00:39,906 --> 00:00:42,710
+For this exercise, I would like you to take
+
+16
+00:00:42,770 --> 00:00:45,353
+this code and using only message prefilling
+
+17
+00:00:45,512 --> 00:00:48,036
+and stop sequences, I want you to get all three
+
+18
+00:00:48,055 --> 00:00:51,020
+different commands in a single response, all
+
+19
+00:00:51,079 --> 00:00:53,582
+right next to each other without any additional comments
+
+20
+00:00:53,802 --> 00:00:56,665
+or explanation or anything like that. And
+
+21
+00:00:56,706 --> 00:00:59,348
+I'd like you to do this using only message prefilling
+
+22
+00:00:59,429 --> 00:01:02,152
+and stop sequences, so no adjusting this prompt
+
+23
+00:01:02,351 --> 00:01:04,906
+at all. So go ahead and give this a shot. I
+
+24
+00:01:04,947 --> 00:01:07,893
+did put a little hint on here, just as a reminder, with
+
+25
+00:01:07,933 --> 00:01:10,718
+message prefilling, it's not limited just using characters
+
+26
+00:01:10,778 --> 00:01:13,483
+like the backticks. You can put any
+
+27
+00:01:13,522 --> 00:01:16,308
+kind of prefill response you want. I would encourage
+
+28
+00:01:16,349 --> 00:01:18,873
+you to pause this video now and give this an exercise a
+
+29
+00:01:19,054 --> 00:01:21,558
+shot. Otherwise, I'll go over a solution
+
+30
+00:01:21,599 --> 00:01:24,164
+right away. So here we go. Here's how we're going to solve
+
+31
+00:01:24,203 --> 00:01:26,972
+this. To solve this, the first thing I recommend
+
+32
+00:01:26,992 --> 00:01:29,614
+you do is take a look at the output without any kind
+
+33
+00:01:29,635 --> 00:01:32,156
+of pre-filling or stop sequences or anything
+
+34
+00:01:32,237 --> 00:01:34,739
+like that. So if we take a look at what we have right
+
+35
+00:01:34,780 --> 00:01:37,522
+here, we'll notice that each of our three commands are wrapped
+
+36
+00:01:37,563 --> 00:01:40,224
+in a series of three backticks. So a good place
+
+37
+00:01:40,245 --> 00:01:42,787
+to get started would probably be to put in a pre-filled
+
+38
+00:01:42,808 --> 00:01:45,469
+message of three backticks to
+
+39
+00:01:45,510 --> 00:01:48,272
+kind of tell Claude, just go right into the command
+
+40
+00:01:48,313 --> 00:01:51,695
+writing right away and skip any initial commentary.
+
+41
+00:01:51,676 --> 00:01:54,239
+And then we might also decide to put in a stop sequence of three
+
+42
+00:01:54,301 --> 00:01:57,566
+backticks as well. Let's see how far that gets us. So
+
+43
+00:01:57,585 --> 00:02:00,391
+I'll put in an assistant message.
+
+44
+00:02:03,016 --> 00:02:06,001
+And I'll start everything off with three backticks. And
+
+45
+00:02:06,021 --> 00:02:09,507
+I'll put in a stop sequence of
+
+46
+00:02:09,887 --> 00:02:12,451
+closing three backticks. Let's run
+
+47
+00:02:12,491 --> 00:02:15,399
+this and see how far it gets us. My initial
+
+48
+00:02:15,479 --> 00:02:18,223
+output looks kind of reasonable, but it's not perfect just yet.
+
+49
+00:02:18,743 --> 00:02:21,308
+I do get three commands. There's one, two, and three.
+
+50
+00:02:21,669 --> 00:02:24,252
+But you'll notice that I also get the word bash added at
+
+51
+00:02:24,272 --> 00:02:26,856
+the very start. So where's that word coming from
+
+52
+00:02:26,897 --> 00:02:29,421
+exactly? Well, let me show you what Claude
+
+53
+00:02:29,502 --> 00:02:32,126
+is really trying to do here. We provided
+
+54
+00:02:32,145 --> 00:02:34,870
+the initial assistant message of those three
+
+55
+00:02:34,909 --> 00:02:37,604
+backticks. Whenever you put down three back ticks,
+
+56
+00:02:37,784 --> 00:02:40,389
+it's kind of indicating that you are writing out some markdown. And
+
+57
+00:02:40,408 --> 00:02:42,972
+when you are writing a markdown code block with back ticks,
+
+58
+00:02:43,293 --> 00:02:45,936
+you can optionally put in a language identifier right here.
+
+59
+00:02:46,616 --> 00:02:49,260
+If you choose to put one in, that whenever you render this as
+
+60
+00:02:49,320 --> 00:02:51,905
+markdown, the content inside of those back ticks,
+
+61
+00:02:52,365 --> 00:02:55,770
+we rendered using that language's syntax highlighting.
+
+62
+00:02:55,750 --> 00:02:58,393
+So in this case, Claude decided to put in bash right here
+
+63
+00:02:58,612 --> 00:03:01,496
+just to say, hey, we should use bash styles
+
+64
+00:03:01,515 --> 00:03:04,058
+syntax highlighting when we render this stuff out.
+
+65
+00:03:04,079 --> 00:03:06,580
+Now for us, we don't want that at all. So
+
+66
+00:03:06,901 --> 00:03:09,764
+one way we could address this would be to adjust
+
+67
+00:03:09,985 --> 00:03:12,548
+our pre-filled message right here and just include
+
+68
+00:03:12,587 --> 00:03:15,090
+bash ourselves. So that's now going to
+
+69
+00:03:15,110 --> 00:03:17,832
+make it super clear to Claude itself that, yes, you
+
+70
+00:03:18,114 --> 00:03:21,257
+are inside of a Markdown code block. And inside
+
+71
+00:03:21,296 --> 00:03:24,120
+this code block, you should be writing out bash formatted commands.
+
+72
+00:03:24,808 --> 00:03:28,854
+So let me try running this again and see how I do now. Okay,
+
+73
+00:03:28,873 --> 00:03:31,477
+so that looks better. Now I will tell you that from this
+
+74
+00:03:31,556 --> 00:03:34,401
+point, there are probably two additional errors that you might want to address.
+
+75
+00:03:35,020 --> 00:03:37,925
+The first is, sometimes you will get back a single command,
+
+76
+00:03:38,406 --> 00:03:40,929
+which is kind of an indication that Claude might want to write out three
+
+77
+00:03:41,088 --> 00:03:43,651
+separate markdown code blocks. The other problem that
+
+78
+00:03:43,671 --> 00:03:46,395
+you might run into, because we are now using a bash
+
+79
+00:03:46,474 --> 00:03:48,997
+code block, Claude might try to insert some
+
+80
+00:03:49,079 --> 00:03:51,581
+bash formatted comments in there as well. So it
+
+81
+00:03:51,641 --> 00:03:54,644
+might be something like, This
+
+82
+00:03:54,704 --> 00:03:57,228
+command does XYZ, and you
+
+83
+00:03:57,268 --> 00:03:59,842
+might see that repeated. And so we definitely
+
+84
+00:03:59,861 --> 00:04:02,806
+don't want those comments really just because that was one of the requirements
+
+85
+00:04:02,925 --> 00:04:05,550
+of this exercise. So to get rid
+
+86
+00:04:05,569 --> 00:04:08,152
+of those comments and to also make sure that we get
+
+87
+00:04:08,272 --> 00:04:10,896
+all three commands more reliably, we can use that
+
+88
+00:04:10,937 --> 00:04:13,661
+hint I gave you. Remember the hint was message
+
+89
+00:04:13,700 --> 00:04:16,264
+prefilling isn't just limited to designating
+
+90
+00:04:16,303 --> 00:04:18,987
+characters like backticks or stuff like that. We can also
+
+91
+00:04:19,088 --> 00:04:21,690
+use the message prefill to dramatically
+
+92
+00:04:21,812 --> 00:04:24,574
+guide Claude in how it's going to answer us.
+
+93
+00:04:25,156 --> 00:04:28,060
+So in this case, we could add in something like
+
+94
+00:04:28,225 --> 00:04:31,488
+Here are all three commands in
+
+95
+00:04:31,670 --> 00:04:34,333
+a single block without any
+
+96
+00:04:34,653 --> 00:04:37,156
+comments. And
+
+97
+00:04:37,177 --> 00:04:39,920
+then I'll put in a colon right there and then a new line,
+
+98
+00:04:39,980 --> 00:04:43,346
+just so it starts all the markdown stuff on the next line down. So
+
+99
+00:04:43,365 --> 00:04:45,869
+I'm gonna try running this and we should now get some
+
+100
+00:04:45,908 --> 00:04:48,572
+much more reliable output. Okay,
+
+101
+00:04:48,632 --> 00:04:51,196
+that looks good. And of course I can keep running all
+
+102
+00:04:51,216 --> 00:04:54,100
+day and we're probably gonna see exactly the result
+
+103
+00:04:54,139 --> 00:04:56,764
+we want. Okay, this looks good.

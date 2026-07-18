@@ -1,0 +1,507 @@
+1
+00:00:00,031 --> 00:00:02,595
+We have done quite a bit of talking, so in this video, we're going
+
+2
+00:00:02,615 --> 00:00:05,259
+to change things and get our hands dirty by writing out a little
+
+3
+00:00:05,280 --> 00:00:08,023
+bit of code. We're going to learn how to make a simple and basic
+
+4
+00:00:08,103 --> 00:00:10,669
+request off to the Anthropic API. I'm going to walk you
+
+5
+00:00:10,689 --> 00:00:13,413
+through four setup steps. So step one, we're
+
+6
+00:00:13,432 --> 00:00:16,018
+going to open up a Jupyter notebook and install the Anthropic
+
+7
+00:00:16,158 --> 00:00:20,385
+Python SDK, along with a package called python-dotenv.
+
+8
+00:00:20,533 --> 00:00:23,115
+To get started, I'm going to open up a notebook on my own. I've
+
+9
+00:00:23,135 --> 00:00:25,798
+already added in some comments to my notebook just to guide myself
+
+10
+00:00:25,838 --> 00:00:28,381
+through this process. In step one up here, I'm going
+
+11
+00:00:28,400 --> 00:00:31,263
+to add in a magic install command, so percent,
+
+12
+00:00:31,884 --> 00:00:35,646
+pip, install, anthropic, python-dotenv.
+
+13
+00:00:36,247 --> 00:00:38,850
+If you're writing your notebook inside of Visual Studio Code as
+
+14
+00:00:39,049 --> 00:00:41,591
+I am, you might notice a red syntax error coming
+
+15
+00:00:41,612 --> 00:00:44,213
+from the percent over here. If you see that syntax error, it
+
+16
+00:00:44,253 --> 00:00:46,817
+is totally fine. You can ignore it. Once I've written
+
+17
+00:00:46,837 --> 00:00:49,579
+out this command, I'm going to run it to install these packages.
+
+18
+00:00:49,558 --> 00:00:52,121
+I'm then going to clear the output just so you can see what's going on my
+
+19
+00:00:52,161 --> 00:00:54,805
+screen a little bit more easily. Next, we are going to use
+
+20
+00:00:54,845 --> 00:00:57,429
+that python-dotenv package to store
+
+21
+00:00:57,469 --> 00:00:59,991
+and load our API key. As a reminder,
+
+22
+00:01:00,252 --> 00:01:02,996
+I put in some directions on creating API key in the previous
+
+23
+00:01:03,036 --> 00:01:05,558
+lecture. So if you did not create an API key, I would
+
+24
+00:01:05,578 --> 00:01:08,121
+encourage you to go back to the previous lecture and find those
+
+25
+00:01:08,162 --> 00:01:10,724
+directions. To store this key inside
+
+26
+00:01:10,765 --> 00:01:13,668
+of my editor, I'm going to create a file in the same directory
+
+27
+00:01:13,828 --> 00:01:18,435
+as my notebook with a very special name. I'm going to name this file.env.
+
+28
+00:01:18,701 --> 00:01:21,305
+And then inside of here, I'm going to place the API key that I
+
+29
+00:01:21,385 --> 00:01:24,468
+generated a moment ago. I will write out exactly
+
+30
+00:01:24,489 --> 00:01:27,212
+ANTHROPIC_API_KEY,
+
+31
+00:01:27,272 --> 00:01:29,975
+and then an equal sign. And then inside of double quotes,
+
+32
+00:01:30,096 --> 00:01:32,719
+I will put in that key. As a quick side note, the whole
+
+33
+00:01:32,760 --> 00:01:35,382
+reason that we are creating this file and putting our key inside of here is
+
+34
+00:01:35,403 --> 00:01:38,027
+so that we can now ignore this file when we are making use
+
+35
+00:01:38,066 --> 00:01:40,689
+of version control. So that we do not accidentally
+
+36
+00:01:40,790 --> 00:01:43,313
+commit this file, say, to git, and then accidentally
+
+37
+00:01:43,373 --> 00:01:45,936
+push it up to some public repository where anyone can see
+
+38
+00:01:45,956 --> 00:01:48,680
+this file. So again, if you're making use of Git or a similar
+
+39
+00:01:48,739 --> 00:01:51,343
+version control system, I would encourage you to make sure that you
+
+40
+00:01:51,444 --> 00:01:54,608
+ignore this file any time you are committing your work. Now,
+
+41
+00:01:54,727 --> 00:01:57,230
+back inside of my notebook, I can securely load up that
+
+42
+00:01:57,311 --> 00:02:00,034
+environment variable. Then, onto step number three,
+
+43
+00:02:00,194 --> 00:02:02,796
+where we will create our API client using the Anthropic
+
+44
+00:02:02,876 --> 00:02:05,680
+package. Inside the cell, I'm also going to declare
+
+45
+00:02:05,700 --> 00:02:08,563
+a variable name model. This will be a string. It's going to contain
+
+46
+00:02:08,604 --> 00:02:11,167
+the name of the model that we want to run inside
+
+47
+00:02:11,207 --> 00:02:13,830
+of the Anthropic API. We are going to use
+
+48
+00:02:13,890 --> 00:02:16,414
+Claude 3.7 Sonnet. Now onto the
+
+49
+00:02:16,455 --> 00:02:19,181
+last step, where we are going to actually make a request using
+
+50
+00:02:19,222 --> 00:02:21,729
+that client that we just created. Before we write
+
+51
+00:02:21,769 --> 00:02:24,796
+out any code, however, I want to show you a little bit of terminology,
+
+52
+00:02:24,917 --> 00:02:27,423
+just some stuff that's going to make things a little bit easier down the
+
+53
+00:02:27,463 --> 00:02:29,973
+line. So the first thing to understand here is that
+
+54
+00:02:30,033 --> 00:02:32,998
+we are going to access Claude by using the create function
+
+55
+00:02:33,199 --> 00:02:36,125
+inside the Anthropic SDK. This function requires
+
+56
+00:02:36,145 --> 00:02:39,170
+three different keyword arguments, a model, max
+
+57
+00:02:39,211 --> 00:02:41,855
+tokens, and messages. The model keyword
+
+58
+00:02:41,955 --> 00:02:44,800
+argument is just going to be the name of the model we want to run. We
+
+59
+00:02:44,861 --> 00:02:47,366
+already defined that variable ahead of time in our previous
+
+60
+00:02:47,406 --> 00:02:50,050
+cell. The second required keyword argument is
+
+61
+00:02:50,091 --> 00:02:52,735
+max_tokens. This sets
+
+62
+00:02:52,776 --> 00:02:55,520
+a maximum budget on a number of tokens that Claude
+
+63
+00:02:55,540 --> 00:02:58,104
+can generate. For example, if we pass in a max
+
+64
+00:02:58,145 --> 00:03:01,030
+tokens of 1000, if Claude tries to generate anything
+
+65
+00:03:01,069 --> 00:03:03,814
+longer than that, then the generation will be automatically
+
+66
+00:03:03,895 --> 00:03:06,539
+stopped, and we will receive back the first 1000
+
+67
+00:03:06,580 --> 00:03:09,104
+tokens that were generated. One thing to note
+
+68
+00:03:09,144 --> 00:03:11,808
+here is that Claude doesn't try to target your
+
+69
+00:03:11,848 --> 00:03:14,394
+number of max_tokens. In other words, Claude
+
+70
+00:03:14,413 --> 00:03:17,098
+won't try to write a response of 1000 tokens,
+
+71
+00:03:17,538 --> 00:03:20,364
+it'll just write whatever response it thinks is appropriate.
+
+72
+00:03:21,004 --> 00:03:23,650
+And as such, you should really view max_tokens as being
+
+73
+00:03:23,710 --> 00:03:26,294
+like a safety mechanism to ensure that you're not
+
+74
+00:03:26,395 --> 00:03:28,908
+generating too much text. Finally,
+
+75
+00:03:29,229 --> 00:03:31,913
+messages. And this is the part that I really want to focus on
+
+76
+00:03:32,215 --> 00:03:34,819
+because messages are going to be a huge focus for us in the coming
+
+77
+00:03:34,860 --> 00:03:37,525
+videos. To understand what messages are all
+
+78
+00:03:37,544 --> 00:03:40,370
+about, I would like you to think back to the chat application
+
+79
+00:03:40,430 --> 00:03:43,215
+we discussed a moment ago. So a user
+
+80
+00:03:43,376 --> 00:03:45,919
+might type in some question to Claude and then expect to get
+
+81
+00:03:46,020 --> 00:03:48,734
+an answer back. The messages
+
+82
+00:03:48,794 --> 00:03:51,457
+that we're talking about when we pass these things into this create
+
+83
+00:03:51,518 --> 00:03:54,021
+function are meant to represent exchanges like
+
+84
+00:03:54,042 --> 00:03:56,746
+this. There are two types of messages, a
+
+85
+00:03:56,906 --> 00:03:59,710
+user message and assistant message.
+
+86
+00:03:59,729 --> 00:04:02,394
+User messages contain text that we want to feed into
+
+87
+00:04:02,473 --> 00:04:05,318
+Claude. The content inside of a user message is
+
+88
+00:04:05,337 --> 00:04:08,062
+text that either a user or you and I as
+
+89
+00:04:08,143 --> 00:04:10,665
+developers have authored. In other words, a
+
+90
+00:04:10,806 --> 00:04:13,651
+user message will contain text that has been written by
+
+91
+00:04:13,730 --> 00:04:16,290
+some person. The second type of
+
+92
+00:04:16,331 --> 00:04:19,014
+message is an assistant message. These messages
+
+93
+00:04:19,194 --> 00:04:21,937
+contain text that have been produced by a model and
+
+94
+00:04:21,976 --> 00:04:24,579
+sent back to us. Now, at this point,
+
+95
+00:04:24,879 --> 00:04:27,502
+I think we have enough knowledge to at least make our
+
+96
+00:04:27,581 --> 00:04:30,084
+first request. So let's do that and then discuss
+
+97
+00:04:30,144 --> 00:04:32,827
+messages a little bit more. Back inside of my notebook,
+
+98
+00:04:32,848 --> 00:04:35,810
+in the very last cell, I'm going to declare a variable of message
+
+99
+00:04:36,232 --> 00:04:39,535
+that will come from client.messages.create
+
+100
+00:04:39,514 --> 00:04:42,220
+And I'm going to pass in those different arguments that we just discussed.
+
+101
+00:04:42,240 --> 00:04:45,144
+So I'll put in a model of model, a max_tokens,
+
+102
+00:04:45,245 --> 00:04:47,809
+and I'll use 1000 here, which I think is definitely a safe
+
+103
+00:04:47,869 --> 00:04:51,175
+limit, and then a list of input messages. So
+
+104
+00:04:51,214 --> 00:04:53,819
+inside here, I'm going to put in one single user message, and
+
+105
+00:04:53,838 --> 00:04:56,343
+it will contain my question or my query that I want to
+
+106
+00:04:56,382 --> 00:04:59,088
+send off to Claude. To create a user message,
+
+107
+00:04:59,208 --> 00:05:02,112
+we'll create a dictionary that will have a role
+
+108
+00:05:02,379 --> 00:05:04,942
+of user, and then a content that will
+
+109
+00:05:04,963 --> 00:05:07,545
+contain the actual string that we want to send into Claude.
+
+110
+00:05:07,985 --> 00:05:10,689
+So in this case, I'm going to ask Claude to define quantum computing
+
+111
+00:05:10,788 --> 00:05:13,511
+with something like what is quantum
+
+112
+00:05:13,591 --> 00:05:16,254
+computing answer in one sentence.
+
+113
+00:05:18,456 --> 00:05:20,999
+Then I'm going to run this and we'll take a moment or two
+
+114
+00:05:21,038 --> 00:05:23,802
+to run because we are actually accessing Claude here. And
+
+115
+00:05:23,841 --> 00:05:26,564
+then in the next cell down, I'm going to try to print out the message
+
+116
+00:05:26,605 --> 00:05:29,625
+variable. We'll see what we get. All
+
+117
+00:05:29,644 --> 00:05:32,189
+right, so inside of here, we can see that there's a lot of stuff coming
+
+118
+00:05:32,249 --> 00:05:34,833
+out, but noticeably, we have a definition
+
+119
+00:05:35,033 --> 00:05:37,637
+right around here of what quantum computing actually
+
+120
+00:05:37,817 --> 00:05:40,380
+is. So inside of this message variable that
+
+121
+00:05:40,401 --> 00:05:42,944
+we got back, our text is kind of deeply nested.
+
+122
+00:05:43,526 --> 00:05:46,329
+We very often want to get just the text that Claude has generated,
+
+123
+00:05:46,651 --> 00:05:49,254
+and very often we don't really care about any of these other properties that
+
+124
+00:05:49,274 --> 00:05:51,800
+are contained inside this thing. So to access
+
+125
+00:05:51,980 --> 00:05:57,377
+just the generated text, we would write out message.content[0].text
+
+126
+00:05:57,658 --> 00:06:00,187
+like so. And if I run that cell again, now I'll
+
+127
+00:06:00,206 --> 00:06:02,694
+see just the generated text and nothing else.

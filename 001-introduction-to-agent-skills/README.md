@@ -2,6 +2,15 @@
 
 https://anthropic-partners.skilljar.com/introduction-to-agent-skills
 
+## Table of contents
+
+- [What a skill is](#what-a-skill-is)
+- [Creating a skill](#creating-a-skill)
+- [Configuration and multi-file skills](#configuration-and-multi-file-skills)
+- [How skills compare to other Claude Code features](#how-skills-compare-to-other-claude-code-features)
+- [Sharing skills](#sharing-skills)
+- [Troubleshooting skills](#troubleshooting-skills)
+
 ## What a skill is
 
 A skill is a markdown file that teaches Claude how to do something once, instead of you re-explaining it every time (coding standards, PR review format, commit message style). Claude applies that knowledge automatically whenever it's relevant, without you having to ask.

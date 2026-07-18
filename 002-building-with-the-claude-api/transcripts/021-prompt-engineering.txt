@@ -1,0 +1,891 @@
+1
+00:00:00,115 --> 00:00:02,698
+Now that we've got a handle on prompt evaluation, we're
+
+2
+00:00:02,718 --> 00:00:05,482
+going to move on to the world of prompt engineering. Remember, prompt
+
+3
+00:00:05,522 --> 00:00:08,487
+engineering is all about taking a prompt we've written and improving
+
+4
+00:00:08,506 --> 00:00:11,230
+it in some way to get more reliable outputs and higher
+
+5
+00:00:11,310 --> 00:00:14,234
+quality outputs. To understand prompt engineering,
+
+6
+00:00:14,314 --> 00:00:16,939
+we're going to go through a series of videos in this module, and
+
+7
+00:00:16,958 --> 00:00:19,963
+I want to very quickly help you understand how the module is set up.
+
+8
+00:00:19,943 --> 00:00:22,707
+In this video and the next, we're going to write out an initial
+
+9
+00:00:22,748 --> 00:00:25,272
+prompt. And then in the coming videos, we're going to
+
+10
+00:00:25,312 --> 00:00:28,318
+try to improve it step by step by implementing
+
+11
+00:00:28,359 --> 00:00:31,224
+new prompt engineering techniques on that original
+
+12
+00:00:31,324 --> 00:00:33,969
+prompt. So in short, in this video, we're going to set
+
+13
+00:00:33,990 --> 00:00:36,674
+a goal. So something we want our prompt to do, we're
+
+14
+00:00:36,695 --> 00:00:39,198
+then going to write an initial version of that
+
+15
+00:00:39,238 --> 00:00:42,204
+prompt. So kind of like a really poor first attempt.
+
+16
+00:00:42,185 --> 00:00:44,770
+We will then eval the prompt, and then we're going to
+
+17
+00:00:44,789 --> 00:00:47,395
+see right away we get a very poor evaluation
+
+18
+00:00:47,435 --> 00:00:49,979
+score. And then as I mentioned in the coming videos,
+
+19
+00:00:50,020 --> 00:00:52,765
+we're going to learn about and apply some different prompt engineering
+
+20
+00:00:52,805 --> 00:00:55,350
+techniques. And as we apply each of these, we're going
+
+21
+00:00:55,390 --> 00:00:57,915
+to run our evaluation again and see
+
+22
+00:00:57,956 --> 00:01:00,680
+that we are getting better performance with every single improvement
+
+23
+00:01:00,740 --> 00:01:03,262
+we make. Now to run these evals, we're
+
+24
+00:01:03,283 --> 00:01:06,149
+going to use that same kind of eval pipeline that
+
+25
+00:01:06,168 --> 00:01:08,852
+we put together in the previous module. Just
+
+26
+00:01:09,034 --> 00:01:11,697
+one little twist here, something you really need to be aware of if
+
+27
+00:01:11,718 --> 00:01:14,623
+you want to follow along and code with me. I
+
+28
+00:01:14,683 --> 00:01:17,227
+took our original eval pipeline that we put together
+
+29
+00:01:17,248 --> 00:01:19,811
+in the last module, and I made a couple of different
+
+30
+00:01:19,873 --> 00:01:22,477
+improvements to it to make sure that it can work with just
+
+31
+00:01:22,496 --> 00:01:25,182
+about any prompt, as opposed to the very specific
+
+32
+00:01:25,242 --> 00:01:27,798
+prompt we were working on previously. So
+
+33
+00:01:27,879 --> 00:01:30,984
+to get this updated notebook that has this more flexible
+
+34
+00:01:31,025 --> 00:01:33,750
+evaluation pipeline, make sure you download
+
+35
+00:01:33,769 --> 00:01:36,314
+the accompanying notebook named 001
+
+36
+00:01:36,936 --> 00:01:39,441
+underscore prompting. Before you open up that notebook,
+
+37
+00:01:39,460 --> 00:01:42,105
+however, I want to very quickly tell you about the goal of our prompt.
+
+38
+00:01:42,286 --> 00:01:44,870
+So this initial prompt that we're going to write and exactly what
+
+39
+00:01:45,010 --> 00:01:47,515
+it is intended to do. All right, so we're
+
+40
+00:01:47,534 --> 00:01:50,102
+gonna make a prompt that's going to hopefully generate a
+
+41
+00:01:50,403 --> 00:01:53,031
+one-day meal plan for an athlete based
+
+42
+00:01:53,072 --> 00:01:55,859
+upon their height, weight, some kind of physical
+
+43
+00:01:55,960 --> 00:01:58,769
+goal that they might have, and any dietary restrictions
+
+44
+00:01:58,930 --> 00:02:01,552
+they might have. So you can imagine
+
+45
+00:02:01,653 --> 00:02:04,277
+that we are going to take in some kind of sample input that
+
+46
+00:02:04,316 --> 00:02:06,861
+describes an athlete. Maybe there are height, weight, goal,
+
+47
+00:02:06,980 --> 00:02:10,186
+and dietary restrictions. We're then going to interpolate
+
+48
+00:02:10,286 --> 00:02:12,789
+all those inputs into our prompt. And then
+
+49
+00:02:12,810 --> 00:02:15,312
+we're going to send that off to our model. And hopefully we'll
+
+50
+00:02:15,353 --> 00:02:18,116
+get back some kind of output, like what you see on the right-hand
+
+51
+00:02:18,157 --> 00:02:20,901
+side. This is what we're really going for. This is our ideal
+
+52
+00:02:20,941 --> 00:02:23,506
+output. In the first version of our prompt, we're
+
+53
+00:02:23,526 --> 00:02:26,132
+going to get some output that looks nothing like what you
+
+54
+00:02:26,171 --> 00:02:28,697
+see here on the right-hand side, but through a variety of different
+
+55
+00:02:28,736 --> 00:02:31,301
+prompt-entering techniques, we're going to eventually refine the prompt
+
+56
+00:02:31,582 --> 00:02:34,168
+and eventually hopefully get something that looks almost exactly
+
+57
+00:02:34,209 --> 00:02:36,766
+like this. All right, so now that
+
+58
+00:02:36,787 --> 00:02:39,330
+we understand our goal, let's open up that
+
+59
+00:02:39,371 --> 00:02:42,155
+new notebook. So remember, 001 prompting. I
+
+60
+00:02:42,194 --> 00:02:44,698
+can give you a very quick tour of it because there are a couple of
+
+61
+00:02:44,717 --> 00:02:47,222
+things have changed compared to the last module. And just make
+
+62
+00:02:47,241 --> 00:02:49,866
+sure everything inside there is super clear. We'll then
+
+63
+00:02:49,906 --> 00:02:52,468
+use the notebook to generate our initial data set.
+
+64
+00:02:54,072 --> 00:02:56,716
+All right, so I've opened up that notebook. Right away, you'll
+
+65
+00:02:56,756 --> 00:02:59,419
+notice there are a couple of collapsed cells at the top. So
+
+66
+00:02:59,460 --> 00:03:02,364
+this is a lot of different setup code. Just make sure you execute
+
+67
+00:03:02,383 --> 00:03:04,927
+those cells at least one time. So I can do so right
+
+68
+00:03:04,967 --> 00:03:07,550
+away. Next up, you'll see
+
+69
+00:03:07,570 --> 00:03:10,556
+that I'm creating an instance of something called a prompt evaluator.
+
+70
+00:03:11,176 --> 00:03:13,800
+Prompt evaluator is a class I created that wraps
+
+71
+00:03:13,919 --> 00:03:16,704
+up all the data set generation, all the model grading,
+
+72
+00:03:17,064 --> 00:03:19,587
+just about everything is wrapped up inside of this class.
+
+73
+00:03:20,349 --> 00:03:23,112
+The class takes one argument, max concurrent
+
+74
+00:03:23,173 --> 00:03:26,117
+tasks. So this class supports concurrency.
+
+75
+00:03:26,298 --> 00:03:29,021
+We can make multiple API calls at the same time.
+
+76
+00:03:29,663 --> 00:03:32,347
+The upside to this is that it's going to dramatically speed up our
+
+77
+00:03:32,426 --> 00:03:35,070
+eVal process and the data set generation process as
+
+78
+00:03:35,131 --> 00:03:37,974
+well. But I do need you to be aware that
+
+79
+00:03:38,055 --> 00:03:40,618
+depending upon your service quota, you
+
+80
+00:03:40,938 --> 00:03:43,723
+may or may not very quickly start to run into some rate
+
+81
+00:03:43,802 --> 00:03:46,326
+limit errors. So if you see any rate limit
+
+82
+00:03:46,387 --> 00:03:48,949
+errors at all, as you go through this module, I would highly
+
+83
+00:03:49,010 --> 00:03:51,533
+encourage you to change this value right here all the way
+
+84
+00:03:51,574 --> 00:03:54,237
+down to the default of one. which means no
+
+85
+00:03:54,277 --> 00:03:56,921
+concurrency at all. For me personally, I
+
+86
+00:03:56,961 --> 00:03:59,566
+have super high rate limits. So I'm going to dial
+
+87
+00:03:59,586 --> 00:04:02,510
+this all the way up to a concurrency of 50. Chances
+
+88
+00:04:02,610 --> 00:04:05,534
+are you are not going to be able to use 50. So don't
+
+89
+00:04:05,616 --> 00:04:08,118
+try 50. I would really recommend maybe starting off at three.
+
+90
+00:04:08,620 --> 00:04:11,243
+And then if you see any rate limit errors, start to go down to two
+
+91
+00:04:11,283 --> 00:04:13,867
+or one. Again, I'm going to use 50
+
+92
+00:04:14,088 --> 00:04:16,773
+just so you can see some immediate feedback on my screen as
+
+93
+00:04:16,833 --> 00:04:20,137
+I run all these different steps. I'm
+
+94
+00:04:20,158 --> 00:04:22,822
+going to make sure I run that cell. And then let's
+
+95
+00:04:22,862 --> 00:04:25,846
+get started on generating our actual data set. So
+
+96
+00:04:25,886 --> 00:04:28,509
+to generate the data set, I've added this new generate data set
+
+97
+00:04:28,569 --> 00:04:31,093
+method for us. To use this method, we're going to
+
+98
+00:04:31,153 --> 00:04:33,697
+describe the overall purpose of our prompt.
+
+99
+00:04:33,838 --> 00:04:36,461
+So kind of what our prompt is supposed to do. For
+
+100
+00:04:36,502 --> 00:04:39,125
+you and I, we're trying to work on a prompt that is going to
+
+101
+00:04:39,144 --> 00:04:42,149
+write a compact, concise,
+
+102
+00:04:42,990 --> 00:04:45,855
+one day meal plan for
+
+103
+00:04:45,975 --> 00:04:49,526
+a single athlete. And
+
+104
+00:04:49,567 --> 00:04:52,411
+then inside of this prompt input spec, we're gonna have a dictionary
+
+105
+00:04:52,511 --> 00:04:55,033
+that's gonna list out all the different inputs that our
+
+106
+00:04:55,113 --> 00:04:57,656
+prompt requires. As we saw just a moment ago,
+
+107
+00:04:58,096 --> 00:05:00,819
+our prompt is gonna require a height, a weight, a
+
+108
+00:05:00,880 --> 00:05:03,444
+goal, and some dietary restrictions. So
+
+109
+00:05:03,483 --> 00:05:06,086
+these are some extra properties that are gonna be generated
+
+110
+00:05:06,127 --> 00:05:09,250
+as a part of the data set. And eventually we're gonna take them, test
+
+111
+00:05:09,269 --> 00:05:12,074
+case by test case, and interpolate them into our prompt.
+
+112
+00:05:12,774 --> 00:05:16,168
+So I'm gonna fill out all four of these different properties. My
+
+113
+00:05:16,228 --> 00:05:19,350
+height is going to be the height in CM
+
+114
+00:05:19,932 --> 00:05:22,634
+and just be clear I'll put in athlete's height.
+
+115
+00:05:24,617 --> 00:05:27,119
+And I'm going to duplicate that because it's going to be just about the same. We're going to do
+
+116
+00:05:27,139 --> 00:05:31,463
+our weight in kilograms. My
+
+117
+00:05:31,483 --> 00:05:34,387
+goal is going to be the goal of the athlete
+
+118
+00:05:36,668 --> 00:05:39,391
+and my restrictions will
+
+119
+00:05:39,432 --> 00:05:43,115
+be a dietary restrictions
+
+120
+00:05:43,315 --> 00:05:47,617
+of the athlete. And
+
+121
+00:05:47,637 --> 00:05:50,384
+the last input for you to be aware of is number of test cases
+
+122
+00:05:50,423 --> 00:05:53,028
+to generate. I would really recommend that you just leave
+
+123
+00:05:53,069 --> 00:05:56,096
+this at three because it's going to allow you to get through this module
+
+124
+00:05:56,576 --> 00:05:59,221
+way faster because the eVals are going to run much more
+
+125
+00:05:59,341 --> 00:06:01,846
+quickly. Just remember, as I mentioned many
+
+126
+00:06:01,887 --> 00:06:04,512
+times whenever we do an eVal in reality, we want to have
+
+127
+00:06:04,533 --> 00:06:07,137
+a really solid, really large number of test
+
+128
+00:06:07,177 --> 00:06:09,985
+cases. So I'm going to dial mine personally
+
+129
+00:06:10,024 --> 00:06:12,752
+way up. I do not recommend you do this. I recommend
+
+130
+00:06:12,791 --> 00:06:15,377
+you leave it at like two or three, just
+
+131
+00:06:15,398 --> 00:06:17,944
+to make sure all your evals run very quickly. But
+
+132
+00:06:17,985 --> 00:06:21,673
+again, I'm going to dial mine all the way up to 50. Once
+
+133
+00:06:21,713 --> 00:06:24,560
+I put this all together, I'm going to run the cell and that's going to generate
+
+134
+00:06:24,661 --> 00:06:27,326
+my data set. Once I have generated
+
+135
+00:06:27,367 --> 00:06:30,350
+my data set, I can open up the data set.json
+
+136
+00:06:30,389 --> 00:06:32,994
+file, which should be created in the same directory. And we're
+
+137
+00:06:33,014 --> 00:06:35,817
+going to see all these different individual data sets have been generated.
+
+138
+00:06:36,077 --> 00:06:38,740
+So they have a pretty similar structure to what we were doing on
+
+139
+00:06:38,821 --> 00:06:41,964
+our previous module when we were talking about prompt eVals. I'm
+
+140
+00:06:42,004 --> 00:06:44,648
+going to go back over to my notebook and then scroll down
+
+141
+00:06:44,668 --> 00:06:47,531
+a little bit to the run prompt function.
+
+142
+00:06:47,512 --> 00:06:50,254
+This is where we are going to write out our prompt and then eventually
+
+143
+00:06:50,314 --> 00:06:52,877
+improve it over time. This function gets called
+
+144
+00:06:52,918 --> 00:06:56,000
+one time for every test case that you generated. Whenever
+
+145
+00:06:56,040 --> 00:06:58,603
+this function is called, it's going to receive your test cases
+
+146
+00:06:58,644 --> 00:07:01,627
+prompt inputs as its only argument. So
+
+147
+00:07:01,706 --> 00:07:04,790
+in other words, prompt inputs right there is going to be that
+
+148
+00:07:04,850 --> 00:07:07,834
+dictionary. And then that function is going to be called again, and
+
+149
+00:07:07,874 --> 00:07:10,396
+it will be that dictionary, and then again, and it will
+
+150
+00:07:10,416 --> 00:07:13,019
+be that dictionary and so on. So we're going to
+
+151
+00:07:13,060 --> 00:07:15,721
+take this dictionary and we're going to interpolate
+
+152
+00:07:15,762 --> 00:07:18,425
+those inputs into this prompt that we're going to write out right
+
+153
+00:07:18,464 --> 00:07:21,307
+here. Let's immediately write out a first
+
+154
+00:07:21,447 --> 00:07:24,050
+version of our prompt. And it's going to be very simple,
+
+155
+00:07:24,250 --> 00:07:27,012
+very naive. We're going to get a very bad eval score,
+
+156
+00:07:27,353 --> 00:07:29,855
+but it will at least get us started. So I'm going
+
+157
+00:07:29,894 --> 00:07:32,458
+to write in my initial starting frontier and I'm going
+
+158
+00:07:32,497 --> 00:07:35,160
+to use a very bad prompt. I'll say, what
+
+159
+00:07:35,240 --> 00:07:37,762
+should this person eat? And
+
+160
+00:07:37,802 --> 00:07:41,187
+then I'm going to list out their height. their
+
+161
+00:07:41,226 --> 00:07:45,052
+weight, their goal, and
+
+162
+00:07:45,093 --> 00:07:49,298
+dietary restrictions. And
+
+163
+00:07:49,338 --> 00:07:51,901
+then for each of these, I'm going to interpolate in a value from
+
+164
+00:07:51,942 --> 00:07:54,766
+prompt inputs. So the first one will be the height.
+
+165
+00:07:55,387 --> 00:07:58,331
+And I'm going to copy paste that just
+
+166
+00:07:58,391 --> 00:08:01,033
+a save a little bit of time and update the keys on each
+
+167
+00:08:01,175 --> 00:08:03,718
+one. So make sure you have first height and then we
+
+168
+00:08:03,778 --> 00:08:07,663
+want the weight and then our goal and
+
+169
+00:08:07,704 --> 00:08:11,547
+then restrictions. All
+
+170
+00:08:11,567 --> 00:08:14,072
+right, once we have our starter prompt in here, I'm
+
+171
+00:08:14,091 --> 00:08:16,656
+going to run that cell. And then let's do
+
+172
+00:08:16,675 --> 00:08:19,221
+our eVal. So we can run our eVal down here
+
+173
+00:08:19,321 --> 00:08:21,925
+at the very bottom. Now, before we run our eVal,
+
+174
+00:08:22,125 --> 00:08:25,011
+I want you to know that this function that's going to actually kick off the evaluation
+
+175
+00:08:25,071 --> 00:08:27,795
+process, it takes in one additional keyword argument
+
+176
+00:08:27,815 --> 00:08:31,903
+that I'm not showing here. It's called extra criteria.
+
+177
+00:08:31,882 --> 00:08:34,865
+It's going to be a string. This string is going to be used during the model
+
+178
+00:08:34,926 --> 00:08:37,528
+grading process. This extra criteria thing
+
+179
+00:08:37,567 --> 00:08:40,149
+just allows you and I as developers to put in some
+
+180
+00:08:40,350 --> 00:08:43,113
+extra criteria that the model should consider whenever
+
+181
+00:08:43,153 --> 00:08:46,195
+it's doing some grading. So I'm going to say specifically
+
+182
+00:08:46,336 --> 00:08:50,379
+to make sure that the output should
+
+183
+00:08:50,418 --> 00:08:54,101
+include a daily
+
+184
+00:08:54,363 --> 00:08:57,024
+caloric total, a
+
+185
+00:08:57,304 --> 00:08:59,927
+macro nutrient
+
+186
+00:08:59,966 --> 00:09:02,573
+breakdown. and meals with
+
+187
+00:09:02,813 --> 00:09:05,620
+exact foods, portions, and timing.
+
+188
+00:09:06,964 --> 00:09:09,750
+Again, this is just going to add in a little bit of extra
+
+189
+00:09:09,870 --> 00:09:13,720
+validation or a little bit of extra grading criteria. All
+
+190
+00:09:13,740 --> 00:09:16,346
+right, so now let's run our evaluation for the
+
+191
+00:09:16,446 --> 00:09:19,052
+first version of our prompt and see how we're doing.
+
+192
+00:09:21,817 --> 00:09:24,660
+All right, we get a absolutely terrible
+
+193
+00:09:24,701 --> 00:09:27,625
+score. I get a 2.32. Now,
+
+194
+00:09:27,904 --> 00:09:30,427
+just you know, you are probably going to end up getting a much
+
+195
+00:09:30,488 --> 00:09:33,032
+better score than I get. The reason I have a
+
+196
+00:09:33,072 --> 00:09:35,715
+very bad score here is that I'm using a model
+
+197
+00:09:35,735 --> 00:09:38,278
+since that is not super smart. So
+
+198
+00:09:38,318 --> 00:09:40,961
+it's going to tend to give me really bad output unless
+
+199
+00:09:41,081 --> 00:09:43,645
+I'm very specific in how I prompt it. I
+
+200
+00:09:43,706 --> 00:09:46,929
+am using this very bad model just so you can see
+
+201
+00:09:46,909 --> 00:09:49,475
+the increase in score over time as
+
+202
+00:09:49,514 --> 00:09:52,038
+we go throughout this module and add in all these different
+
+203
+00:09:52,058 --> 00:09:54,683
+prompt engineering techniques. So again, you
+
+204
+00:09:54,744 --> 00:09:57,990
+are probably going to get a better score. That's totally fine. Now,
+
+205
+00:09:58,029 --> 00:10:00,594
+before we move on, there's one last thing I want to mention really
+
+206
+00:10:00,634 --> 00:10:03,500
+quickly. Whenever you run any valuation, a
+
+207
+00:10:03,620 --> 00:10:06,245
+file will be created in the same directory as your notebook
+
+208
+00:10:06,424 --> 00:10:09,090
+called output.html. If you
+
+209
+00:10:09,149 --> 00:10:11,673
+open up that file inside of your browser with a simple
+
+210
+00:10:11,874 --> 00:10:14,798
+drag and drop, you're going to see a really nicely formatted
+
+211
+00:10:14,837 --> 00:10:17,402
+report that gives you output on every single test case that
+
+212
+00:10:17,422 --> 00:10:20,366
+was executed along with the score, the reasoning, solution
+
+213
+00:10:20,386 --> 00:10:22,931
+criteria, and so on. And you can also see the actual
+
+214
+00:10:23,051 --> 00:10:25,955
+output too. So I'm going to use this little dashboard
+
+215
+00:10:26,075 --> 00:10:28,919
+quite a bit in order to take a look at the output of the Eval
+
+216
+00:10:29,039 --> 00:10:32,424
+and understand how I actually need to improve my prompt.
+
+217
+00:10:32,894 --> 00:10:35,498
+All right, I apologize for the long video here, but now
+
+218
+00:10:35,538 --> 00:10:38,042
+hopefully you have an idea of some of the setup
+
+219
+00:10:38,142 --> 00:10:40,725
+that we're doing inside of this module. So now all we really
+
+220
+00:10:40,745 --> 00:10:43,309
+have to do, as you can see, we have really bad score
+
+221
+00:10:43,330 --> 00:10:46,173
+right now. All we have to do is start to improve our prompt. So
+
+222
+00:10:46,193 --> 00:10:48,977
+let's start to take a look at our first prompt engineering technique
+
+223
+00:10:49,158 --> 00:10:50,159
+in the next video.

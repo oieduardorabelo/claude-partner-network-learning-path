@@ -1,0 +1,867 @@
+1
+00:00:00,031 --> 00:00:02,555
+The next advanced capability of Claude that we are going to
+
+2
+00:00:02,595 --> 00:00:05,399
+investigate is Claude's vision capabilities. Whenever
+
+3
+00:00:05,418 --> 00:00:07,923
+we send a user message off to Claude, we can optionally include
+
+4
+00:00:07,963 --> 00:00:10,647
+images inside of the message. We can then ask Claude
+
+5
+00:00:10,666 --> 00:00:13,230
+to do just about anything you can possibly imagine with these images.
+
+6
+00:00:13,711 --> 00:00:16,376
+So we could ask Claude to tell us what is contained inside them. We
+
+7
+00:00:16,396 --> 00:00:18,899
+could ask Claude to compare different images. We can ask Claude
+
+8
+00:00:18,940 --> 00:00:21,484
+to count different objects. Really, there's a lot of
+
+9
+00:00:21,524 --> 00:00:24,187
+different possibilities here. The first thing I want you to understand
+
+10
+00:00:24,207 --> 00:00:27,472
+around image handling is some of the different restrictions or requirements.
+
+11
+00:00:27,452 --> 00:00:29,995
+We can send up to 100 images across all
+
+12
+00:00:30,036 --> 00:00:32,597
+the messages inside of a single request. There
+
+13
+00:00:32,637 --> 00:00:35,301
+are some limitations around the size of each image and
+
+14
+00:00:35,320 --> 00:00:37,844
+the height and width as well. And
+
+15
+00:00:37,904 --> 00:00:40,405
+finally, you need to understand that whenever you send an image off to
+
+16
+00:00:40,466 --> 00:00:43,069
+Claude, that is going to count for some number of tokens
+
+17
+00:00:43,249 --> 00:00:45,771
+that you are going to be charged for. There is an equation you
+
+18
+00:00:45,792 --> 00:00:48,393
+can use to roughly calculate how many tokens you'll be charged for
+
+19
+00:00:48,433 --> 00:00:51,957
+based upon the height and the width of the image in pixels.
+
+20
+00:00:51,938 --> 00:00:54,524
+To send an image off to Claude, we are going to include yet
+
+21
+00:00:54,665 --> 00:00:57,173
+another type of block inside of a user
+
+22
+00:00:57,213 --> 00:01:00,021
+message. This is an image block. We can attach
+
+23
+00:01:00,180 --> 00:01:02,929
+multiple different image blocks inside of one single user
+
+24
+00:01:02,948 --> 00:01:05,555
+message. Each image block is going to hold a reference
+
+25
+00:01:05,596 --> 00:01:08,141
+to a single image. Inside this image block, we
+
+26
+00:01:08,162 --> 00:01:10,685
+can attach either the raw image data, which
+
+27
+00:01:10,784 --> 00:01:13,629
+is what I showed in this diagram over here on the right-hand side, or
+
+28
+00:01:13,668 --> 00:01:16,373
+alternatively, we can provide a URL to an image
+
+29
+00:01:16,433 --> 00:01:18,975
+that is hosted somewhere online. So now that we understand
+
+30
+00:01:18,995 --> 00:01:21,539
+some of the technical limitations here and how we send
+
+31
+00:01:21,558 --> 00:01:24,183
+the image off, there's something really important that I want
+
+32
+00:01:24,203 --> 00:01:26,927
+to address right away. Whenever an engineer
+
+33
+00:01:27,027 --> 00:01:29,650
+starts making use of images with Claude, well, I
+
+34
+00:01:29,710 --> 00:01:32,215
+notice very often they start using prompts that are very
+
+35
+00:01:32,275 --> 00:01:35,019
+simple, even kind of like the prompt I've gotten this example
+
+36
+00:01:35,060 --> 00:01:37,603
+right here. The number one way to get good
+
+37
+00:01:37,664 --> 00:01:40,388
+results out of Claude when you are making use of images is
+
+38
+00:01:40,409 --> 00:01:43,132
+to continue to have a strong focus on prompting
+
+39
+00:01:43,173 --> 00:01:45,777
+techniques. So if you just throw an image off
+
+40
+00:01:45,796 --> 00:01:48,740
+to Claude and then put in a very simple prompt, very
+
+41
+00:01:48,820 --> 00:01:51,765
+often you are not going to get back a good result. For
+
+42
+00:01:51,825 --> 00:01:54,468
+example, consider the conversation on the right-hand side. I
+
+43
+00:01:54,509 --> 00:01:57,272
+put in an image with 12 marbles. I actually
+
+44
+00:01:57,332 --> 00:01:59,996
+tested this by the way and I asked it very simply how
+
+45
+00:02:00,037 --> 00:02:02,599
+many marbles are in this image. And sure enough, I got back
+
+46
+00:02:02,659 --> 00:02:05,224
+an incorrect count of 13. We can
+
+47
+00:02:05,263 --> 00:02:07,986
+dramatically increase Claude's accuracy when
+
+48
+00:02:08,046 --> 00:02:10,569
+working with images by using the same kind of
+
+49
+00:02:10,669 --> 00:02:13,353
+prompting techniques that we've already learned earlier on inside
+
+50
+00:02:13,372 --> 00:02:16,056
+this course. So techniques like providing
+
+51
+00:02:16,116 --> 00:02:18,799
+guidelines, providing analysis steps, or by using
+
+52
+00:02:18,838 --> 00:02:21,701
+one shot or even multi-shot examples. So
+
+53
+00:02:21,723 --> 00:02:24,305
+let me show you two ways in which we could very easily enhance
+
+54
+00:02:24,346 --> 00:02:27,109
+this prompt and actually get back the correct result. And
+
+55
+00:02:27,149 --> 00:02:30,092
+again, I actually tested this out and made sure that these examples,
+
+56
+00:02:30,231 --> 00:02:33,157
+at least for me, worked as expected. So
+
+57
+00:02:33,197 --> 00:02:36,043
+the first thing we might do is provide a series of steps
+
+58
+00:02:36,282 --> 00:02:39,288
+for Claude to go through in analyzing the image. Now,
+
+59
+00:02:39,669 --> 00:02:42,455
+of course, this is only really going to work if we kind of already
+
+60
+00:02:42,514 --> 00:02:45,320
+understand the content of the image that we're feeding into Claude.
+
+61
+00:02:45,921 --> 00:02:48,467
+So in this scenario, I might ask Claude to first take
+
+62
+00:02:48,507 --> 00:02:51,072
+a look and try to identify each individual marble
+
+63
+00:02:51,192 --> 00:02:53,856
+and just count each of them one by one. and then ask
+
+64
+00:02:53,917 --> 00:02:56,618
+it to recount a second time to verify
+
+65
+00:02:56,658 --> 00:02:59,381
+the initial count and provide it a different mechanism
+
+66
+00:02:59,441 --> 00:03:01,963
+or different strategy for counting the number of marbles.
+
+67
+00:03:02,584 --> 00:03:05,426
+And then finally at the bottom, I ask, okay, now let's kind of compare
+
+68
+00:03:05,467 --> 00:03:08,269
+those two different counts and figure out what the correct
+
+69
+00:03:08,389 --> 00:03:11,491
+answer is. So by providing a more sophisticated
+
+70
+00:03:11,551 --> 00:03:14,133
+prompt, I was able to get results with a correct count of
+
+71
+00:03:14,153 --> 00:03:16,975
+12 marbles. Another technique
+
+72
+00:03:16,996 --> 00:03:19,679
+we might use here is one shot or multi-shot
+
+73
+00:03:19,758 --> 00:03:22,281
+prompting. So here's how that would work.
+
+74
+00:03:22,717 --> 00:03:25,240
+Inside of my user message, I can alternate
+
+75
+00:03:25,500 --> 00:03:28,122
+the presence of an image part and a text part.
+
+76
+00:03:28,742 --> 00:03:31,605
+So in this scenario, I have an image part up here, a
+
+77
+00:03:31,665 --> 00:03:34,389
+text part underneath it, and then another image, and
+
+78
+00:03:34,408 --> 00:03:36,911
+then a text part. In the initial pair,
+
+79
+00:03:37,231 --> 00:03:39,794
+I provide an image with 11 marbles, and then say very
+
+80
+00:03:39,834 --> 00:03:42,497
+plainly, the image above has 11 marbles inside
+
+81
+00:03:42,516 --> 00:03:45,280
+of it. Providing an example like this can easily improve
+
+82
+00:03:45,340 --> 00:03:48,022
+Claude's accuracy when it goes to tackle your image
+
+83
+00:03:48,062 --> 00:03:50,748
+later on. As usual, I would like to test
+
+84
+00:03:50,808 --> 00:03:53,677
+out this feature in Claude inside of a Jupyter notebook. But
+
+85
+00:03:53,717 --> 00:03:56,606
+this time around, we're going to have a little bit more complicated example.
+
+86
+00:03:56,747 --> 00:03:59,336
+And I want you to understand the scenario that we're going to walk
+
+87
+00:03:59,376 --> 00:04:01,965
+through here inside of our notebook ahead of time by showing
+
+88
+00:04:02,004 --> 00:04:04,706
+you a quick diagram. All right, so here is a
+
+89
+00:04:05,127 --> 00:04:07,792
+sample use case of how we might use Claude's
+
+90
+00:04:08,193 --> 00:04:10,918
+image support capability. So in case you're not aware,
+
+91
+00:04:11,258 --> 00:04:13,983
+in many parts of the United States, we have really
+
+92
+00:04:14,103 --> 00:04:17,028
+bad wildfire problems, where wildfire
+
+93
+00:04:17,069 --> 00:04:19,713
+will begin sweep through an area and burn down a
+
+94
+00:04:19,793 --> 00:04:22,358
+ton of houses. And because this is a very
+
+95
+00:04:22,418 --> 00:04:25,062
+common risk, a lot of people want fire insurance to
+
+96
+00:04:25,122 --> 00:04:27,766
+ensure their home in case it gets burned down. But
+
+97
+00:04:27,786 --> 00:04:30,754
+these insurers are very much aware that a house
+
+98
+00:04:30,793 --> 00:04:33,480
+can absolutely be burned down tomorrow or next year
+
+99
+00:04:33,500 --> 00:04:36,105
+or very shortly. So these insurers
+
+100
+00:04:36,185 --> 00:04:38,771
+will very often require a homeowner who wants
+
+101
+00:04:38,810 --> 00:04:41,415
+to ensure their home to trim trees or even
+
+102
+00:04:41,516 --> 00:04:44,141
+cut trees down entirely around their house.
+
+103
+00:04:44,122 --> 00:04:46,625
+Now the insurer needs to actually verify and make sure
+
+104
+00:04:46,665 --> 00:04:49,187
+that the homeowner is taking care of the trees appropriately.
+
+105
+00:04:49,586 --> 00:04:52,329
+But to verify that, they might have to send out a person to inspect
+
+106
+00:04:52,389 --> 00:04:55,192
+each property and probably do that inspection maybe once
+
+107
+00:04:55,273 --> 00:04:58,016
+every year or once every two years. That would become expensive
+
+108
+00:04:58,036 --> 00:05:00,577
+really, really quickly. So one way that we can automate
+
+109
+00:05:00,617 --> 00:05:03,221
+this process is by getting high resolution up
+
+110
+00:05:03,281 --> 00:05:05,903
+to date satellite imagery and then feed it into
+
+111
+00:05:05,963 --> 00:05:09,166
+Claude and ask Claude for a fire risk assessment.
+
+112
+00:05:09,146 --> 00:05:11,771
+We might ask Claude in particular to try to detect
+
+113
+00:05:12,132 --> 00:05:14,857
+the main residence on the property. So in other words, inside
+
+114
+00:05:14,896 --> 00:05:17,601
+of a satellite image of a property, find the main
+
+115
+00:05:17,682 --> 00:05:20,206
+home that is presumably insured. And then take
+
+116
+00:05:20,226 --> 00:05:22,791
+a look for maybe tree branches that are overhanging
+
+117
+00:05:22,831 --> 00:05:25,857
+the residence, which is a very common risk of fire.
+
+118
+00:05:25,836 --> 00:05:28,362
+Maybe try to gauge how difficult it is for
+
+119
+00:05:28,521 --> 00:05:31,086
+fire services to actually access the residence.
+
+120
+00:05:31,408 --> 00:05:33,932
+So make sure in other words, there's kind of a clear path to get to the
+
+121
+00:05:33,992 --> 00:05:36,658
+home and also take a look at the trees around
+
+122
+00:05:36,697 --> 00:05:39,362
+the home and make sure that they are not too closely or
+
+123
+00:05:39,442 --> 00:05:41,987
+tightly packed, which in its own right could be a
+
+124
+00:05:42,067 --> 00:05:44,673
+fire risk as well. All right, so let's go
+
+125
+00:05:44,713 --> 00:05:48,387
+over to notebook and see how we could implement this. I'm
+
+126
+00:05:48,427 --> 00:05:51,011
+inside of a new notebook called 002 images.
+
+127
+00:05:51,512 --> 00:05:54,036
+Inside of here, I have already put together a starter prompt for
+
+128
+00:05:54,115 --> 00:05:56,680
+us. Now notice that this prompt is highly
+
+129
+00:05:56,740 --> 00:05:59,324
+detailed and walks Claude through different points
+
+130
+00:05:59,403 --> 00:06:02,488
+or different ideas that I want analyzed inside the image. I
+
+131
+00:06:02,588 --> 00:06:05,634
+could have written out a very simple prompt of something like provide
+
+132
+00:06:05,653 --> 00:06:08,257
+a fire score based upon the satellite image of this
+
+133
+00:06:08,317 --> 00:06:11,163
+property and just left it there. I can almost guarantee
+
+134
+00:06:11,182 --> 00:06:13,867
+you I would not get a good result. So instead,
+
+135
+00:06:14,007 --> 00:06:16,610
+I applied some of the different prompt engineering techniques
+
+136
+00:06:16,651 --> 00:06:19,233
+we've learned about previously, and I provided a series
+
+137
+00:06:19,254 --> 00:06:22,458
+of different analysis steps for Claude to go through. Step
+
+138
+00:06:22,478 --> 00:06:25,302
+1. First, find the actual primary residence
+
+139
+00:06:25,401 --> 00:06:28,305
+inside of the satellite photo. Step 2. Take
+
+140
+00:06:28,365 --> 00:06:30,870
+a look at the tree density. Then take a look
+
+141
+00:06:30,970 --> 00:06:33,774
+at the ability for fire services to actually access
+
+142
+00:06:33,814 --> 00:06:36,461
+the property. Take a look at how many
+
+143
+00:06:36,521 --> 00:06:39,084
+trees or specifically branches are overhanging the
+
+144
+00:06:39,144 --> 00:06:41,687
+roof, which is a very common fire risk,
+
+145
+00:06:41,708 --> 00:06:44,211
+and then finally assign a fire risk rating based
+
+146
+00:06:44,252 --> 00:06:47,295
+upon all these different qualities. And I provide some criteria
+
+147
+00:06:47,636 --> 00:06:50,199
+on helping it decide whether it should be a 1, 2, 3,
+
+148
+00:06:50,238 --> 00:06:53,122
+or 4. And then finally at the very bottom, write
+
+149
+00:06:53,142 --> 00:06:56,086
+a one-cent summary for each with a final score.
+
+150
+00:06:57,146 --> 00:06:59,851
+So that's our prompt. I'm going to make sure I run
+
+151
+00:06:59,891 --> 00:07:02,615
+that cell. And then let's go down here to the bottom. And
+
+152
+00:07:02,637 --> 00:07:05,180
+we're going to write out some code to read in a sample
+
+153
+00:07:05,261 --> 00:07:07,846
+image and feed it into Claude with that prompt and
+
+154
+00:07:07,865 --> 00:07:10,629
+see what kind of result we get. One other quick item. Attach
+
+155
+00:07:10,670 --> 00:07:14,317
+to this lecture, you will find a zip archive called images.zip.
+
+156
+00:07:14,336 --> 00:07:16,980
+Make sure you extract that archive and place the images directory
+
+157
+00:07:17,101 --> 00:07:19,925
+into the same folder as your notebook. This folder contains
+
+158
+00:07:19,966 --> 00:07:22,649
+some different satellite imagery of different houses with some number
+
+159
+00:07:22,709 --> 00:07:25,333
+of trees around it. So for example, Image 1 has a house
+
+160
+00:07:25,432 --> 00:07:28,817
+with definitely a good amount of tree overhang. Image
+
+161
+00:07:28,838 --> 00:07:31,600
+2 has definitely a lot less trees,
+
+162
+00:07:31,680 --> 00:07:34,685
+but there's still a little bit close tree right here to the property. And
+
+163
+00:07:34,704 --> 00:07:37,208
+you can go through the rest and just verify that, yeah, we've definitely
+
+164
+00:07:37,228 --> 00:07:39,732
+got some satellite imagery here. So our goal is going to
+
+165
+00:07:39,752 --> 00:07:42,435
+be to send these different images into Claude and get a fire
+
+166
+00:07:42,454 --> 00:07:44,997
+score rating for each. Back inside my notebook, I'm
+
+167
+00:07:45,017 --> 00:07:47,540
+going to first begin by opening up an image file and converting
+
+168
+00:07:47,581 --> 00:07:50,264
+its contents into base 64. So I'll
+
+169
+00:07:50,285 --> 00:07:52,947
+do a width open. In the images directory,
+
+170
+00:07:53,067 --> 00:07:56,913
+I'm going to look for image seven specifically. And
+
+171
+00:07:56,932 --> 00:07:59,755
+I'm using that image in particular because it is absolutely
+
+172
+00:07:59,795 --> 00:08:02,480
+surrounded by trees. So here's prop
+
+173
+00:08:02,500 --> 00:08:05,023
+seven dot PNG. As you can see, definitely a lot of
+
+174
+00:08:05,523 --> 00:08:08,918
+issues with fire here. I'm
+
+175
+00:08:08,937 --> 00:08:11,983
+going to get the image files as base 64,
+
+176
+00:08:13,586 --> 00:08:16,512
+standard underscore B64 and
+
+177
+00:08:16,612 --> 00:08:19,175
+code. I'm going to pass an F dot
+
+178
+00:08:19,255 --> 00:08:22,081
+read and I'll decode into
+
+179
+00:08:22,120 --> 00:08:24,646
+utf-8. I'm then going to
+
+180
+00:08:24,745 --> 00:08:27,630
+add in an empty list of messages. I'll
+
+181
+00:08:27,711 --> 00:08:30,315
+add a user message into it. And
+
+182
+00:08:30,336 --> 00:08:33,139
+this message that I am adding in is going to have two separate blocks.
+
+183
+00:08:33,700 --> 00:08:36,523
+It is first going to have an image block, exactly with the structure
+
+184
+00:08:36,682 --> 00:08:39,285
+that you see right here, and it will have a text block.
+
+185
+00:08:39,446 --> 00:08:42,009
+And a text block is going to contain the actual directions that
+
+186
+00:08:42,028 --> 00:08:44,552
+I want to feed into Claude. So I'll
+
+187
+00:08:44,611 --> 00:08:47,495
+add in first a dictionary to represent the image block.
+
+188
+00:08:47,514 --> 00:08:50,999
+So a type of image with
+
+189
+00:08:51,058 --> 00:08:53,621
+a nested dictionary assigned to source that has
+
+190
+00:08:53,721 --> 00:08:56,544
+a type of base 64, a
+
+191
+00:08:56,625 --> 00:08:59,307
+media underscore type of image slash
+
+192
+00:08:59,427 --> 00:09:02,038
+PNG. and data that's going
+
+193
+00:09:02,058 --> 00:09:04,701
+to be the image bytes encoded as base 64.
+
+194
+00:09:06,043 --> 00:09:08,666
+Then after that dictionary, I'll add in my actual prompt.
+
+195
+00:09:09,225 --> 00:09:12,188
+So I'll give this a type of text. And
+
+196
+00:09:12,229 --> 00:09:15,072
+then the prompt that I want to send in, I assign to the prompt
+
+197
+00:09:15,192 --> 00:09:18,254
+variable right there. So
+
+198
+00:09:18,294 --> 00:09:21,979
+I'll do a text of
+
+199
+00:09:22,139 --> 00:09:24,922
+prompt. All right, finally, I'll
+
+200
+00:09:24,942 --> 00:09:28,385
+call chat and pass in my list of messages. I'm
+
+201
+00:09:28,466 --> 00:09:31,229
+going to run this and let's see what we get. Looking
+
+202
+00:09:31,309 --> 00:09:33,874
+at the response, I'm going to scroll down to the very bottom and I should see
+
+203
+00:09:33,913 --> 00:09:36,498
+a fire risk rating. In this case, I got a fire
+
+204
+00:09:36,518 --> 00:09:39,101
+risk of high or a score in particular
+
+205
+00:09:39,162 --> 00:09:41,686
+of three. So I think Claude did a pretty reasonable job
+
+206
+00:09:41,826 --> 00:09:44,630
+of evaluating all the trees around the main property and
+
+207
+00:09:44,711 --> 00:09:47,534
+deciding that, yeah, there's probably going to be an issue here. Before
+
+208
+00:09:47,554 --> 00:09:50,379
+we move on, there is one last thing I want to remind you around images.
+
+209
+00:09:50,961 --> 00:09:53,565
+Getting good results out of Claude when feeding images in
+
+210
+00:09:53,825 --> 00:09:56,830
+all comes down to your prompting technique. Just as we examined
+
+211
+00:09:56,850 --> 00:09:59,414
+a lot different ways of improving your prompt when using
+
+212
+00:09:59,475 --> 00:10:01,980
+plain text, those same techniques apply to the world
+
+213
+00:10:02,100 --> 00:10:04,663
+of images as well. So I would really encourage you
+
+214
+00:10:04,705 --> 00:10:07,349
+to always make sure that you put together a very well-developed and
+
+215
+00:10:07,408 --> 00:10:10,094
+well-evaluated prompt. Because if you rely upon
+
+216
+00:10:10,134 --> 00:10:12,778
+simple prompts like what I'm putting in right here, it's
+
+217
+00:10:12,919 --> 00:10:15,364
+probably not going to work quite as well as you might expect.

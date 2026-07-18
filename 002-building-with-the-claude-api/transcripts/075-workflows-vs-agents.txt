@@ -1,0 +1,167 @@
+1
+00:00:00,031 --> 00:00:02,633
+Let's wrap up by comparing and contrasting some
+
+2
+00:00:02,673 --> 00:00:05,418
+different aspects of workflows and agents. First,
+
+3
+00:00:05,618 --> 00:00:08,262
+recall that workflows are a predefined series of calls
+
+4
+00:00:08,481 --> 00:00:11,185
+to Claude. We often use workflows when we have a good idea
+
+5
+00:00:11,285 --> 00:00:13,888
+of the exact series of steps that are needed to complete
+
+6
+00:00:13,909 --> 00:00:16,672
+a task. With agents, on the other hand, we
+
+7
+00:00:16,693 --> 00:00:19,536
+don't know exactly what task will be provided, so
+
+8
+00:00:19,577 --> 00:00:22,300
+we instead provide a solid set of basic tools
+
+9
+00:00:22,620 --> 00:00:25,283
+and expect Claude to combine these tools together to complete
+
+10
+00:00:25,303 --> 00:00:28,147
+a given task. You might have noticed that a common
+
+11
+00:00:28,187 --> 00:00:30,751
+theme around workflows is that we take a big task
+
+12
+00:00:30,890 --> 00:00:33,715
+and we divide it up into much smaller tasks. Each
+
+13
+00:00:33,734 --> 00:00:36,598
+of these smaller tasks are much more specific in nature, allowing
+
+14
+00:00:36,658 --> 00:00:39,902
+Claude to focus on a single area at a time. This
+
+15
+00:00:40,023 --> 00:00:42,707
+increased focus generally leads to higher accuracy
+
+16
+00:00:42,767 --> 00:00:45,429
+for completing a task compared to agents.
+
+17
+00:00:46,091 --> 00:00:49,094
+Because we know the exact series of steps that a workflow executes,
+
+18
+00:00:49,414 --> 00:00:52,279
+they're also far easier to test and evaluate.
+
+19
+00:00:52,850 --> 00:00:55,412
+With Agents, we aren't constrained to a series of
+
+20
+00:00:55,472 --> 00:00:58,137
+steps etched in stone. Instead, Claude
+
+21
+00:00:58,176 --> 00:01:00,719
+can creatively figure out how to handle a wide variety
+
+22
+00:01:00,740 --> 00:01:03,304
+of challenges. Along with this flexibility, we
+
+23
+00:01:03,344 --> 00:01:06,328
+also get flexibility in the user experience. While
+
+24
+00:01:06,408 --> 00:01:09,210
+workflows expect to receive a very particular set of inputs,
+
+25
+00:01:09,691 --> 00:01:12,295
+Agents can create their own inputs based on queries
+
+26
+00:01:12,376 --> 00:01:15,179
+received from the user, and Agents can also ask user
+
+27
+00:01:15,299 --> 00:01:18,085
+for more input when it's needed. The downside
+
+28
+00:01:18,105 --> 00:01:21,013
+to agents is that they generally have a lower successful
+
+29
+00:01:21,052 --> 00:01:23,718
+task completion rate compared to workflows because
+
+30
+00:01:23,739 --> 00:01:26,344
+we are delegating so much work to Claude. In
+
+31
+00:01:26,385 --> 00:01:29,010
+addition, they're also harder to test and evaluate,
+
+32
+00:01:29,412 --> 00:01:32,097
+since we often don't have a good idea of what series of steps
+
+33
+00:01:32,197 --> 00:01:35,444
+an agent will execute to complete a given task.
+
+34
+00:01:35,424 --> 00:01:38,248
+At the end of the day, agents are really interesting,
+
+35
+00:01:38,509 --> 00:01:41,212
+but remember, your primary goal as an engineer is
+
+36
+00:01:41,272 --> 00:01:44,115
+to solve problems reliably. Users
+
+37
+00:01:44,236 --> 00:01:47,040
+probably don't care that you've made a fancy agent. They
+
+38
+00:01:47,079 --> 00:01:49,602
+really just want a product that's going to work 100% of
+
+39
+00:01:49,643 --> 00:01:52,146
+the time. So with this in mind, the general
+
+40
+00:01:52,186 --> 00:01:55,269
+recommendation is to always focus on implementing workflows
+
+41
+00:01:55,290 --> 00:01:58,013
+where possible and only resort to agents when
+
+42
+00:01:58,033 --> 00:01:59,474
+they are truly required.

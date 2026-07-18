@@ -1,0 +1,283 @@
+1
+00:00:00,031 --> 00:00:02,576
+Our next workflow is going to show us one way of improving this
+
+2
+00:00:02,775 --> 00:00:05,561
+social media marketing tool. So once again, we'll imagine
+
+3
+00:00:05,581 --> 00:00:08,086
+that a user is going to enter in a topic, we're then going
+
+4
+00:00:08,125 --> 00:00:10,650
+to produce some videos somehow, and post them to
+
+5
+00:00:10,670 --> 00:00:13,195
+a user's social media account. Now, there's
+
+6
+00:00:13,215 --> 00:00:16,201
+something I really want you to think about about the script generation
+
+7
+00:00:16,260 --> 00:00:19,065
+process. In other words, the actual tone and language
+
+8
+00:00:19,227 --> 00:00:21,903
+used in these different videos. Given two different
+
+9
+00:00:21,923 --> 00:00:24,769
+topics, such as programming on the left hand side, and
+
+10
+00:00:24,789 --> 00:00:27,315
+maybe surfing on the right hand side, we would really
+
+11
+00:00:27,355 --> 00:00:30,060
+expect to get video scripts that are very, very different
+
+12
+00:00:30,120 --> 00:00:32,786
+in nature. So on the left hand side with programming, we
+
+13
+00:00:32,805 --> 00:00:35,591
+would want to get a lot of information, carefully explain
+
+14
+00:00:35,631 --> 00:00:38,357
+definitions, and probably just overall a video
+
+15
+00:00:38,398 --> 00:00:40,963
+that is meant to be educational in nature. And if
+
+16
+00:00:41,084 --> 00:00:43,668
+user entered in surfing as a topic, we would probably
+
+17
+00:00:43,689 --> 00:00:46,354
+want to get back a very different video script. Probably something
+
+18
+00:00:46,395 --> 00:00:49,021
+that is much less educational in nature and doesn't
+
+19
+00:00:49,060 --> 00:00:51,606
+have a long definition on what surfing is or
+
+20
+00:00:51,627 --> 00:00:54,192
+anything like that. So let me show you a workflow that
+
+21
+00:00:54,212 --> 00:00:56,737
+we could use to make sure that a given topic will
+
+22
+00:00:56,777 --> 00:00:59,404
+result in a video script that fits the nature of that
+
+23
+00:00:59,463 --> 00:01:01,987
+topic really well. First, we would sit
+
+24
+00:01:02,027 --> 00:01:04,650
+down and think about all the different possible genres of
+
+25
+00:01:04,671 --> 00:01:07,555
+videos that users might ask us to create. So
+
+26
+00:01:07,575 --> 00:01:10,117
+we might decide that the topics that users are going
+
+27
+00:01:10,158 --> 00:01:12,941
+to give to us are going to fit into one of six different
+
+28
+00:01:12,960 --> 00:01:16,045
+genres. Entertainment, educational, comedy,
+
+29
+00:01:16,185 --> 00:01:19,048
+and so on. So in our example back over here, programming
+
+30
+00:01:19,188 --> 00:01:22,451
+might be educational and surfing might be entertainment.
+
+31
+00:01:22,432 --> 00:01:24,995
+Then for each of these different genres, we might write out a
+
+32
+00:01:25,055 --> 00:01:27,679
+script generation prompt. So if someone asks for
+
+33
+00:01:27,759 --> 00:01:30,903
+a topic that we categorize as being educational
+
+34
+00:01:30,983 --> 00:01:33,965
+in nature, we would ask Claude to write a script using
+
+35
+00:01:34,186 --> 00:01:36,730
+this prompt right here. And the prompt is asking Claude to make
+
+36
+00:01:36,810 --> 00:01:40,073
+a clear, engaging script that has some interesting
+
+37
+00:01:40,134 --> 00:01:42,736
+examples and interesting questions and so on. If the
+
+38
+00:01:42,757 --> 00:01:45,340
+user gives us a topic of surfing, we might categorize that
+
+39
+00:01:45,441 --> 00:01:48,144
+as being entertainment. So then we would take this prompt
+
+40
+00:01:48,165 --> 00:01:50,769
+right here, put in the topic as surfing and
+
+41
+00:01:50,790 --> 00:01:53,394
+feed the whole prompt into Claude and ask Claude to write
+
+42
+00:01:53,474 --> 00:01:56,180
+a script about surfing that maybe has some trendy
+
+43
+00:01:56,240 --> 00:01:58,865
+language and engaging hooks and so on. So let me show
+
+44
+00:01:58,906 --> 00:02:01,551
+you what this entire flow would look like in practice.
+
+45
+00:02:01,531 --> 00:02:04,436
+We would initially send a request off to Claude that contained
+
+46
+00:02:04,475 --> 00:02:06,980
+just the topic the user had entered, maybe something
+
+47
+00:02:07,021 --> 00:02:09,945
+like Python functions, and ask Claude to categorize
+
+48
+00:02:09,985 --> 00:02:12,550
+this topic into one of our different categories that we just
+
+49
+00:02:12,570 --> 00:02:15,115
+came up with. In this scenario, Python functions
+
+50
+00:02:15,436 --> 00:02:18,882
+might be most closely related to the category of educational.
+
+51
+00:02:18,861 --> 00:02:21,764
+So then we would take this response from Claude and then make a follow
+
+52
+00:02:21,805 --> 00:02:24,366
+up request asking Claude to write a
+
+53
+00:02:24,426 --> 00:02:27,050
+script that has some clear, engaging information
+
+54
+00:02:27,210 --> 00:02:29,973
+about Python functions that has thought provoking
+
+55
+00:02:30,013 --> 00:02:32,594
+examples. And then presumably we would get back some
+
+56
+00:02:32,615 --> 00:02:35,217
+script with those different qualities and a tone
+
+57
+00:02:35,237 --> 00:02:37,840
+appropriate for an educational video. This is
+
+58
+00:02:37,879 --> 00:02:40,423
+an example of a routing workflow. In
+
+59
+00:02:40,483 --> 00:02:43,306
+a routing workflow, we are going to take the user's original input
+
+60
+00:02:43,586 --> 00:02:46,209
+and feed it into a routing step. This routing
+
+61
+00:02:46,248 --> 00:02:48,993
+step will probably be a call to Claude itself, asking
+
+62
+00:02:49,375 --> 00:02:51,919
+Claude to categorize the user input or task in
+
+63
+00:02:51,979 --> 00:02:54,544
+some way. Then, depending upon Claude's answer,
+
+64
+00:02:54,883 --> 00:02:57,549
+we're going to forward the user's input onto some very
+
+65
+00:02:57,609 --> 00:03:00,373
+particular follow up processing pipeline. So maybe
+
+66
+00:03:00,413 --> 00:03:03,057
+this one right here, or this one right here, or this one right here, and so
+
+67
+00:03:03,117 --> 00:03:05,742
+on. But probably only one of these different three.
+
+68
+00:03:05,723 --> 00:03:08,372
+Each of these different routing options might have a different
+
+69
+00:03:08,453 --> 00:03:11,163
+workflow implemented inside of it or a customized prompt
+
+70
+00:03:11,463 --> 00:03:14,114
+or a customized set of tools that are specialized for
+
+71
+00:03:14,174 --> 00:03:17,185
+handling the exact task that the user is asking for.

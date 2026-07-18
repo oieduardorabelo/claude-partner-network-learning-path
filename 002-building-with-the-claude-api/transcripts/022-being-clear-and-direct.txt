@@ -1,0 +1,175 @@
+1
+00:00:00,031 --> 00:00:02,575
+With a starting grade of 2.32, we
+
+2
+00:00:02,615 --> 00:00:05,160
+can definitely only go up. So with that in mind, let's take
+
+3
+00:00:05,179 --> 00:00:07,684
+a look at our first prompt engineering technique that we're going to use
+
+4
+00:00:07,743 --> 00:00:10,810
+to improve our prompt. Alright,
+
+5
+00:00:10,849 --> 00:00:13,454
+so we're going to be discussing the idea of being clear and
+
+6
+00:00:13,554 --> 00:00:16,199
+direct. These two rules are really talking
+
+7
+00:00:16,219 --> 00:00:18,821
+about the very first line of your prompt. The first line
+
+8
+00:00:18,841 --> 00:00:21,524
+of your prompt tends to be the most important. In that first
+
+9
+00:00:21,585 --> 00:00:24,468
+line, you want to use simple and direct language,
+
+10
+00:00:24,487 --> 00:00:27,771
+until Claude, with a kind of action verb, exactly
+
+11
+00:00:27,832 --> 00:00:30,335
+what its task is. So for example, we
+
+12
+00:00:30,375 --> 00:00:33,279
+might want to have a first line of a prompt be something like write
+
+13
+00:00:33,338 --> 00:00:36,061
+three paragraphs about how solar panels work.
+
+14
+00:00:36,042 --> 00:00:38,667
+that tells Claude that it's going to have a job and use to write
+
+15
+00:00:38,686 --> 00:00:41,732
+or generate or create something. It also clarifies
+
+16
+00:00:41,753 --> 00:00:44,417
+a little bit of information about the expected output and
+
+17
+00:00:44,438 --> 00:00:47,082
+exactly what that output should contain. So
+
+18
+00:00:47,122 --> 00:00:49,667
+we're really setting an action and providing a
+
+19
+00:00:49,728 --> 00:00:52,929
+task in that very first line. Another
+
+20
+00:00:52,969 --> 00:00:55,912
+great example would be identify three countries that use geothermal
+
+21
+00:00:55,993 --> 00:00:58,576
+energy and for each include generation stats.
+
+22
+00:00:59,216 --> 00:01:01,780
+Again, we are telling Claude to do something or give it an
+
+23
+00:01:01,899 --> 00:01:04,483
+immediate task and a little bit of information about the
+
+24
+00:01:04,543 --> 00:01:07,144
+expected output. Let's take this idea of
+
+25
+00:01:07,185 --> 00:01:09,808
+being clear and direct in the very first line of our prompt and
+
+26
+00:01:09,828 --> 00:01:12,590
+see if we can't use it to improve the outcomes of our prompt
+
+27
+00:01:12,650 --> 00:01:15,174
+that we're currently working on. Using that rule that
+
+28
+00:01:15,213 --> 00:01:17,757
+we just learned, I might update this line to say something like,
+
+29
+00:01:18,197 --> 00:01:21,000
+generate a one day meal plan,
+
+30
+00:01:21,165 --> 00:01:24,272
+for an athlete that
+
+31
+00:01:24,373 --> 00:01:28,203
+meets their dietary restrictions.
+
+32
+00:01:29,105 --> 00:01:31,611
+So again, I'm being direct by making use of an action
+
+33
+00:01:31,691 --> 00:01:34,378
+verb at the very start, and then in very simple language,
+
+34
+00:01:34,477 --> 00:01:37,926
+I'm providing a direct task for Claude to fulfill.
+
+35
+00:01:38,040 --> 00:01:40,584
+Now let's rerun the cell to get our updated
+
+36
+00:01:40,603 --> 00:01:43,468
+prompt and then rerun the Eval itself. And
+
+37
+00:01:43,528 --> 00:01:46,212
+see if this does anything to improve our score. And I bet as
+
+38
+00:01:46,231 --> 00:01:48,754
+you can guess, yeah, we're probably going to do a little bit
+
+39
+00:01:48,954 --> 00:01:51,618
+better than we did previously. So I think before
+
+40
+00:01:51,778 --> 00:01:54,582
+I had a 2.32, now I'm up to a 3.92.
+
+41
+00:01:54,843 --> 00:01:57,587
+Definitely an improvement, but
+
+42
+00:01:57,626 --> 00:02:00,189
+still not great. So let's move on to the next video
+
+43
+00:02:00,430 --> 00:02:02,974
+and take a look at our next prompt engineering topic in
+
+44
+00:02:02,993 --> 00:02:05,296
+order to improve our prompt a little bit more.

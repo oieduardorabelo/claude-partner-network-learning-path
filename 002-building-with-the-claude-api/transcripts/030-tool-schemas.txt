@@ -1,0 +1,395 @@
+1
+00:00:00,031 --> 00:00:02,596
+Now that we've got our tool function put together, we are going to
+
+2
+00:00:02,636 --> 00:00:05,182
+move on to step two, which is where we are going to write
+
+3
+00:00:05,222 --> 00:00:07,968
+out a JSON schema. We are going to eventually send
+
+4
+00:00:08,007 --> 00:00:10,612
+all this configuration off to Claude. Claude is going to use
+
+5
+00:00:10,653 --> 00:00:13,239
+it to understand the different tool functions that are available and the
+
+6
+00:00:13,259 --> 00:00:15,984
+different arguments that must be provided to these tool functions
+
+7
+00:00:16,024 --> 00:00:18,708
+as well. The first thing I want you to understand here
+
+8
+00:00:18,748 --> 00:00:21,853
+is exactly what JSON schema is all about. So
+
+9
+00:00:21,893 --> 00:00:24,437
+this entire object you see on the right-hand side, this is
+
+10
+00:00:24,516 --> 00:00:27,902
+not technically a JSON schema per se. Instead,
+
+11
+00:00:28,001 --> 00:00:30,524
+at the very top, there is a name and a description. I'll tell
+
+12
+00:00:30,545 --> 00:00:33,048
+you what those are about in just a little bit. Underneath that,
+
+13
+00:00:33,128 --> 00:00:35,753
+there is a key of input schema. And then
+
+14
+00:00:35,832 --> 00:00:38,817
+assigned to that is that dictionary right there. What
+
+15
+00:00:38,857 --> 00:00:41,442
+I've now highlighted, that is technically what a
+
+16
+00:00:41,481 --> 00:00:44,027
+JSON schema is. So again, let me give you a little
+
+17
+00:00:44,046 --> 00:00:46,832
+bit more background. The idea of JSON schema
+
+18
+00:00:46,972 --> 00:00:49,595
+is not specifically tied to language models or tool
+
+19
+00:00:49,615 --> 00:00:52,159
+calling or anything like that. JSON schema is
+
+20
+00:00:52,219 --> 00:00:54,764
+a data validation specification. So
+
+21
+00:00:54,804 --> 00:00:57,448
+it is a set of rules that can be used to validate any kind
+
+22
+00:00:57,548 --> 00:01:00,152
+of JSON data. So again, it is not specifically
+
+23
+00:01:00,231 --> 00:01:02,774
+tied to language models or tools or anything like that.
+
+24
+00:01:03,155 --> 00:01:05,759
+The language model community decided at some point in time that
+
+25
+00:01:05,920 --> 00:01:08,483
+JSON schema is just a really convenient way of
+
+26
+00:01:08,522 --> 00:01:11,186
+wiring up and handling tool calls. This is a
+
+27
+00:01:11,346 --> 00:01:14,290
+widely understood technology that has been around for many,
+
+28
+00:01:14,331 --> 00:01:16,856
+many years. Now, at this point, I still haven't
+
+29
+00:01:16,876 --> 00:01:19,864
+really explained what the JSON schema spec is all about. So,
+
+30
+00:01:19,944 --> 00:01:22,533
+in total, this thing is used to inform its Claude
+
+31
+00:01:22,692 --> 00:01:25,219
+about the different tools that are available to it. We are going
+
+32
+00:01:25,239 --> 00:01:28,087
+to provide a name for the tool, so in this case it might be GetWeather,
+
+33
+00:01:28,509 --> 00:01:31,156
+and then a description for the tool. This description
+
+34
+00:01:31,195 --> 00:01:33,762
+is meant to tell Claude what the tool does, when
+
+35
+00:01:33,802 --> 00:01:36,867
+to use it, and what kind of data it is going to return. Best
+
+36
+00:01:36,888 --> 00:01:39,534
+practice is to make sure you have a description around three to
+
+37
+00:01:39,593 --> 00:01:42,239
+four sentences long. So even though right here I'm showing
+
+38
+00:01:42,338 --> 00:01:44,965
+only retrieved current weather, in reality, I would definitely
+
+39
+00:01:45,045 --> 00:01:48,067
+want to have a much longer description than this. Then,
+
+40
+00:01:48,569 --> 00:01:51,114
+under this input schema key is going to be the actual
+
+41
+00:01:51,194 --> 00:01:53,780
+JSON schema spec. This is going to describe the
+
+42
+00:01:53,819 --> 00:01:56,926
+different arguments that should be passed into our function. So
+
+43
+00:01:57,025 --> 00:01:59,870
+in this example back over here, if I had a git weather function
+
+44
+00:02:00,012 --> 00:02:02,516
+that received just a location, I would put in
+
+45
+00:02:02,536 --> 00:02:05,402
+input schema with location right here, it
+
+46
+00:02:05,421 --> 00:02:08,206
+needs to be a string, and here's a description of the purpose
+
+47
+00:02:08,348 --> 00:02:11,231
+of that argument. Again, we would want this description
+
+48
+00:02:11,372 --> 00:02:14,094
+of the argument to also be about three to four sentences
+
+49
+00:02:14,155 --> 00:02:16,737
+long, and help Claude understand exactly what
+
+50
+00:02:16,777 --> 00:02:19,580
+this argument controls and how it affects the overall function
+
+51
+00:02:19,621 --> 00:02:22,384
+call. Now, like I mentioned, it might be a little bit intimidating
+
+52
+00:02:22,465 --> 00:02:25,448
+to think that you have to write out all this configuration on your own. Luckily,
+
+53
+00:02:25,568 --> 00:02:28,431
+I've got a trick that is going to help you write out a almost perfect
+
+54
+00:02:28,471 --> 00:02:31,014
+JSON schema spec for every tool you ever put
+
+55
+00:02:31,054 --> 00:02:33,737
+together. So let me show you the trick. First,
+
+56
+00:02:33,818 --> 00:02:36,521
+I'm going to go back over to my editor and I'm going to find our
+
+57
+00:02:36,622 --> 00:02:39,125
+tool function. So for us, it is the get current date
+
+58
+00:02:39,145 --> 00:02:42,389
+time function. I'm then going to take this over
+
+59
+00:02:42,490 --> 00:02:45,996
+to a Claude window. So I'm at Claude.ai
+
+60
+00:02:46,036 --> 00:02:48,800
+here. I'm going to write out a very simple prompt. I'm
+
+61
+00:02:48,819 --> 00:02:51,484
+going to ask Claude to write a valid
+
+62
+00:02:51,644 --> 00:02:54,328
+JSON schema spec for the purposes
+
+63
+00:02:54,367 --> 00:02:57,573
+of tool calling for this function.
+
+64
+00:02:58,895 --> 00:03:02,211
+And then I will also ask Claude to Follow
+
+65
+00:03:02,231 --> 00:03:04,754
+the best practices listed in the
+
+66
+00:03:04,895 --> 00:03:07,538
+attached documentation. Then
+
+67
+00:03:07,557 --> 00:03:10,080
+I'm going to go into put in my tool function, like
+
+68
+00:03:10,120 --> 00:03:12,643
+so. And then here's the real trick. I'm going
+
+69
+00:03:12,682 --> 00:03:15,665
+to go over to the Anthropic API documentation. In
+
+70
+00:03:15,686 --> 00:03:18,348
+the User Guide section, there is a entire page on
+
+71
+00:03:18,408 --> 00:03:21,131
+tool use with Claude. This entire page has
+
+72
+00:03:21,151 --> 00:03:23,713
+a lot of different best practices, and examples of good
+
+73
+00:03:23,774 --> 00:03:26,917
+tool descriptions and bad tool descriptions. So
+
+74
+00:03:26,997 --> 00:03:29,680
+I'm going to just copy all the text here, go
+
+75
+00:03:29,740 --> 00:03:32,288
+back over to my Claude window, paste it in as an
+
+76
+00:03:32,348 --> 00:03:35,253
+attachment and run this. Claude
+
+77
+00:03:35,294 --> 00:03:38,098
+is then going to respond with probably a very strong
+
+78
+00:03:38,259 --> 00:03:40,865
+JSON schema spec. So I'm now going to copy
+
+79
+00:03:40,884 --> 00:03:43,569
+this, take it back over to my editor, and
+
+80
+00:03:43,590 --> 00:03:46,093
+I'm going to paste it in right underneath my existing get
+
+81
+00:03:46,414 --> 00:03:49,460
+current date time function. So I'll say get current
+
+82
+00:03:49,741 --> 00:03:52,346
+date time schema,
+
+83
+00:03:53,889 --> 00:03:56,694
+like so. Now, as a little naming pattern
+
+84
+00:03:56,735 --> 00:03:59,520
+that I like to use here, I'll give my tool function,
+
+85
+00:03:59,680 --> 00:04:02,224
+whatever name I want, and then the schema to match up with it
+
+86
+00:04:02,264 --> 00:04:04,909
+will be underscore schema. So the same name underscore
+
+87
+00:04:04,930 --> 00:04:07,474
+schema. And it makes it a lot easier to keep track of my
+
+88
+00:04:07,514 --> 00:04:10,020
+different schemas. There's one last thing I'm going to do.
+
+89
+00:04:10,240 --> 00:04:13,186
+At the top of the cell, I'm going to add in an import from
+
+90
+00:04:13,225 --> 00:04:16,151
+anthropic.types. I will import
+
+91
+00:04:16,492 --> 00:04:19,197
+tool program. I'm going to take
+
+92
+00:04:19,237 --> 00:04:22,067
+this tool param and wrap it around this entire dictionary.
+
+93
+00:04:22,468 --> 00:04:25,478
+So I'll put in right here, tool param, opening
+
+94
+00:04:25,517 --> 00:04:28,086
+parentheses, and then a closing parentheses down here at
+
+95
+00:04:28,107 --> 00:04:30,795
+the bottom. Adding in this tool param
+
+96
+00:04:30,814 --> 00:04:33,444
+thing is not strictly necessary. In other words, our code
+
+97
+00:04:33,463 --> 00:04:36,112
+is still going to work without it, but it's going to prevent a type
+
+98
+00:04:36,173 --> 00:04:38,800
+error later on when we eventually take this schema and make
+
+99
+00:04:38,880 --> 00:04:39,382
+use of it.

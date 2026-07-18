@@ -1,0 +1,619 @@
+1
+00:00:00,031 --> 00:00:02,653
+Next up, we need to implement our code grader. So
+
+2
+00:00:02,714 --> 00:00:05,216
+our code grader is going to take in some output from the model and make
+
+3
+00:00:05,277 --> 00:00:07,799
+sure that we get back just plain Python,
+
+4
+00:00:07,820 --> 00:00:10,843
+JSON, or regular expression without any kind of explanation.
+
+5
+00:00:11,423 --> 00:00:14,006
+In addition, we should also make sure that we have valid
+
+6
+00:00:14,047 --> 00:00:17,111
+syntax for whatever type of code we actually got. You
+
+7
+00:00:17,131 --> 00:00:19,774
+might be kind of curious, how are we going to validate
+
+8
+00:00:19,814 --> 00:00:22,597
+the syntax of, say, Python at all? Well,
+
+9
+00:00:22,838 --> 00:00:25,620
+we use a little trick for this. We're going to define
+
+10
+00:00:25,780 --> 00:00:28,585
+three helper functions, one will be called Validate
+
+11
+00:00:28,605 --> 00:00:31,228
+JSON, another Validate Python, and another
+
+12
+00:00:31,268 --> 00:00:33,970
+Validate Reg X. Then inside of each of those,
+
+13
+00:00:34,192 --> 00:00:36,875
+we're going to take whatever output we got from the model and try to
+
+14
+00:00:36,914 --> 00:00:39,578
+either parse it as JSON, we'll try
+
+15
+00:00:39,637 --> 00:00:42,362
+to parse it as a Python abstract syntax
+
+16
+00:00:42,381 --> 00:00:45,265
+tree or AST, or we'll try to compile
+
+17
+00:00:45,304 --> 00:00:47,948
+it as a regular expression. And for each
+
+18
+00:00:47,969 --> 00:00:50,652
+of these, if we successfully parse or load or
+
+19
+00:00:50,713 --> 00:00:53,517
+whatever else, we'll return a full score of 10.
+
+20
+00:00:54,036 --> 00:00:56,540
+Otherwise, if we get an error during this parsing operation,
+
+21
+00:00:56,820 --> 00:00:59,706
+we'll assume that we completely failed the syntax check and return
+
+22
+00:00:59,725 --> 00:01:02,329
+a zero. There is one other thing to be
+
+23
+00:01:02,368 --> 00:01:04,873
+aware of here. In order to know which of these different
+
+24
+00:01:05,173 --> 00:01:07,876
+validators or these kind of grading functions to run, we
+
+25
+00:01:07,936 --> 00:01:10,480
+need our test case data set to include the
+
+26
+00:01:10,581 --> 00:01:13,344
+expected format that we're going to get back for each output.
+
+27
+00:01:13,786 --> 00:01:16,950
+So in other words, back here inside of our data set,
+
+28
+00:01:16,930 --> 00:01:19,593
+On our first task, for me, at least, I was expecting
+
+29
+00:01:19,632 --> 00:01:22,135
+to get back a Python function and then JSON and
+
+30
+00:01:22,156 --> 00:01:24,798
+then a reg X. So we need to update our data set
+
+31
+00:01:24,858 --> 00:01:27,501
+to include something like a format key that will say,
+
+32
+00:01:27,561 --> 00:01:30,704
+hey, this output should probably be Python. This
+
+33
+00:01:30,784 --> 00:01:33,507
+one should be JSON and this one a
+
+34
+00:01:33,768 --> 00:01:36,551
+reg X. Now, of course, I could just edit this file manually,
+
+35
+00:01:36,870 --> 00:01:39,433
+but instead, we will update our prompt that is generating
+
+36
+00:01:39,513 --> 00:01:42,316
+our data set so that we can eventually generate really large
+
+37
+00:01:42,397 --> 00:01:45,134
+data sets for testing purposes. Now, total
+
+38
+00:01:45,373 --> 00:01:47,878
+to do all this stuff, couple of different steps we have to go
+
+39
+00:01:47,918 --> 00:01:50,421
+through. So just to help you understand the code side
+
+40
+00:01:50,441 --> 00:01:52,944
+of it and keep everything in line, I came up with this quick
+
+41
+00:01:53,025 --> 00:01:55,548
+checklist of items that we're going to go through. So our first
+
+42
+00:01:55,649 --> 00:01:58,552
+item, adding functions to validate JSON, Python,
+
+43
+00:01:58,673 --> 00:02:01,256
+and regular expressions. For this, I'm going to flip back
+
+44
+00:02:01,316 --> 00:02:04,131
+over to my notebook. I'm going to find the run
+
+45
+00:02:04,311 --> 00:02:06,995
+test case cell. I'm going to add a new cell right
+
+46
+00:02:07,036 --> 00:02:09,838
+above it. And then inside there, I'm going to add those three
+
+47
+00:02:09,979 --> 00:02:12,543
+functions you just saw inside that diagram. Once
+
+48
+00:02:12,582 --> 00:02:15,687
+again, to save a little bit of time, I'm going to paste them in here. You
+
+49
+00:02:15,706 --> 00:02:18,290
+can always copy the completed code out of the finished
+
+50
+00:02:18,330 --> 00:02:21,014
+version of this notebook. So at the top of the cell,
+
+51
+00:02:21,215 --> 00:02:23,838
+I'm importing these two helper modules. I've then got the
+
+52
+00:02:23,979 --> 00:02:27,442
+three different validator functions we just saw. And
+
+53
+00:02:27,461 --> 00:02:30,064
+then at the bottom, I have kind of a general
+
+54
+00:02:30,104 --> 00:02:32,608
+purpose function to figure out which these different validators to
+
+55
+00:02:32,729 --> 00:02:35,651
+use. So I've got grade syntax right here. That's
+
+56
+00:02:35,671 --> 00:02:38,475
+going to take a look at the test case. It's
+
+57
+00:02:38,496 --> 00:02:41,019
+going to look at the format in particular. So we need to make sure
+
+58
+00:02:41,058 --> 00:02:43,701
+our test cases have that format property that I just
+
+59
+00:02:43,741 --> 00:02:46,264
+mentioned a moment ago. And then depending upon that, we're going to
+
+60
+00:02:46,284 --> 00:02:49,663
+call the appropriate format function. Okay,
+
+61
+00:02:49,682 --> 00:02:52,305
+that is step one. Now step two, we
+
+62
+00:02:52,344 --> 00:02:55,268
+need to update our data set to make sure we include that format
+
+63
+00:02:55,348 --> 00:02:57,991
+key. So for that, we'll scroll up
+
+64
+00:02:58,031 --> 00:03:00,673
+a little bit and
+
+65
+00:03:00,752 --> 00:03:03,295
+find our data set.
+
+66
+00:03:04,576 --> 00:03:07,360
+Here it is right here. So
+
+67
+00:03:07,419 --> 00:03:10,223
+generate data set and I'm going to add onto
+
+68
+00:03:10,263 --> 00:03:13,025
+the example output. On task, I'm
+
+69
+00:03:13,044 --> 00:03:15,907
+gonna add a comma at the very end and I'll add in a format
+
+70
+00:03:15,948 --> 00:03:18,551
+key And inside of here, we'll say simply
+
+71
+00:03:18,652 --> 00:03:21,537
+JSON or Python or
+
+72
+00:03:21,597 --> 00:03:24,723
+RegX. That's really all we have to do. So
+
+73
+00:03:24,763 --> 00:03:28,288
+now if I rerun that cell and
+
+74
+00:03:28,367 --> 00:03:31,092
+rerun the cell underneath it that actually generates the data
+
+75
+00:03:31,133 --> 00:03:34,618
+set, there
+
+76
+00:03:34,639 --> 00:03:37,282
+we go. Now we'll go back over to my data set file.
+
+77
+00:03:37,870 --> 00:03:40,536
+And I'll see, yes, I did, in fact, get the format inside there.
+
+78
+00:03:40,975 --> 00:03:43,562
+And it looks like it matches up with the task perfectly. So
+
+79
+00:03:43,602 --> 00:03:46,307
+the first task is create a JSON configuration, got
+
+80
+00:03:46,328 --> 00:03:49,092
+JSON, write Python, got Python, and
+
+81
+00:03:49,133 --> 00:03:51,799
+then write a regular expression, and I got regx.
+
+82
+00:03:53,622 --> 00:03:57,318
+OK, on to step number three. Now
+
+83
+00:03:57,337 --> 00:04:00,282
+this, we're going to update our draft prompt template,
+
+84
+00:04:00,302 --> 00:04:03,348
+just to make sure that it's really clear that we only want JSON
+
+85
+00:04:03,467 --> 00:04:06,092
+Python or regular expression. Because right now, our draft
+
+86
+00:04:06,152 --> 00:04:08,978
+prompt just kind of says, yeah, try to solve the task. So
+
+87
+00:04:09,138 --> 00:04:12,022
+inevitably, we're going to get back some non JSON
+
+88
+00:04:12,103 --> 00:04:14,826
+or non Python content and we'll always be failing
+
+89
+00:04:15,147 --> 00:04:17,711
+the actual validation check. So we're just going to give our
+
+90
+00:04:17,771 --> 00:04:20,416
+prompt a little help here, give it some work that we know
+
+91
+00:04:20,456 --> 00:04:23,622
+that it needs. So for step three,
+
+92
+00:04:23,720 --> 00:04:26,262
+will go back down to our run prompt, which is where
+
+93
+00:04:26,302 --> 00:04:29,185
+our draft prompt is. And
+
+94
+00:04:29,206 --> 00:04:31,728
+I'm going to update the prompt just a little bit. I'm going to
+
+95
+00:04:31,749 --> 00:04:35,173
+add in some notes, and I'll ask it to respond
+
+96
+00:04:35,372 --> 00:04:38,877
+only with Python, JSON,
+
+97
+00:04:39,879 --> 00:04:43,523
+or a plain regX. And
+
+98
+00:04:43,543 --> 00:04:46,125
+do not add any comments,
+
+99
+00:04:47,107 --> 00:04:49,889
+or commentary, or
+
+100
+00:04:49,930 --> 00:04:52,738
+explanation. Next
+
+101
+00:04:52,838 --> 00:04:55,362
+up, I'm going to make sure that we get back just
+
+102
+00:04:55,403 --> 00:04:58,048
+that raw content that we really care about. And once again, to do
+
+103
+00:04:58,108 --> 00:05:00,692
+so, we'll use a prefilled assistant message
+
+104
+00:05:01,274 --> 00:05:03,858
+along with a stop sequence. So
+
+105
+00:05:03,918 --> 00:05:06,684
+I'll add in a assistant message
+
+106
+00:05:06,704 --> 00:05:09,762
+right here. In
+
+107
+00:05:09,802 --> 00:05:12,747
+my assistant message, in this case, I can put in three
+
+108
+00:05:12,807 --> 00:05:15,492
+backticks, and then usually, as we saw previously,
+
+109
+00:05:15,812 --> 00:05:18,315
+we might put in something like JSON or
+
+110
+00:05:18,355 --> 00:05:21,180
+Bash or Python right here. But
+
+111
+00:05:21,319 --> 00:05:23,843
+in this particular case, we don't really know ahead of
+
+112
+00:05:23,923 --> 00:05:26,668
+time the exact format that we expect to get back.
+
+113
+00:05:26,687 --> 00:05:29,872
+We don't know if we're going to get back Python or JSON or RegX.
+
+114
+00:05:29,853 --> 00:05:32,355
+So one little cheat code here, one little work
+
+115
+00:05:32,437 --> 00:05:34,959
+around, we could just put in code and that kind of
+
+116
+00:05:34,980 --> 00:05:37,564
+pre-fills the assistant message and tells Claude, hey,
+
+117
+00:05:37,584 --> 00:05:40,266
+you're going to put some code inside of here without us having
+
+118
+00:05:40,307 --> 00:05:43,170
+to specifically say this is going to be Python or JSON
+
+119
+00:05:43,250 --> 00:05:45,814
+or reg X. I'm then going to add on
+
+120
+00:05:45,875 --> 00:05:50,060
+the closing stop sequence with
+
+121
+00:05:50,161 --> 00:05:52,704
+backticks like so. Lastly, we need to actually
+
+122
+00:05:52,884 --> 00:05:55,507
+merge the scores from our model grader and the code
+
+123
+00:05:55,548 --> 00:05:58,108
+grader together. So for that back
+
+124
+00:05:58,149 --> 00:06:01,334
+over here, I'm going to scroll down once again, and
+
+125
+00:06:01,394 --> 00:06:04,757
+we will find our run
+
+126
+00:06:04,778 --> 00:06:07,302
+test case function. So this is where we are running our
+
+127
+00:06:07,362 --> 00:06:09,904
+model grader right underneath it. I'm going to put together
+
+128
+00:06:09,944 --> 00:06:12,608
+the syntax grader per code grader,
+
+129
+00:06:12,749 --> 00:06:15,531
+whichever you want to call it. So I'll say my syntax score
+
+130
+00:06:15,552 --> 00:06:18,656
+is grade syntax.
+
+131
+00:06:18,677 --> 00:06:22,105
+We need to pass in the output. and
+
+132
+00:06:22,125 --> 00:06:24,668
+our test case. And then finally,
+
+133
+00:06:24,749 --> 00:06:27,754
+we're going to merge the syntax score together with the model
+
+134
+00:06:27,774 --> 00:06:30,276
+score. I'm going to first rename score right
+
+135
+00:06:30,297 --> 00:06:33,822
+here to model score, just to be clear. And
+
+136
+00:06:33,882 --> 00:06:36,446
+I'm going to take the average of these two scores. So
+
+137
+00:06:36,466 --> 00:06:39,009
+I'll say score is going to be model
+
+138
+00:06:39,170 --> 00:06:41,973
+score plus syntax score divided
+
+139
+00:06:42,014 --> 00:06:44,581
+by two. And that should be
+
+140
+00:06:44,661 --> 00:06:47,226
+it. So that's all it took to add in a little bit of code
+
+141
+00:06:47,286 --> 00:06:49,812
+grading. So last thing to do is test this
+
+142
+00:06:49,951 --> 00:06:52,456
+all out. To do so, we'll go down just a little
+
+143
+00:06:52,497 --> 00:06:55,223
+bit here. So right underneath the runeval function
+
+144
+00:06:55,262 --> 00:06:57,807
+is where we actually call runeval and
+
+145
+00:06:57,867 --> 00:07:00,372
+calculate our overall average score. So I'm going to rerun
+
+146
+00:07:00,392 --> 00:07:02,978
+this and remember it usually takes a decent number of seconds
+
+147
+00:07:03,038 --> 00:07:05,612
+to complete. And after a short pause, I
+
+148
+00:07:05,651 --> 00:07:08,735
+get a final score of 8.166. So now
+
+149
+00:07:08,776 --> 00:07:11,839
+the question is, is this good or not? Well,
+
+150
+00:07:11,860 --> 00:07:14,442
+the real answer to that is that we just don't know. The
+
+151
+00:07:14,564 --> 00:07:17,107
+only way we're going to know is if we now try to change our
+
+152
+00:07:17,166 --> 00:07:19,949
+prompt in somebody and hopefully get a better score. So
+
+153
+00:07:19,970 --> 00:07:22,574
+let's try out an exercise in the next video where we will
+
+154
+00:07:22,613 --> 00:07:25,377
+try to change our prompt a little bit and hopefully improve
+
+155
+00:07:25,437 --> 00:07:26,158
+our score.

@@ -1,0 +1,747 @@
+1
+00:00:00,031 --> 00:00:02,899
+As we saw earlier on inside this module, usually
+
+2
+00:00:02,919 --> 00:00:05,567
+you as developers author all the different tools
+
+3
+00:00:05,607 --> 00:00:08,275
+that we want to pass off to Claude. But there is one tool
+
+4
+00:00:08,455 --> 00:00:11,143
+that Claude has access to by default. This
+
+5
+00:00:11,202 --> 00:00:13,730
+is called the Text Editor tool, and it is built
+
+6
+00:00:13,750 --> 00:00:16,536
+directly into Claude. This tool gives Claude
+
+7
+00:00:16,676 --> 00:00:19,361
+a wide variety of abilities related to just
+
+8
+00:00:19,420 --> 00:00:22,065
+about everything you can do inside of a standard text
+
+9
+00:00:22,204 --> 00:00:24,807
+editor. So for example, this tool gives Claude
+
+10
+00:00:24,827 --> 00:00:27,611
+the ability to open up files or directories
+
+11
+00:00:27,692 --> 00:00:30,275
+and read the contents. It can take a look at specific
+
+12
+00:00:30,495 --> 00:00:33,140
+ranges of text inside of a file. It can
+
+13
+00:00:33,179 --> 00:00:35,683
+add or replace text inside of a file. It can make
+
+14
+00:00:35,764 --> 00:00:38,426
+new files. It can do undo. Essentially,
+
+15
+00:00:38,648 --> 00:00:41,731
+everything you would do inside of a normal text editor.
+
+16
+00:00:41,712 --> 00:00:44,256
+So this dramatically expands Claude's abilities and
+
+17
+00:00:44,396 --> 00:00:46,941
+almost right out of the gate kind of gives Claude
+
+18
+00:00:46,960 --> 00:00:50,225
+the ability to act as a software engineer. Now,
+
+19
+00:00:50,406 --> 00:00:53,110
+understanding the text editor tool is just a little
+
+20
+00:00:53,151 --> 00:00:56,055
+bit confusing, so I want to walk you through a couple of different diagrams
+
+21
+00:00:56,216 --> 00:00:58,761
+and clarify what this tool does for you and
+
+22
+00:00:58,801 --> 00:01:01,304
+what you and I have to do to actually make
+
+23
+00:01:01,384 --> 00:01:04,250
+use of it inside of a project. So the first thing to understand
+
+24
+00:01:04,329 --> 00:01:07,115
+here is that only the JSON schema part
+
+25
+00:01:07,296 --> 00:01:09,861
+is actually built into Claude. And let
+
+26
+00:01:09,900 --> 00:01:12,506
+me clarify what I mean by that. Remember
+
+27
+00:01:12,546 --> 00:01:15,132
+that when we want to make use of tools, we really have to author
+
+28
+00:01:15,171 --> 00:01:17,897
+two separate things. First, on the left hand side,
+
+29
+00:01:18,016 --> 00:01:20,561
+we have to write out that JSON schema spec. This
+
+30
+00:01:20,641 --> 00:01:23,265
+gets provided off to Claude and tells Claude about some
+
+31
+00:01:23,346 --> 00:01:25,868
+tool that it can make use of and all the different arguments that
+
+32
+00:01:25,909 --> 00:01:28,671
+the tool requires. And then on the right-hand side, you
+
+33
+00:01:28,712 --> 00:01:31,314
+and I had to write out a tool function implementation
+
+34
+00:01:31,674 --> 00:01:34,298
+to pair up with that JSON schema. These were
+
+35
+00:01:34,338 --> 00:01:36,981
+actual functions implemented inside of our code
+
+36
+00:01:37,022 --> 00:01:39,525
+base that would be called at some point in time when
+
+37
+00:01:39,605 --> 00:01:42,328
+Claude wanted to use our tool. So we really
+
+38
+00:01:42,367 --> 00:01:44,870
+had to write both sides here. We had to do both the JSON
+
+39
+00:01:44,891 --> 00:01:48,355
+schema and the tool function implementation.
+
+40
+00:01:48,334 --> 00:01:51,078
+So when we make use of the text editor tool,
+
+41
+00:01:51,518 --> 00:01:54,061
+the only thing that is actually kind of provided for us
+
+42
+00:01:54,260 --> 00:01:56,802
+or built into Claude is the JSON
+
+43
+00:01:56,843 --> 00:01:59,626
+schema. That's set of instructions that tells Claude
+
+44
+00:01:59,786 --> 00:02:02,569
+how to make use of this tool. You
+
+45
+00:02:02,608 --> 00:02:05,111
+have to provide an actual implementation
+
+46
+00:02:05,152 --> 00:02:07,853
+to handle all of Claude's requests to use the text
+
+47
+00:02:07,953 --> 00:02:10,597
+editor tool. That does not exist. It is something
+
+48
+00:02:10,616 --> 00:02:13,599
+that you have to write out inside of our codebase.
+
+49
+00:02:13,580 --> 00:02:16,403
+So in other words, whenever Claude decides to say,
+
+50
+00:02:16,824 --> 00:02:19,489
+maybe create a new file, and it sends back a
+
+51
+00:02:19,649 --> 00:02:22,212
+tool use part to us that says, I want to create
+
+52
+00:02:22,233 --> 00:02:25,057
+a new file, we have to provide an actual function
+
+53
+00:02:25,318 --> 00:02:27,981
+that will actually make a new file somewhere on our
+
+54
+00:02:28,021 --> 00:02:30,706
+hard drive. So using the text editor tool
+
+55
+00:02:30,866 --> 00:02:33,450
+is not free, so to speak. It requires a little bit
+
+56
+00:02:33,491 --> 00:02:36,175
+of effort on our side because we have to write out a couple
+
+57
+00:02:36,254 --> 00:02:38,836
+of different functions. Now, let's go over to
+
+58
+00:02:38,895 --> 00:02:41,561
+a Jupyter notebook, and we're going to demo the use of this tool
+
+59
+00:02:41,661 --> 00:02:44,224
+and take a look at how we would write out some of these different
+
+60
+00:02:44,264 --> 00:02:46,829
+functions. Back over here, I'm inside of a new notebook
+
+61
+00:02:46,949 --> 00:02:49,633
+called 005 Text Editor Tool. As usual,
+
+62
+00:02:49,733 --> 00:02:52,356
+you can find this notebook attached to this lecture. Inside
+
+63
+00:02:52,396 --> 00:02:54,961
+this notebook, there's a lot of the exact same helper code that we've
+
+64
+00:02:54,981 --> 00:02:57,605
+been working with so far. But if you take a look at the third
+
+65
+00:02:57,686 --> 00:03:00,530
+cell down, which has a comment at the top of, implementation
+
+66
+00:03:00,590 --> 00:03:03,395
+of the text editor tool, you're going to see that there is a tremendous
+
+67
+00:03:03,414 --> 00:03:06,057
+amount of code inside of here. So this is a class
+
+68
+00:03:06,098 --> 00:03:08,641
+that I put together ahead of time. It contains all the different
+
+69
+00:03:08,701 --> 00:03:11,365
+functions that are required to use the text editor tool. So
+
+70
+00:03:11,504 --> 00:03:14,008
+in other words, this class provides this piece of the
+
+71
+00:03:14,027 --> 00:03:16,550
+puzzle over here. Remember, I just told you a moment ago
+
+72
+00:03:16,592 --> 00:03:19,335
+that we have to write out some code to handle all of the Claude's requests
+
+73
+00:03:19,375 --> 00:03:21,877
+to use the text editor tool. I wrote out that code
+
+74
+00:03:21,918 --> 00:03:24,842
+for you inside of this particular class. Inside
+
+75
+00:03:24,861 --> 00:03:27,465
+of this class, you'll notice that there are some methods, if you scroll down
+
+76
+00:03:27,504 --> 00:03:30,068
+a little bit, like view, which can be used to view the
+
+77
+00:03:30,108 --> 00:03:33,032
+contents of a file or a directory. There is also
+
+78
+00:03:33,712 --> 00:03:36,217
+a string replace function, which will replace a
+
+79
+00:03:36,276 --> 00:03:39,122
+string inside of a file. There is a function to create
+
+80
+00:03:39,141 --> 00:03:41,746
+a file and so on. So everything has already been
+
+81
+00:03:41,786 --> 00:03:44,289
+provided for you inside of this class. I'm going
+
+82
+00:03:44,310 --> 00:03:46,873
+to collapse this cell. And the next thing I want to point out to
+
+83
+00:03:46,913 --> 00:03:49,478
+you is the cell with the comment of make the text edit
+
+84
+00:03:49,497 --> 00:03:52,162
+schema based upon the model version being used. Now, this
+
+85
+00:03:52,181 --> 00:03:54,686
+is where things get just a little bit confusing. So let me very quickly
+
+86
+00:03:54,725 --> 00:03:57,330
+show you a diagram to help you understand what's going on here.
+
+87
+00:03:57,310 --> 00:03:59,914
+Now, I've repeated several times that this text editor
+
+88
+00:03:59,974 --> 00:04:02,519
+tool schema is already built in the Claude, and we do not have
+
+89
+00:04:02,558 --> 00:04:05,123
+to include it. That's kind of mostly true,
+
+90
+00:04:05,243 --> 00:04:07,808
+but also just a little caveat here, just something to make
+
+91
+00:04:07,868 --> 00:04:10,713
+it slightly confusing. When we make our request
+
+92
+00:04:10,813 --> 00:04:13,318
+off to Claude, and we want to make use of this text
+
+93
+00:04:13,399 --> 00:04:15,962
+editor tool, we do need to include a very,
+
+94
+00:04:16,002 --> 00:04:18,708
+very small schema. So we need to send a lot of a schema
+
+95
+00:04:18,747 --> 00:04:21,593
+that's going to look like this right here. The exact
+
+96
+00:04:21,812 --> 00:04:24,458
+type string that we put in here, notice how it has a date, is
+
+97
+00:04:24,497 --> 00:04:27,262
+going to change depending upon the exact version of Claude
+
+98
+00:04:27,283 --> 00:04:29,987
+that we are making use of. So inside this function, I
+
+99
+00:04:30,028 --> 00:04:32,773
+am checking to see if you are making use of Claude 3.7 Sonnet.
+
+100
+00:04:32,992 --> 00:04:35,596
+And if you are, I'm going to return that schema that
+
+101
+00:04:35,658 --> 00:04:38,182
+has a date of that right there. And if you're making
+
+102
+00:04:38,221 --> 00:04:41,086
+use of Claude 3.5, it's going to have a slightly different date.
+
+103
+00:04:41,067 --> 00:04:43,692
+So you are going to have a slightly different date
+
+104
+00:04:43,831 --> 00:04:46,476
+depending upon the exact model version. When
+
+105
+00:04:46,516 --> 00:04:49,062
+we send this very small schema off to Claude, it is going to be
+
+106
+00:04:49,221 --> 00:04:52,028
+automatically expanded into a much, much larger schema.
+
+107
+00:04:52,327 --> 00:04:54,892
+That looks a little something like this. So Claude
+
+108
+00:04:54,932 --> 00:04:57,458
+is going to see that we are including this very small
+
+109
+00:04:57,637 --> 00:05:00,343
+stub schema that has a name of string replace editor.
+
+110
+00:05:00,723 --> 00:05:03,750
+And it's also going to notice the exact type that we are putting right there.
+
+111
+00:05:03,730 --> 00:05:06,293
+Then behind the scenes, we can imagine that this very small
+
+112
+00:05:06,334 --> 00:05:08,838
+schema gets replaced with this much larger one. That
+
+113
+00:05:08,879 --> 00:05:11,624
+lists out a ton of information to Claude on exactly
+
+114
+00:05:11,663 --> 00:05:14,247
+how to use the text editor tool. Now
+
+115
+00:05:14,267 --> 00:05:17,033
+that we have a slightly better idea of what's going on here, I'd like
+
+116
+00:05:17,052 --> 00:05:19,557
+to give you a quick demonstration of what the text editor tool
+
+117
+00:05:19,596 --> 00:05:22,461
+can do. Inside of the same directory as my notebook,
+
+118
+00:05:22,581 --> 00:05:25,607
+I'm going to make a new file called main.py. And
+
+119
+00:05:25,687 --> 00:05:28,451
+inside there, I'm going to make a very simple function called
+
+120
+00:05:28,531 --> 00:05:31,115
+greeting. that will print out hi
+
+121
+00:05:31,355 --> 00:05:34,038
+there, like so. I'll then make sure that I save that file.
+
+122
+00:05:34,699 --> 00:05:37,221
+I'm then going to go back over to my notebook and down at
+
+123
+00:05:37,242 --> 00:05:39,783
+the very bottom, I've added in a cell that's going to
+
+124
+00:05:39,923 --> 00:05:42,807
+add in a empty user message and then send the list messages
+
+125
+00:05:42,927 --> 00:05:45,629
+into run conversation. I'm going to ask Claude
+
+126
+00:05:45,810 --> 00:05:48,372
+to open up the main.py file and just
+
+127
+00:05:48,413 --> 00:05:51,035
+tell me what is inside this file. So I'll ask
+
+128
+00:05:51,095 --> 00:05:53,858
+Claude to open the .slash
+
+129
+00:05:54,057 --> 00:05:57,942
+main.py file and summarize its
+
+130
+00:05:58,081 --> 00:06:00,721
+contents. I'll then run that. And
+
+131
+00:06:00,761 --> 00:06:03,286
+then inside the response, we can see that Claude did,
+
+132
+00:06:03,326 --> 00:06:05,850
+in fact, get the contents of that file. And it's going to be
+
+133
+00:06:05,870 --> 00:06:08,514
+a summary of what's going on inside there. If we take a look
+
+134
+00:06:08,574 --> 00:06:11,420
+at the list of messages, we'll see that we get a tool
+
+135
+00:06:11,500 --> 00:06:14,547
+use block right here, where Claude is asking to view
+
+136
+00:06:14,586 --> 00:06:17,230
+the contents of the main.py file. The
+
+137
+00:06:17,290 --> 00:06:19,814
+code inside of that text editor tool class that
+
+138
+00:06:19,853 --> 00:06:22,458
+I showed you a moment ago is going to receive that command. It's going
+
+139
+00:06:22,478 --> 00:06:25,100
+to open up the file automatically, and then send that contents
+
+140
+00:06:25,161 --> 00:06:27,903
+back over to Claude. We can actually see the contents right
+
+141
+00:06:27,963 --> 00:06:30,666
+here. Now, at this point, you might be kind of curious why
+
+142
+00:06:30,726 --> 00:06:33,250
+the text edit tool exists all. In other words, what does
+
+143
+00:06:33,269 --> 00:06:36,053
+it really do for us? What functionality does it really offer besides
+
+144
+00:06:36,113 --> 00:06:38,757
+the obvious fact that it can somehow work with files on the file
+
+145
+00:06:38,776 --> 00:06:41,380
+system? Well, chances are right now you
+
+146
+00:06:41,420 --> 00:06:43,944
+are making use of a code editor that has a really
+
+147
+00:06:43,985 --> 00:06:46,629
+fancy AI assistant built into it. And you can ask
+
+148
+00:06:46,689 --> 00:06:49,233
+that assistant to refactor files or create files
+
+149
+00:06:49,334 --> 00:06:52,158
+or do whatever else. It turns out that we can largely
+
+150
+00:06:52,199 --> 00:06:54,802
+replicate all the functionality of your fancy code
+
+151
+00:06:54,882 --> 00:06:57,406
+editor by just making use of this text edit tool.
+
+152
+00:06:57,947 --> 00:07:00,612
+So for example, I'm going to update the prompt that I'm sending
+
+153
+00:07:00,632 --> 00:07:04,017
+off to Claude. I'm going to ask Claude to open up that file.
+
+154
+00:07:03,997 --> 00:07:06,701
+and write out a function to
+
+155
+00:07:06,882 --> 00:07:09,805
+calculate pi to the fifth digit.
+
+156
+00:07:10,646 --> 00:07:13,449
+And then after doing so, I'm going to ask Claude to then
+
+157
+00:07:13,490 --> 00:07:16,334
+create a .slash test.py file
+
+158
+00:07:16,394 --> 00:07:19,677
+to test your implementation. I'm
+
+159
+00:07:19,798 --> 00:07:22,641
+going to run this. After the request is complete,
+
+160
+00:07:22,742 --> 00:07:25,685
+I'm going to scroll down to the list of messages that were exchanged.
+
+161
+00:07:25,665 --> 00:07:28,891
+So down here, I've got my initial user message, then
+
+162
+00:07:28,930 --> 00:07:31,636
+our assistant message, in which Claude decides to use the
+
+163
+00:07:31,755 --> 00:07:34,519
+text edit tool, and specifically, it wants to try to view
+
+164
+00:07:34,560 --> 00:07:37,144
+a file. We then send back the contents of that file.
+
+165
+00:07:37,605 --> 00:07:40,529
+Claude then says, OK, great. I know it's inside this file. I'm
+
+166
+00:07:40,569 --> 00:07:43,175
+now going to try to replace its contents by writing in some
+
+167
+00:07:43,214 --> 00:07:45,778
+new content. So we can see right here is
+
+168
+00:07:45,819 --> 00:07:49,024
+the actual implementation of calculating pi.
+
+169
+00:07:49,004 --> 00:07:51,627
+Then if we go a little bit further down, we respond
+
+170
+00:07:51,668 --> 00:07:54,290
+and say that we did the update to the file successfully.
+
+171
+00:07:54,812 --> 00:07:57,596
+Claude is then going to attempt to create the test.py
+
+172
+00:07:57,636 --> 00:08:00,399
+file and write some text into it, specifically some
+
+173
+00:08:00,439 --> 00:08:03,483
+test to test out the implementation it just put together. We
+
+174
+00:08:03,524 --> 00:08:06,067
+can verify that this all happened by taking a look at
+
+175
+00:08:06,107 --> 00:08:09,011
+the newly updated main.py file. So
+
+176
+00:08:09,050 --> 00:08:11,995
+we will now see an implementation for calculating pi, and
+
+177
+00:08:12,016 --> 00:08:14,718
+then an accompanying test.py file as well, where
+
+178
+00:08:14,738 --> 00:08:17,244
+we've got some tests. So once again, using
+
+179
+00:08:17,305 --> 00:08:20,012
+this tool, we can very easily approximate a rather
+
+180
+00:08:20,052 --> 00:08:22,559
+fancy code editor. And you might be thinking,
+
+181
+00:08:22,579 --> 00:08:25,286
+OK, why don't I just use my code editor? Well, there
+
+182
+00:08:25,326 --> 00:08:28,074
+are probably going to be some scenarios on some different applications
+
+183
+00:08:28,095 --> 00:08:31,062
+you might work on, where you might want to edit some files
+
+184
+00:08:31,202 --> 00:08:33,769
+inside of some file system, or something similar, where
+
+185
+00:08:33,791 --> 00:08:36,398
+you don't really have access to a native, full-featured
+
+186
+00:08:36,457 --> 00:08:38,985
+code editor. And this would be a scenario where you would
+
+187
+00:08:39,024 --> 00:08:41,150
+want to make use of the text edit tool.

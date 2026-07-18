@@ -1,0 +1,1107 @@
+1
+00:00:00,031 --> 00:00:02,595
+Inside of this video and the next couple of videos, we're
+
+2
+00:00:02,616 --> 00:00:05,480
+going to start to implement our own custom rag workflow
+
+3
+00:00:05,801 --> 00:00:08,406
+inside of a series of different notebooks. We're going to first
+
+4
+00:00:08,426 --> 00:00:10,949
+focus on just making the most simple basic rag
+
+5
+00:00:10,990 --> 00:00:13,734
+setup we can possibly make, and then we're going to add in some additional
+
+6
+00:00:13,775 --> 00:00:16,640
+steps over time. Now, as a reminder, A typical
+
+7
+00:00:16,681 --> 00:00:19,568
+rag pipeline looks a little bit like this to really simplify
+
+8
+00:00:19,609 --> 00:00:22,315
+things. We're going to take a source document, break
+
+9
+00:00:22,336 --> 00:00:24,903
+it up into chunks of text, then whenever user asks
+
+10
+00:00:25,044 --> 00:00:28,012
+us a question, we're going to find some relevant chunk of text,
+
+11
+00:00:28,032 --> 00:00:31,100
+put it into a prompt, and that's pretty much the entire thing.
+
+12
+00:00:31,080 --> 00:00:34,003
+So step one of this entire flow is to take a source document
+
+13
+00:00:34,404 --> 00:00:36,947
+and break it up into chunks of text. Now believe it or
+
+14
+00:00:36,987 --> 00:00:39,630
+not, this process of taking a document and breaking
+
+15
+00:00:39,670 --> 00:00:42,192
+it up into separate chunks is one of the more complex
+
+16
+00:00:42,213 --> 00:00:45,094
+steps of the entire rag pipeline. Simply because
+
+17
+00:00:45,136 --> 00:00:47,917
+how we chunk our document up has a huge
+
+18
+00:00:48,058 --> 00:00:50,962
+output on the quality of our rag pipeline. And
+
+19
+00:00:50,981 --> 00:00:53,524
+I want to give you an example right away to help you understand
+
+20
+00:00:53,564 --> 00:00:56,148
+why that's the case. So take a look at
+
+21
+00:00:56,167 --> 00:00:58,813
+this source document. It's just a couple of little lines,
+
+22
+00:00:59,454 --> 00:01:01,959
+and it's supposed to represent some kind of report from a
+
+23
+00:01:02,158 --> 00:01:04,724
+company or something like that. And just reading
+
+24
+00:01:04,765 --> 00:01:07,530
+through it really quickly, we can see that there's really three general areas.
+
+25
+00:01:08,090 --> 00:01:10,656
+We have a header, we have a section about medical research,
+
+26
+00:01:10,796 --> 00:01:13,783
+and then a section about software engineering. Now
+
+27
+00:01:13,843 --> 00:01:16,388
+there are many ways in which we could divide this thing up into
+
+28
+00:01:16,427 --> 00:01:18,992
+separate chunks, but I'm just going to suggest one way. I'm going to say
+
+29
+00:01:19,391 --> 00:01:22,096
+for every kind of distinct line inside this document, we're
+
+30
+00:01:22,117 --> 00:01:24,781
+going to make a separate chunk. So we'd end up with about five separate
+
+31
+00:01:24,801 --> 00:01:27,344
+chunks like the ones you see right here. If you consider each of these
+
+32
+00:01:27,385 --> 00:01:30,129
+different chunks now, you will notice something really interesting.
+
+33
+00:01:30,109 --> 00:01:32,774
+The third chunk of text right here is all
+
+34
+00:01:32,813 --> 00:01:35,399
+about medical research. That's what this text is about. It was
+
+35
+00:01:35,519 --> 00:01:38,162
+inside of the medical research section. But it contains
+
+36
+00:01:38,203 --> 00:01:41,067
+the word bug. So at kind of a high level,
+
+37
+00:01:41,207 --> 00:01:43,793
+if you just glanced at this paragraph alone, it
+
+38
+00:01:43,933 --> 00:01:46,737
+is almost like it's kind of about software engineering, just
+
+39
+00:01:46,778 --> 00:01:49,721
+because it contains the word bug. And then likewise,
+
+40
+00:01:49,763 --> 00:01:52,406
+down here, we have the software engineering section, and
+
+41
+00:01:52,427 --> 00:01:55,591
+inside of it is the word infection vectors. Infection
+
+42
+00:01:55,652 --> 00:01:58,256
+vectors is a little bit more of a medical term. So
+
+43
+00:01:58,316 --> 00:02:00,900
+once again, we have a section that is about software engineering,
+
+44
+00:02:01,322 --> 00:02:04,466
+but the language inside of it is kind of about medical research.
+
+45
+00:02:05,287 --> 00:02:08,052
+So now we want you to think about what would happen if we took these
+
+46
+00:02:08,152 --> 00:02:11,337
+chugs and we added them into our rag pipeline.
+
+47
+00:02:11,318 --> 00:02:13,841
+Let's imagine that a user asked a question of something like,
+
+48
+00:02:14,181 --> 00:02:17,044
+how many bugs did engineers fix this year? So
+
+49
+00:02:17,084 --> 00:02:19,687
+now our job as a part of the rag pipeline would
+
+50
+00:02:19,706 --> 00:02:22,229
+be to find the chunks of text we have that
+
+51
+00:02:22,269 --> 00:02:25,353
+are most relevant for the user's question. Well,
+
+52
+00:02:25,372 --> 00:02:28,395
+the user said something about bugs. So, well,
+
+53
+00:02:28,675 --> 00:02:32,039
+at first glance, this chunk of text right here seems relevant,
+
+54
+00:02:32,060 --> 00:02:34,622
+just because it contains the word bug. So we might
+
+55
+00:02:34,662 --> 00:02:37,185
+decide to take this chunk of text and add
+
+56
+00:02:37,224 --> 00:02:40,228
+it as context into the overall prompt.
+
+57
+00:02:40,207 --> 00:02:43,012
+And as you can tell right away, this is a huge error.
+
+58
+00:02:43,592 --> 00:02:46,336
+The user wants to understand something about software engineering
+
+59
+00:02:46,395 --> 00:02:48,899
+from the report. So we definitely wanted this section,
+
+60
+00:02:49,179 --> 00:02:51,983
+but we erroneously got something about medical research
+
+61
+00:02:52,103 --> 00:02:54,866
+instead. So this is an example
+
+62
+00:02:55,106 --> 00:02:57,610
+where a chunking strategy can easily introduce
+
+63
+00:02:57,969 --> 00:03:00,633
+huge errors and very bad context inserts
+
+64
+00:03:00,894 --> 00:03:03,677
+into your prompt. So to solve this problem, we're going to spend a lot
+
+65
+00:03:03,717 --> 00:03:06,360
+of time thinking about how we're going to take our original source
+
+66
+00:03:06,401 --> 00:03:09,625
+document and break it up into different chunks of text.
+
+67
+00:03:10,026 --> 00:03:12,652
+In this video, we're going to cover three different chunking
+
+68
+00:03:12,733 --> 00:03:15,560
+strategies or methods to divide our document
+
+69
+00:03:15,620 --> 00:03:18,206
+into separate chunks of text, each of which have some
+
+70
+00:03:18,306 --> 00:03:20,812
+feature or some technique meant to address the problem that
+
+71
+00:03:20,832 --> 00:03:24,080
+we just saw. So we are going to discuss size-based
+
+72
+00:03:24,100 --> 00:03:27,207
+chunking, structure-based, and semantic-based.
+
+73
+00:03:27,272 --> 00:03:29,915
+The first one we're going to cover is size-based chunking.
+
+74
+00:03:30,377 --> 00:03:32,979
+This is where we take our big old document, so a big
+
+75
+00:03:33,039 --> 00:03:35,802
+chunk of text, and we just divide it into a number of strings
+
+76
+00:03:36,122 --> 00:03:38,786
+of equal length. This is by far the
+
+77
+00:03:39,086 --> 00:03:41,588
+easiest technique to implement, and in some, also
+
+78
+00:03:41,649 --> 00:03:44,793
+probably the one you're going to see most often in production implementations.
+
+79
+00:03:45,493 --> 00:03:48,257
+So let's take a look at how size-based chunking is done. With
+
+80
+00:03:48,456 --> 00:03:51,219
+size-based chunking, we're going to take our original document and
+
+81
+00:03:51,259 --> 00:03:53,763
+divide it into some number of strings of more or
+
+82
+00:03:53,823 --> 00:03:56,425
+less equal length. In our particular case,
+
+83
+00:03:56,507 --> 00:03:59,711
+we have a source document with about 325 characters.
+
+84
+00:04:00,292 --> 00:04:02,794
+So we could decide just completely arbitrarily to
+
+85
+00:04:02,835 --> 00:04:05,538
+divide that into three separate chunks. And that means each
+
+86
+00:04:05,598 --> 00:04:08,262
+chunk would have about 108 characters or so.
+
+87
+00:04:09,203 --> 00:04:11,746
+So we might take the first 108 characters,
+
+88
+00:04:11,967 --> 00:04:14,650
+put them into chunk 1, the next 108 put them into chunk
+
+89
+00:04:14,669 --> 00:04:17,613
+2, and just repeat for the entire document.
+
+90
+00:04:17,728 --> 00:04:20,355
+Now, very simple technique, but right away it has
+
+91
+00:04:20,377 --> 00:04:23,064
+a big downside. And that is that each chunk is
+
+92
+00:04:23,245 --> 00:04:25,851
+probably going to end up with some number of cutoff words
+
+93
+00:04:25,932 --> 00:04:28,821
+inside of it. You can see right away the first chunk has
+
+94
+00:04:28,860 --> 00:04:32,752
+the word significant cutoff. So it's just significant
+
+95
+00:04:32,771 --> 00:04:35,418
+key. in the first chunk and then ends the word in the next
+
+96
+00:04:35,538 --> 00:04:38,043
+one. In addition, each chunk ends up lacking
+
+97
+00:04:38,083 --> 00:04:40,608
+context. So for example, the third chunk
+
+98
+00:04:40,649 --> 00:04:43,696
+down here unfortunately does not really include the section
+
+99
+00:04:43,755 --> 00:04:46,341
+header that was right above it. And this section header would
+
+100
+00:04:46,360 --> 00:04:49,067
+have provided a lot of context on what this text right
+
+101
+00:04:49,086 --> 00:04:51,793
+here is really talking about. So to solve
+
+102
+00:04:51,812 --> 00:04:54,755
+this problem that starts to come up right away if you use size-based
+
+103
+00:04:54,815 --> 00:04:57,637
+chunking, we can implement a overlap strategy.
+
+104
+00:04:58,238 --> 00:05:01,382
+An overlap strategy is where we are still going to do size-based
+
+105
+00:05:01,422 --> 00:05:04,504
+chunking, but we're also going to include a little bit of overlap
+
+106
+00:05:04,644 --> 00:05:07,208
+from the neighboring chunks. So for example, we have
+
+107
+00:05:07,247 --> 00:05:09,810
+the original chunk one right here, but we
+
+108
+00:05:09,870 --> 00:05:12,372
+might decide to include just a number of characters from
+
+109
+00:05:12,392 --> 00:05:14,975
+the next chunk down. So in this case, we might
+
+110
+00:05:15,016 --> 00:05:17,517
+include the rest of the word significant plus the end
+
+111
+00:05:17,557 --> 00:05:20,081
+of that entire sentence. So we would end up with
+
+112
+00:05:20,341 --> 00:05:22,903
+a chunk that looks like this that just has a little bit more meaning to
+
+113
+00:05:22,963 --> 00:05:25,526
+it. And then for chunk 2, we would still
+
+114
+00:05:25,586 --> 00:05:28,249
+have the body be this area right here, but we'd
+
+115
+00:05:28,309 --> 00:05:30,930
+include an overlap of some number of characters from
+
+116
+00:05:31,012 --> 00:05:33,514
+before the chunk and after the chunk. So with
+
+117
+00:05:33,553 --> 00:05:36,557
+the strategy, we are going to end up with a decent amount of duplicated
+
+118
+00:05:36,576 --> 00:05:39,600
+text. For example, in this case, we have section
+
+119
+00:05:39,620 --> 00:05:42,343
+1 medical research inside the second chunk, and that
+
+120
+00:05:42,362 --> 00:05:44,925
+was also included inside the first one as well.
+
+121
+00:05:44,904 --> 00:05:47,550
+So there is duplication of text, but the upside
+
+122
+00:05:47,610 --> 00:05:50,295
+here is that each chunk of text has, in general, a little
+
+123
+00:05:50,314 --> 00:05:52,819
+bit more context provided for it. The
+
+124
+00:05:52,860 --> 00:05:55,786
+next kind of strategy that you're going to see is structure-based
+
+125
+00:05:55,906 --> 00:05:58,451
+chunking. This is where we are going to divide off the
+
+126
+00:05:58,471 --> 00:06:00,995
+text based upon the overall structure of our
+
+127
+00:06:01,036 --> 00:06:03,940
+document. So we might try to find headers or paragraphs
+
+128
+00:06:04,002 --> 00:06:06,666
+or general sections and use those as our dividing
+
+129
+00:06:06,726 --> 00:06:09,372
+lines for each chunk. Implementing this strategy of chunking
+
+130
+00:06:09,392 --> 00:06:12,057
+with our document would be really easy because our document
+
+131
+00:06:12,119 --> 00:06:14,684
+is written with markdown syntax. We know that because it has
+
+132
+00:06:14,744 --> 00:06:17,470
+a little pounds right here, the double hashes
+
+133
+00:06:17,509 --> 00:06:20,214
+for each section. So we might look for these little
+
+134
+00:06:20,334 --> 00:06:23,000
+pound symbols, and then say that every time we see this kind
+
+135
+00:06:23,040 --> 00:06:25,906
+of symbol, that means we must be starting a brand new section. So
+
+136
+00:06:25,925 --> 00:06:28,471
+we could very easily write out some code to programmatically split
+
+137
+00:06:28,630 --> 00:06:31,235
+on the double hash characters. And we would end up with some
+
+138
+00:06:31,336 --> 00:06:33,841
+pretty well-formed sections, like what you see right here. Now
+
+139
+00:06:33,860 --> 00:06:36,605
+this might sound like a fantastic strategy, but unfortunately,
+
+140
+00:06:36,646 --> 00:06:39,971
+reality just doesn't favor it quite so often.
+
+141
+00:06:39,951 --> 00:06:42,495
+In many cases, you are going to be trying to ingest documents
+
+142
+00:06:42,535 --> 00:06:45,459
+that are not formatted with Markdown syntax at all. They
+
+143
+00:06:45,499 --> 00:06:48,101
+might be plain PDF documents that just contain
+
+144
+00:06:48,221 --> 00:06:50,764
+plain text, in which case you will not get these
+
+145
+00:06:50,805 --> 00:06:53,447
+very clearly delineated sections. So
+
+146
+00:06:53,487 --> 00:06:56,050
+again, even though this seems like a great technique, implementing it
+
+147
+00:06:56,170 --> 00:06:58,834
+can be really challenging, especially if you do
+
+148
+00:06:58,915 --> 00:07:01,458
+not have any guarantees around the structure of your
+
+149
+00:07:01,478 --> 00:07:04,040
+different documents. The last chunking strategy that we are
+
+150
+00:07:04,081 --> 00:07:06,865
+going to discuss is semantic-based chunking. This
+
+151
+00:07:06,906 --> 00:07:09,471
+is where you might take all of your text, divide it up into
+
+152
+00:07:09,490 --> 00:07:12,154
+sentences or sections, and then use some kind
+
+153
+00:07:12,214 --> 00:07:14,939
+of natural language processing technique to figure out how
+
+154
+00:07:15,000 --> 00:07:17,805
+related each consecutive sentence is.
+
+155
+00:07:17,785 --> 00:07:20,389
+you'll then build up your chunks out of groups
+
+156
+00:07:20,509 --> 00:07:23,173
+of these somehow related sentences or sections.
+
+157
+00:07:23,774 --> 00:07:26,478
+Now, as you can tell just by the description, this is by
+
+158
+00:07:26,557 --> 00:07:29,101
+far definitely more advanced technique, so we're
+
+159
+00:07:29,122 --> 00:07:31,947
+not going to look too closely into the actual implementation. The
+
+160
+00:07:32,026 --> 00:07:34,610
+only reason I mention it at all is just to make it clear that
+
+161
+00:07:34,870 --> 00:07:37,634
+there's really no set finite fixed number of chunking
+
+162
+00:07:37,675 --> 00:07:40,218
+strategies. There's really an infinite number of
+
+163
+00:07:40,278 --> 00:07:42,963
+ways in which we can decide to divide up our text. And
+
+164
+00:07:42,983 --> 00:07:45,872
+so deciding upon which method you use really comes down to your
+
+165
+00:07:45,913 --> 00:07:48,641
+particular use case and what guarantees you have around
+
+166
+00:07:48,661 --> 00:07:51,884
+the documents that you are trying to ingest. Now
+
+167
+00:07:52,004 --> 00:07:54,668
+before we move on, I want to go over a very quick example
+
+168
+00:07:54,728 --> 00:07:57,291
+with you. So I've got a Jupyter notebook put together
+
+169
+00:07:57,492 --> 00:08:00,196
+with three different chunking strategies implemented inside
+
+170
+00:08:00,235 --> 00:08:03,019
+of it. So I would encourage you to find a notebook called 001
+
+171
+00:08:03,439 --> 00:08:06,564
+chunking. Also make sure that you download the accompanying
+
+172
+00:08:06,605 --> 00:08:09,108
+report.md file and place
+
+173
+00:08:09,127 --> 00:08:12,432
+it inside the same directory as that notebook. This report.md
+
+174
+00:08:12,473 --> 00:08:15,216
+file has a little sample kind of fictional report
+
+175
+00:08:15,276 --> 00:08:17,779
+inside of it that we're going to use for testing purposes as
+
+176
+00:08:17,819 --> 00:08:20,886
+we learn about how to implement a rag pipeline. So
+
+177
+00:08:20,925 --> 00:08:23,632
+inside of here, you'll find a couple of different cells. The first one
+
+178
+00:08:23,672 --> 00:08:26,237
+contains a sample implementation of a chunk
+
+179
+00:08:26,336 --> 00:08:29,403
+by character. So this is an implementation based
+
+180
+00:08:29,463 --> 00:08:32,009
+upon the size-based strategy, where we are going
+
+181
+00:08:32,048 --> 00:08:34,774
+to divide up our text into strings of equal length that
+
+182
+00:08:34,855 --> 00:08:37,539
+also have some amount of overlap on them.
+
+183
+00:08:37,739 --> 00:08:40,383
+You'll notice that the arguments are going to be the text, the
+
+184
+00:08:40,482 --> 00:08:43,067
+size of each chunk, and then some amount of chunk
+
+185
+00:08:43,246 --> 00:08:45,851
+overlap. So again, that is the number of characters we want to have
+
+186
+00:08:46,152 --> 00:08:48,855
+on either side of the chunk. The next cell shows
+
+187
+00:08:48,895 --> 00:08:51,460
+how we might chunk by sentence. So very similar idea,
+
+188
+00:08:51,559 --> 00:08:54,264
+but now I'm using a regular expression to split
+
+189
+00:08:54,304 --> 00:08:56,807
+the text up into individual sentences, and then
+
+190
+00:08:56,928 --> 00:08:59,572
+each chunk will be formed out of some number of sentences
+
+191
+00:08:59,893 --> 00:09:03,038
+with optionally a little bit of overlap on each side.
+
+192
+00:09:03,018 --> 00:09:05,602
+And then finally, if we have really strong guarantees
+
+193
+00:09:05,844 --> 00:09:09,029
+around the structure of our document and its exact contents,
+
+194
+00:09:09,049 --> 00:09:11,615
+we might try to use a chunk by section, which would be
+
+195
+00:09:11,635 --> 00:09:14,642
+an example of structure-based chunking. So
+
+196
+00:09:14,701 --> 00:09:17,466
+in this example, it's going to look for a new line character, and
+
+197
+00:09:17,508 --> 00:09:20,052
+then two pound signs, and then a space. And that
+
+198
+00:09:20,092 --> 00:09:22,677
+is going to be our separation criteria. So we would
+
+199
+00:09:22,717 --> 00:09:25,221
+get kind of executive summary
+
+200
+00:09:25,422 --> 00:09:28,066
+would be the first chunk. Well, technically the second one, this
+
+201
+00:09:28,086 --> 00:09:30,609
+would be the first chunk up here. But then we would get everything
+
+202
+00:09:30,649 --> 00:09:33,373
+inside the executive summary all the way down to the table
+
+203
+00:09:33,393 --> 00:09:36,177
+of contents that would start off our second chunk.
+
+204
+00:09:37,099 --> 00:09:39,601
+And then the next chunk would be the methodology and then section
+
+205
+00:09:39,701 --> 00:09:42,527
+one and so on. This will give us the best formatting
+
+206
+00:09:42,567 --> 00:09:45,072
+for each chunk, because each chunk will consist of exactly
+
+207
+00:09:45,111 --> 00:09:47,756
+one section, but it really only works because
+
+208
+00:09:47,817 --> 00:09:50,783
+we have a guarantee around the structure of the document. We
+
+209
+00:09:50,863 --> 00:09:53,528
+know it is marked down, and we know that we're only going to see
+
+210
+00:09:53,567 --> 00:09:56,394
+that new line, pound, pound space, in
+
+211
+00:09:56,453 --> 00:09:59,219
+the case that we have a new section beginning. Now let's
+
+212
+00:09:59,399 --> 00:10:01,942
+test each of these really quickly. So back inside my
+
+213
+00:10:01,984 --> 00:10:04,508
+notebook, I'm going to go down to the bottom cell and
+
+214
+00:10:04,528 --> 00:10:07,331
+I'm going to first try out the chunk by character. So
+
+215
+00:10:07,393 --> 00:10:09,897
+I'm opening up the file, getting all the text out of it. I'm going to
+
+216
+00:10:09,917 --> 00:10:12,500
+chunk by character and then just print out each chunk with
+
+217
+00:10:12,541 --> 00:10:15,065
+a little separator between each one. So I'll
+
+218
+00:10:15,085 --> 00:10:17,730
+run that. and I will see that we get our first chunk
+
+219
+00:10:17,750 --> 00:10:20,357
+right here, second, and so on. And right away, you can
+
+220
+00:10:20,418 --> 00:10:23,205
+see that the default settings do not produce
+
+221
+00:10:23,245 --> 00:10:25,971
+very good chunks. So the default settings are
+
+222
+00:10:25,990 --> 00:10:28,597
+a chunk length of 150 with a overlap
+
+223
+00:10:28,738 --> 00:10:32,307
+of 20. So in this case, each chunk
+
+224
+00:10:32,287 --> 00:10:35,052
+doesn't really provide a whole lot of meaning. Like, what
+
+225
+00:10:35,091 --> 00:10:37,657
+does this sentence right here really do for us? And can we really
+
+226
+00:10:37,736 --> 00:10:40,302
+use it to answer any user question? I
+
+227
+00:10:40,322 --> 00:10:43,467
+don't know, maybe not. So we might decide to dramatically
+
+228
+00:10:43,769 --> 00:10:46,553
+change our default settings here. Maybe
+
+229
+00:10:46,594 --> 00:10:49,720
+I want a chunk length of 500 with
+
+230
+00:10:49,799 --> 00:10:52,445
+a overlap of 150. Let's see if that gives us something
+
+231
+00:10:52,485 --> 00:10:55,246
+a little bit better. Okay, that's a little
+
+232
+00:10:55,267 --> 00:10:57,769
+bit better than what we had before. So now I can
+
+233
+00:10:57,789 --> 00:11:00,673
+start to see the formation of actual individual sections
+
+234
+00:11:00,714 --> 00:11:03,596
+here that give us a little bit of information. You'll
+
+235
+00:11:03,657 --> 00:11:06,480
+also very quickly start to notice the overlaps. So
+
+236
+00:11:06,520 --> 00:11:09,445
+I can see addressing complex challenges.
+
+237
+00:11:10,005 --> 00:11:12,509
+Let turns out that exact phrase is included
+
+238
+00:11:12,548 --> 00:11:15,131
+inside of the chunk right above. So that's an example of
+
+239
+00:11:15,172 --> 00:11:18,796
+the overlapping that we get. All
+
+240
+00:11:18,817 --> 00:11:21,707
+right, next up, let's try our second strategy, which
+
+241
+00:11:21,807 --> 00:11:24,778
+is chunk by sentence. And
+
+242
+00:11:24,839 --> 00:11:27,799
+again, I'm going to use the default arguments. And
+
+243
+00:11:27,840 --> 00:11:30,806
+this one actually looks like it's pretty strong. So this should give us five
+
+244
+00:11:30,865 --> 00:11:33,610
+sentences by default in each chunk with one sentence
+
+245
+00:11:33,650 --> 00:11:36,537
+of overlap. And we are using a regular expression
+
+246
+00:11:36,557 --> 00:11:39,142
+to split up each sentence. So there might be
+
+247
+00:11:39,162 --> 00:11:41,726
+cases where it doesn't split a sentence correctly. But at first
+
+248
+00:11:41,767 --> 00:11:44,611
+glance, yeah, I'd say this looks pretty good. Each chunk appears
+
+249
+00:11:44,652 --> 00:11:47,658
+to give us a solid amount of information. And
+
+250
+00:11:47,677 --> 00:11:50,302
+then finally, we can try out chunk by section.
+
+251
+00:11:52,561 --> 00:11:55,246
+Now run that. And now we can see that the first
+
+252
+00:11:55,307 --> 00:11:58,073
+chunk is not going to contain a lot of useful information, but
+
+253
+00:11:58,214 --> 00:12:00,759
+everything after that is really, really strong because we
+
+254
+00:12:00,801 --> 00:12:03,306
+are getting exactly a single section each
+
+255
+00:12:03,366 --> 00:12:06,092
+time. I get just the executive summary, and
+
+256
+00:12:06,113 --> 00:12:08,719
+then the table of contents, and then section one, section
+
+257
+00:12:08,778 --> 00:12:11,287
+two, section three, and so on. So once again,
+
+258
+00:12:11,326 --> 00:12:14,210
+which strategy you use entirely
+
+259
+00:12:14,270 --> 00:12:16,854
+comes down to the nature of your document
+
+260
+00:12:17,014 --> 00:12:19,957
+and what guarantees you have around its structure. For
+
+261
+00:12:20,197 --> 00:12:23,201
+us, chunk by section looks fantastic. But
+
+262
+00:12:23,442 --> 00:12:26,105
+if we are expecting to receive user-provided documents where
+
+263
+00:12:26,125 --> 00:12:28,870
+there are no guarantees around the formatting of each document,
+
+264
+00:12:29,169 --> 00:12:31,773
+then using chunk by section is probably not going to
+
+265
+00:12:31,812 --> 00:12:34,395
+work out in the long run. In
+
+266
+00:12:34,416 --> 00:12:36,921
+that case, we might fall back to chunk by sentence. But
+
+267
+00:12:36,961 --> 00:12:39,927
+even this might not work pretty well, work out pretty well. Imagine
+
+268
+00:12:39,947 --> 00:12:42,772
+that we are trying to chunk user-provided code, for example.
+
+269
+00:12:43,413 --> 00:12:46,700
+Well, if we try to split code up into individual
+
+270
+00:12:46,740 --> 00:12:49,404
+sentences, we are probably going to get a lot of unexpected
+
+271
+00:12:49,445 --> 00:12:52,129
+results, because code tends to have periods
+
+272
+00:12:52,311 --> 00:12:54,871
+in very unexpected places. So
+
+273
+00:12:54,912 --> 00:12:57,719
+that might mean that we just fall back to the old reliable
+
+274
+00:12:57,759 --> 00:13:00,505
+standard, which is chunk by character. Chunk
+
+275
+00:13:00,546 --> 00:13:03,113
+by character is not guaranteed to give you the best results, but
+
+276
+00:13:03,173 --> 00:13:05,759
+it's going to work vast majority of the time and it's going
+
+277
+00:13:05,778 --> 00:13:07,302
+to work out reasonably well.

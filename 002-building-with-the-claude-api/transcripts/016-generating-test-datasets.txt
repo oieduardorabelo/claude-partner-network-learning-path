@@ -1,0 +1,391 @@
+1
+00:00:00,031 --> 00:00:02,573
+Let's get started on building our own custom
+
+2
+00:00:02,754 --> 00:00:05,378
+prompt evaluation workflow. We're going to be writing
+
+3
+00:00:05,397 --> 00:00:08,061
+out a prompt and then writing out some code to evaluate how
+
+4
+00:00:08,121 --> 00:00:10,766
+well it performs. So let's first focus on making
+
+5
+00:00:10,785 --> 00:00:13,288
+a prompt. The goal of our prompt is to
+
+6
+00:00:13,329 --> 00:00:16,112
+help users in writing out some code specific
+
+7
+00:00:16,152 --> 00:00:18,716
+for AWS use cases. So we're
+
+8
+00:00:18,736 --> 00:00:21,381
+going to allow user to enter in some kind of task that they
+
+9
+00:00:21,420 --> 00:00:23,966
+need help with. And then we're going to respond with
+
+10
+00:00:24,245 --> 00:00:26,751
+one of three types of output. We're either going
+
+11
+00:00:26,791 --> 00:00:29,696
+to output Python, JSON configuration,
+
+12
+00:00:30,155 --> 00:00:32,960
+or a raw, just plain regular expression.
+
+13
+00:00:33,201 --> 00:00:35,826
+Those are our three possible outputs.
+
+14
+00:00:35,805 --> 00:00:38,348
+So we need to make sure that whenever a user asks for us to
+
+15
+00:00:38,389 --> 00:00:40,972
+complete some kind of task, we give them some output
+
+16
+00:00:41,112 --> 00:00:43,695
+in one of these three particular outputs without
+
+17
+00:00:43,875 --> 00:00:46,658
+any other kind of explanation, or header, or footer,
+
+18
+00:00:46,819 --> 00:00:49,503
+or anything like that. So that's the overall
+
+19
+00:00:49,563 --> 00:00:52,165
+goal. Now, the first step of our goal is,
+
+20
+00:00:52,286 --> 00:00:54,908
+of course, to write out a draft prompt. Now, I've kind of already
+
+21
+00:00:54,948 --> 00:00:57,773
+done that for us on the right-hand side here. I've got V1 of our prompt,
+
+22
+00:00:58,073 --> 00:01:00,816
+where it just says, please provide a solution to the following task,
+
+23
+00:01:01,057 --> 00:01:03,679
+and we'll put the user's task in there. Step two
+
+24
+00:01:03,719 --> 00:01:06,664
+is to assemble a data set. Remember
+
+25
+00:01:06,823 --> 00:01:09,688
+that a data set is going to contain some number of inputs
+
+26
+00:01:09,727 --> 00:01:12,272
+that we're going to feed into our prompt, and then we're going to run
+
+27
+00:01:12,371 --> 00:01:15,236
+our prompt for every combination of prompt and input.
+
+28
+00:01:16,197 --> 00:01:19,061
+For our particular case, we're going to have an array of JSON
+
+29
+00:01:19,221 --> 00:01:22,125
+objects, where every object has a task property.
+
+30
+00:01:22,786 --> 00:01:25,308
+These tasks are going to describe something that we want
+
+31
+00:01:25,370 --> 00:01:27,912
+to be done by Claude, so we're going to take each of these tasks,
+
+32
+00:01:28,233 --> 00:01:31,597
+put them into our prompt, and then feed the result into Claude.
+
+33
+00:01:31,831 --> 00:01:34,537
+Remember that when we make a data set, we can either assemble
+
+34
+00:01:34,578 --> 00:01:37,266
+it by hand, or we can generate it automatically with
+
+35
+00:01:37,385 --> 00:01:40,174
+Claude. Now, as a side note, if you're using Claude
+
+36
+00:01:40,213 --> 00:01:42,921
+for something like this, this would be a really good opportunity
+
+37
+00:01:43,040 --> 00:01:45,789
+to use a faster model like Haiku. And
+
+38
+00:01:45,808 --> 00:01:48,655
+that's what we're going to be doing here. Let's go back on to Jupyter,
+
+39
+00:01:48,814 --> 00:01:51,397
+we're going to open up our notebook, and we're going to write out a little
+
+40
+00:01:51,418 --> 00:01:54,061
+bit of code that's going to generate a sample data set, like
+
+41
+00:01:54,081 --> 00:01:57,105
+the one you see on the left-hand side, using Haiku. Back
+
+42
+00:01:57,165 --> 00:01:59,750
+over here, I've created a new notebook, it has a lot of the same
+
+43
+00:01:59,810 --> 00:02:02,634
+code that we've been working on throughout the course. So I'm creating a client
+
+44
+00:02:02,713 --> 00:02:05,677
+inside the top cell and also loading some environment variables, and
+
+45
+00:02:05,718 --> 00:02:08,942
+I create those same three helper functions that we've been developing.
+
+46
+00:02:08,921 --> 00:02:11,627
+Then, a little bit lower, I've defined a function called generate
+
+47
+00:02:11,668 --> 00:02:14,334
+data set. And inside of here, I've put together a rather large
+
+48
+00:02:14,433 --> 00:02:16,979
+prompt to get us started. Now, I've taken this
+
+49
+00:02:17,020 --> 00:02:19,825
+notebook and attached it to this lecture. So I would encourage
+
+50
+00:02:19,846 --> 00:02:22,431
+you to download this notebook and copy the
+
+51
+00:02:22,532 --> 00:02:25,078
+prompt right here, or just use this notebook directly to save
+
+52
+00:02:25,098 --> 00:02:27,663
+yourself a whole bunch of typing. This prompt is
+
+53
+00:02:27,703 --> 00:02:30,247
+going to ask Claude to go ahead and generate some different
+
+54
+00:02:30,287 --> 00:02:32,811
+test cases for us. Our test cases are going to
+
+55
+00:02:32,830 --> 00:02:35,735
+be represented by an array of JSON objects, and
+
+56
+00:02:35,816 --> 00:02:38,479
+each object is going to have a task property that describes the task
+
+57
+00:02:38,520 --> 00:02:41,125
+to be done. For right now, I'm just asking Claude to
+
+58
+00:02:41,164 --> 00:02:43,829
+generate three such objects. This is enough
+
+59
+00:02:43,848 --> 00:02:46,413
+to definitely get us started and make sure that we can actually create a
+
+60
+00:02:46,453 --> 00:02:49,277
+data set. So now let's add in some code to
+
+61
+00:02:49,337 --> 00:02:51,861
+this generate dataset function that we are in. It
+
+62
+00:02:51,882 --> 00:02:54,665
+will actually take this prompt, send off to Claude, get
+
+63
+00:02:54,725 --> 00:02:57,389
+back a list of tasks, and then parse them as
+
+64
+00:02:57,469 --> 00:03:00,033
+JSON. To parse the JSON, we're going to
+
+65
+00:03:00,074 --> 00:03:02,998
+make sure that we use that same prefilling and stop
+
+66
+00:03:03,038 --> 00:03:05,582
+sequence method. We spoke about a little bit ago. So
+
+67
+00:03:05,663 --> 00:03:08,227
+let's get to it. Down here inside of the
+
+68
+00:03:08,287 --> 00:03:11,132
+function, so I'm going to make sure that I do indent in, I
+
+69
+00:03:11,151 --> 00:03:13,915
+will declare a list of messages. I'll
+
+70
+00:03:14,036 --> 00:03:17,854
+add a user message, of
+
+71
+00:03:17,894 --> 00:03:20,798
+that prompt, I'll then add in an assistant
+
+72
+00:03:20,877 --> 00:03:23,961
+message, and
+
+73
+00:03:23,981 --> 00:03:26,544
+I'm going to put in backtick, backtick, backtick,
+
+74
+00:03:26,784 --> 00:03:29,549
+JSON. I'll then call it chat
+
+75
+00:03:31,069 --> 00:03:33,894
+with our listed messages and some stop sequences.
+
+76
+00:03:35,115 --> 00:03:37,938
+In this case, our only stop sequence is going to be backtick, backtick,
+
+77
+00:03:38,079 --> 00:03:40,581
+backtick. And then finally, I will return
+
+78
+00:03:40,923 --> 00:03:43,959
+JSON.loads, text. OK,
+
+79
+00:03:43,979 --> 00:03:46,526
+so I'm going to run the cell to make sure that function gets defined,
+
+80
+00:03:46,826 --> 00:03:49,534
+and we'll test it out down here really quickly. And
+
+81
+00:03:49,555 --> 00:03:52,081
+then let's print up that data set just to make sure that
+
+82
+00:03:52,122 --> 00:03:55,204
+we are getting back some realistic looking data. Okay,
+
+83
+00:03:55,223 --> 00:03:58,048
+there we go. So there's our three different test cases. We
+
+84
+00:03:58,209 --> 00:04:01,173
+are getting a case in which we are going to get a Python function, write
+
+85
+00:04:01,193 --> 00:04:03,798
+some JSON configuration, and then write a regular
+
+86
+00:04:03,897 --> 00:04:07,282
+expression. So let's say this is a good start. Next,
+
+87
+00:04:07,383 --> 00:04:10,008
+I would like to take this data set and write it into a file. So
+
+88
+00:04:10,027 --> 00:04:12,572
+we can very easily load it up later on when we start to
+
+89
+00:04:12,651 --> 00:04:15,776
+evaluate our prompt to do so. We
+
+90
+00:04:15,818 --> 00:04:18,322
+will open up a file in my right mode. I'm going to
+
+91
+00:04:18,382 --> 00:04:23,249
+call the file dataset.json. and
+
+92
+00:04:23,288 --> 00:04:28,136
+then json.dump with
+
+93
+00:04:28,196 --> 00:04:30,819
+an indent of two. So I'm going to run
+
+94
+00:04:30,860 --> 00:04:33,423
+this again. After that cell runs inside
+
+95
+00:04:33,442 --> 00:04:36,827
+the same directory as my notebook, I should find a dataset.json
+
+96
+00:04:36,867 --> 00:04:39,992
+file and inside there should be our list of tasks.
+
+97
+00:04:40,012 --> 00:04:42,696
+Okay, this is a good start. We've got our eval
+
+97
+00:04:42,735 --> 00:04:43,838
+dataset put together.

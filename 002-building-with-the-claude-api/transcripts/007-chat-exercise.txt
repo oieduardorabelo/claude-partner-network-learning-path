@@ -1,0 +1,327 @@
+1
+00:00:00,993 --> 00:00:03,576
+Let's go through a quick exercise just to make sure everything's
+
+2
+00:00:03,636 --> 00:00:06,139
+making sense so far. In this exercise, we're going to
+
+3
+00:00:06,160 --> 00:00:08,682
+be building a very small chatbot that is going to run out
+
+4
+00:00:08,723 --> 00:00:11,606
+of our Jupyter notebook. Here's how it's going to work. Whenever
+
+5
+00:00:11,627 --> 00:00:14,230
+we run a cell, we're going to prompt the user to enter
+
+6
+00:00:14,330 --> 00:00:17,094
+in some text using the built-in input function.
+
+7
+00:00:17,695 --> 00:00:20,277
+We're then going to take whatever the user enters and add it into
+
+8
+00:00:20,338 --> 00:00:22,961
+a list of messages. We'll then take the list of messages and
+
+9
+00:00:23,021 --> 00:00:25,705
+pass it off to the API through the use of our chat function
+
+10
+00:00:25,786 --> 00:00:28,649
+that we just put together. That's going to give us some feedback
+
+11
+00:00:28,731 --> 00:00:31,373
+from Claude, so some generated text. We're going to take
+
+12
+00:00:31,394 --> 00:00:34,478
+that generated text and add it into our list of messages. We'll
+
+13
+00:00:34,539 --> 00:00:37,082
+print that generated text and then we will loop and
+
+14
+00:00:37,122 --> 00:00:39,786
+go back to step one so that we repeat the entire process
+
+15
+00:00:39,906 --> 00:00:42,411
+all over again. I'm going to show you how this thing
+
+16
+00:00:42,451 --> 00:00:45,073
+is intended to work very quickly. So I've already put
+
+17
+00:00:45,154 --> 00:00:47,697
+a solution together. I've hidden it inside this cell,
+
+18
+00:00:48,218 --> 00:00:50,780
+and I'm going to run this cell again just so you can see how I intend
+
+19
+00:00:50,801 --> 00:00:53,404
+for this thing to work. So whenever I run the cell, I'm
+
+20
+00:00:53,444 --> 00:00:56,228
+going to immediately prompt the user for some inputs using
+
+21
+00:00:56,268 --> 00:00:58,831
+the built in input function. And I'll show you how to use that in just
+
+22
+00:00:58,890 --> 00:01:01,393
+a moment in case you're not familiar with it. Then I'm going
+
+23
+00:01:01,414 --> 00:01:03,957
+to enter in something like what's one plus one.
+
+24
+00:01:05,236 --> 00:01:07,843
+I should see my message printed right away, and then I should
+
+25
+00:01:07,942 --> 00:01:10,590
+make use of the chat function to get a response from Claude and
+
+26
+00:01:10,631 --> 00:01:13,138
+print that up as well. And then I should be prompted once
+
+27
+00:01:13,177 --> 00:01:15,885
+again to add in some more text. So now I could say something like
+
+28
+00:01:16,566 --> 00:01:19,361
+add to that answer. And
+
+29
+00:01:19,382 --> 00:01:22,147
+then I should see that I'm maintaining the history or the context
+
+30
+00:01:22,188 --> 00:01:24,915
+of my conversation. So I should now get a response back
+
+31
+00:01:25,275 --> 00:01:27,820
+that says taking the previous answer to and adding to it
+
+32
+00:01:27,881 --> 00:01:30,387
+should result in four. And again, this should go on
+
+33
+00:01:30,427 --> 00:01:33,093
+forever until I eventually interrupt the process
+
+34
+00:01:33,414 --> 00:01:36,019
+by clicking the interrupt button right here and hitting
+
+35
+00:01:36,039 --> 00:01:38,543
+escape. Now, as I mentioned, if
+
+36
+00:01:38,563 --> 00:01:41,171
+you're not familiar with the built-in input function, no problem.
+
+37
+00:01:41,271 --> 00:01:44,177
+I'm going to give you a little hint right now and just make sure that
+
+38
+00:01:44,198 --> 00:01:46,765
+it's really clear what we want to do. So I'm going to paste in a little bit of
+
+39
+00:01:46,805 --> 00:01:50,233
+code that you can use as a little template. All
+
+40
+00:01:50,274 --> 00:01:53,180
+right, so here's the general structure that we want to use.
+
+41
+00:01:53,262 --> 00:01:55,965
+We want to initialize a starting list
+
+42
+00:01:56,004 --> 00:01:58,569
+of messages that's going to start off entirely empty. And then we're going
+
+43
+00:01:58,588 --> 00:02:01,753
+to have a while true loop that is going to run forever. And
+
+44
+00:02:01,793 --> 00:02:04,456
+then inside the while loop, we're going to ask the user to enter
+
+45
+00:02:04,596 --> 00:02:07,719
+in some text, making use of the, again, built-in input
+
+46
+00:02:07,780 --> 00:02:10,503
+function. Whenever the user types into the displayed
+
+47
+00:02:10,604 --> 00:02:13,647
+input, we'll be assigned to this user input variable. And
+
+48
+00:02:13,668 --> 00:02:16,211
+then I put some comments in here just to guide you through the steps of what
+
+49
+00:02:16,251 --> 00:02:18,866
+we need to do. All right, so go ahead and
+
+50
+00:02:19,026 --> 00:02:21,609
+pause the video right here. I would encourage you to give this exercise
+
+51
+00:02:21,688 --> 00:02:24,312
+a shot. Otherwise, stick around and we'll go
+
+52
+00:02:24,352 --> 00:02:26,933
+over a solution right now. So let's get
+
+53
+00:02:26,954 --> 00:02:29,537
+to it. Let me show you how we could put this together. So
+
+54
+00:02:29,597 --> 00:02:32,159
+to implement the rest of this, we really just have to follow the different comments
+
+55
+00:02:32,180 --> 00:02:34,861
+that I put in here. The first thing we're going to do is take
+
+56
+00:02:34,901 --> 00:02:37,884
+that user input and add it into our list of messages using
+
+57
+00:02:37,925 --> 00:02:40,448
+the add user message function that we just put together
+
+58
+00:02:40,487 --> 00:02:43,330
+a moment to go. So I'm going to call add user
+
+59
+00:02:43,591 --> 00:02:46,373
+message. I'll pass in the list of messages and
+
+60
+00:02:46,413 --> 00:02:49,340
+my user input. Then
+
+61
+00:02:49,360 --> 00:02:53,008
+I'm going to call Claude using the built-in chat function and
+
+62
+00:02:53,049 --> 00:02:55,615
+pass in my list of messages. That's going to give
+
+63
+00:02:55,634 --> 00:02:58,420
+me back some answer. I'm going to take
+
+64
+00:02:58,461 --> 00:03:01,127
+that answer and add it in as an assistant message
+
+65
+00:03:01,268 --> 00:03:03,834
+to my list of messages. So add assistant
+
+66
+00:03:03,993 --> 00:03:07,134
+message. like
+
+67
+00:03:07,194 --> 00:03:09,840
+so. And then I just need to print out the generated
+
+68
+00:03:09,900 --> 00:03:12,844
+text. And optionally, I can put in some delimiters
+
+69
+00:03:13,365 --> 00:03:15,929
+in the form of little dashes. Just make sure that it's clear
+
+70
+00:03:16,009 --> 00:03:18,753
+to whoever's using this application that it's being generated
+
+71
+00:03:18,933 --> 00:03:21,538
+by our AI. So I'll print a
+
+72
+00:03:21,579 --> 00:03:24,223
+dash, dash, dash. And
+
+73
+00:03:24,323 --> 00:03:26,986
+in between two of those, I'll print out my answer
+
+74
+00:03:27,448 --> 00:03:31,153
+that I got back. And that's it. So
+
+75
+00:03:31,193 --> 00:03:34,132
+now to test this out, I'm going to run the cell. And
+
+76
+00:03:34,171 --> 00:03:36,716
+then I should see some output up here underneath the cell after
+
+77
+00:03:36,756 --> 00:03:39,740
+I start chatting with Claude. So I'm going to ask Claude what's
+
+78
+00:03:39,900 --> 00:03:42,462
+one plus one. And I'll get my response
+
+79
+00:03:42,522 --> 00:03:46,008
+back and two more. And
+
+80
+00:03:46,068 --> 00:03:48,871
+I should see adding two more to one plus one should give us four.
+
+81
+00:03:49,572 --> 00:03:53,937
+All right, very good. So there is our very simple implementation
+
+82
+00:03:53,977 --> 00:03:55,378
+of a looping chatbot.

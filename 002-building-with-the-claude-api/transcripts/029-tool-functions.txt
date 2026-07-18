@@ -1,0 +1,455 @@
+1
+00:00:00,031 --> 00:00:02,533
+Let's get started working on our first tool, which is going
+
+2
+00:00:02,555 --> 00:00:05,298
+to allow Claude to retrieve the current date time. Before
+
+3
+00:00:05,317 --> 00:00:08,102
+we go any further, I want you to know that I've created a new notebook
+
+4
+00:00:08,162 --> 00:00:11,006
+for you to use. This notebook is titled 001
+
+5
+00:00:11,066 --> 00:00:13,990
+Tools, and it is attached to this lecture. Inside
+
+6
+00:00:14,031 --> 00:00:16,553
+this notebook, you're going to find a lot of the same code we've already written out
+
+7
+00:00:16,594 --> 00:00:19,198
+inside the course. However, I've also added in
+
+8
+00:00:19,217 --> 00:00:21,800
+a new cell down here, titled Tools and
+
+9
+00:00:21,841 --> 00:00:24,405
+Schemas. Inside this cell, I've placed a tremendous
+
+10
+00:00:24,425 --> 00:00:27,109
+amount of boilerplate code just to save us a little bit of time
+
+11
+00:00:27,169 --> 00:00:29,692
+later on. In particular, you're going to find the add
+
+12
+00:00:29,711 --> 00:00:32,213
+duration to date time function, which you are going to use a
+
+13
+00:00:32,234 --> 00:00:35,057
+little bit later on. So again, I would encourage you to download
+
+14
+00:00:35,097 --> 00:00:37,679
+this notebook that is attached to this lecture and use it as the
+
+15
+00:00:37,700 --> 00:00:40,302
+starting point. All right. So now,
+
+16
+00:00:40,542 --> 00:00:43,125
+once again, we're going to be focused on implementing this first tool
+
+17
+00:00:43,286 --> 00:00:45,828
+of Git the current date time. I'm going
+
+18
+00:00:45,847 --> 00:00:48,371
+to walk you through this entire process step by step. We're going to
+
+19
+00:00:48,390 --> 00:00:50,893
+write out a lot of code inside of our notebook, and we're not
+
+20
+00:00:50,914 --> 00:00:53,676
+going to use any of those helper functions that we've set up inside
+
+21
+00:00:53,695 --> 00:00:56,319
+there. The ones like add user message and add assistant message
+
+22
+00:00:56,359 --> 00:00:58,881
+and so on. The reason for this is that you're going to see that we
+
+23
+00:00:58,921 --> 00:01:01,566
+need to refactor those functions just a little bit to
+
+24
+00:01:01,625 --> 00:01:04,450
+suit tools. So rather than trying to mix updating
+
+25
+00:01:04,471 --> 00:01:06,993
+those helper functions and learn about tools at the same time,
+
+26
+00:01:07,034 --> 00:01:09,778
+that would be really confusing. So we're going to instead just focus
+
+27
+00:01:09,978 --> 00:01:12,522
+on making a tool call without using any
+
+28
+00:01:12,561 --> 00:01:15,426
+helper functions as much as possible. OK,
+
+29
+00:01:15,445 --> 00:01:18,019
+so let's get to it. I've broken down this entire
+
+30
+00:01:18,058 --> 00:01:20,701
+process into several different steps. Step one,
+
+31
+00:01:20,822 --> 00:01:23,564
+whenever we are adding in a tool to our implementation, is
+
+32
+00:01:23,605 --> 00:01:26,287
+to write out a tool function. A tool function
+
+33
+00:01:26,308 --> 00:01:29,111
+is a plain Python function that is going to be executed
+
+34
+00:01:29,150 --> 00:01:31,873
+automatically at some point in time when Claude decides
+
+35
+00:01:31,953 --> 00:01:34,697
+that it needs to retrieve some extra information in order
+
+36
+00:01:34,757 --> 00:01:37,620
+to help the user in some way. I've got an example
+
+37
+00:01:37,819 --> 00:01:40,522
+of a possible tool function on the right-hand side called
+
+38
+00:01:40,643 --> 00:01:43,171
+get weather. Claude might be able to make use of this
+
+39
+00:01:43,212 --> 00:01:45,828
+tool function in order to retrieve the current weather at some
+
+40
+00:01:45,888 --> 00:01:48,483
+particular location in the world. Now there's
+
+41
+00:01:48,503 --> 00:01:51,706
+a couple of best practices around tool functions. First,
+
+42
+00:01:51,807 --> 00:01:54,390
+we always want to use well-named and descriptive
+
+43
+00:01:54,430 --> 00:01:56,933
+arguments. So the actual function itself and the
+
+44
+00:01:57,013 --> 00:01:59,677
+arguments to receive should be reasonably well-named
+
+45
+00:02:00,057 --> 00:02:03,061
+and at least give us a hint of what they are about. Second,
+
+46
+00:02:03,180 --> 00:02:05,903
+we want to validate these inputs and raise an error if
+
+47
+00:02:06,084 --> 00:02:08,687
+anything is wrong with the input itself. So for example,
+
+48
+00:02:08,967 --> 00:02:11,711
+if we failed to receive a location or if the location
+
+49
+00:02:11,770 --> 00:02:15,134
+is an empty string, we would want to raise an error immediately.
+
+50
+00:02:15,115 --> 00:02:17,639
+And then finally, whenever we do raise an error, we want to
+
+51
+00:02:17,680 --> 00:02:20,346
+make sure that it contains some kind of a meaningful error message.
+
+52
+00:02:20,926 --> 00:02:23,513
+In some cases, if Claude tries to call a tool
+
+53
+00:02:23,573 --> 00:02:26,157
+function, and it results in an error, Claude is going
+
+54
+00:02:26,177 --> 00:02:28,764
+to see the exact error message. And Claude
+
+55
+00:02:28,783 --> 00:02:31,509
+might decide to try to call your tool function again and
+
+56
+00:02:31,550 --> 00:02:34,094
+call it in a slightly different way that attempts to correct for
+
+57
+00:02:34,134 --> 00:02:36,838
+that error. So for example, you can imagine if that if
+
+58
+00:02:36,938 --> 00:02:39,580
+Claude tries to call this get weather function, and
+
+59
+00:02:39,600 --> 00:02:42,182
+it passes in an empty string, the validation
+
+60
+00:02:42,263 --> 00:02:44,846
+check at the very top would fail, and we would raise an
+
+61
+00:02:44,966 --> 00:02:47,788
+error. Claude would see the error message of location
+
+62
+00:02:47,867 --> 00:02:50,409
+cannot be empty. And Claude might then decide to try
+
+63
+00:02:50,449 --> 00:02:53,112
+to call this tool function again, making sure that it passes
+
+64
+00:02:53,193 --> 00:02:55,735
+in not an empty string anymore. All right, so
+
+65
+00:02:55,754 --> 00:02:58,377
+let's go back over to our notebook, and we're going to put together our first
+
+66
+00:02:58,537 --> 00:03:01,120
+tool function. Remember, the goal of the tool we are
+
+67
+00:03:01,139 --> 00:03:04,021
+putting together is to get the current date time.
+
+68
+00:03:04,002 --> 00:03:06,706
+So back over here, I'm going to add
+
+69
+00:03:06,747 --> 00:03:09,412
+a new cell at the very bottom and I will define a new
+
+70
+00:03:09,431 --> 00:03:12,237
+function called get current date time.
+
+71
+00:03:13,139 --> 00:03:16,125
+This is going to take in an argument that I will call date format.
+
+72
+00:03:16,705 --> 00:03:19,411
+I will give it a default value. It's going to be a little bit
+
+73
+00:03:19,471 --> 00:03:22,697
+of a complicated string here. I'm going to put in percent
+
+74
+00:03:22,978 --> 00:03:25,723
+capital Y, percent lowercase M,
+
+75
+00:03:25,703 --> 00:03:28,545
+percent lowercase d, and then a space,
+
+76
+00:03:29,366 --> 00:03:31,889
+a percent H colon, percent
+
+77
+00:03:32,129 --> 00:03:36,134
+M colon, percent S. Now
+
+78
+00:03:36,155 --> 00:03:38,657
+that string is a little bit complicated, so I would encourage you
+
+79
+00:03:38,698 --> 00:03:41,260
+to pause the video right here and double check the
+
+80
+00:03:41,320 --> 00:03:44,044
+string you've put in, make sure it exactly matches what I have.
+
+81
+00:03:45,284 --> 00:03:48,087
+Then inside this function, I'm going to use that date format
+
+82
+00:03:48,108 --> 00:03:50,691
+to get the current date time and format it in a way that
+
+83
+00:03:50,931 --> 00:03:53,454
+matches this date format string. So I will
+
+84
+00:03:53,495 --> 00:03:56,890
+return datetime.now.strftime, I'll pass in that
+
+85
+00:03:56,951 --> 00:03:59,514
+date format. So now as a quick example
+
+86
+00:03:59,594 --> 00:04:02,438
+of how we would actually use this function, we could call get
+
+87
+00:04:02,579 --> 00:04:05,182
+current date time. And if we ran it just like
+
+88
+00:04:05,342 --> 00:04:07,846
+this, we would get back a date time in the format of
+
+89
+00:04:07,887 --> 00:04:10,449
+year, month, day, hour, minute, second.
+
+90
+00:04:10,490 --> 00:04:13,253
+Or alternatively, I could put in a custom date
+
+91
+00:04:13,854 --> 00:04:16,377
+format string of something like percent
+
+92
+00:04:16,398 --> 00:04:18,920
+H, colon, percent, capital M. And
+
+93
+00:04:19,382 --> 00:04:22,103
+that will print out just the hour and minute of my
+
+94
+00:04:22,124 --> 00:04:24,625
+current time. A good improvement to this function would
+
+95
+00:04:24,887 --> 00:04:27,528
+be to add in some validation of the date format argument.
+
+96
+00:04:27,548 --> 00:04:30,230
+Unfortunately, we can't very easily validate the exact
+
+97
+00:04:30,831 --> 00:04:33,613
+structure. Make sure that this thing is a valid string format
+
+98
+00:04:33,673 --> 00:04:36,437
+time formatter. But we can at least check and make sure
+
+99
+00:04:36,476 --> 00:04:39,098
+that we are not passing in an empty string. So
+
+100
+00:04:39,139 --> 00:04:41,860
+I might decide to add in a little bit of validation here with
+
+101
+00:04:41,940 --> 00:04:44,442
+a if not date format.
+
+102
+00:04:44,502 --> 00:04:47,466
+And then if we fail that validation check, I might raise a value
+
+103
+00:04:47,446 --> 00:04:50,598
+error and say something like date
+
+104
+00:04:50,759 --> 00:04:53,370
+format cannot be empty. So
+
+105
+00:04:53,550 --> 00:04:56,889
+now if I try to call get current daytime with an empty
+
+106
+00:04:56,930 --> 00:05:02,242
+string, I would end up getting an error message and it's going to tell me
+
+107
+00:05:02,283 --> 00:05:04,848
+date format cannot be empty. Now to be
+
+108
+00:05:04,867 --> 00:05:07,473
+honest with you, it's kind of unlikely that Claude is going to
+
+109
+00:05:07,774 --> 00:05:10,360
+make this mistake of passing in an empty string here, but
+
+110
+00:05:10,420 --> 00:05:13,026
+at least from the off chance that it does, we are providing some
+
+111
+00:05:13,127 --> 00:05:15,673
+signal back to Claude and we are kind of telling it how
+
+112
+00:05:15,733 --> 00:05:18,399
+it can fix up the error. It can try to call get current
+
+113
+00:05:18,439 --> 00:05:21,225
+date time again and make sure that it passes in a date format
+
+114
+00:05:21,264 --> 00:05:22,447
+that is not empty.

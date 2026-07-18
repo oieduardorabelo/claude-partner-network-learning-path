@@ -1,0 +1,419 @@
+1
+00:00:00,031 --> 00:00:03,013
+The next portion of model context protocol that we're going to investigate
+
+2
+00:00:03,133 --> 00:00:05,636
+is the client. The purpose of the client is
+
+3
+00:00:05,657 --> 00:00:08,259
+to provide a means of communication between your server
+
+4
+00:00:08,400 --> 00:00:10,923
+and a MCP server. This client is going to
+
+5
+00:00:10,942 --> 00:00:13,726
+be your access point to all the tools implemented by that server.
+
+6
+00:00:14,446 --> 00:00:16,969
+Now MCP is transport agnostic. This
+
+7
+00:00:17,070 --> 00:00:19,632
+is a fancy term that just says that the client and the
+
+8
+00:00:19,672 --> 00:00:22,216
+server can communicate over a variety of different
+
+9
+00:00:22,256 --> 00:00:25,179
+protocols. A very common way to run a MCP
+
+10
+00:00:25,199 --> 00:00:28,003
+server right now is on the same physical machine as
+
+11
+00:00:28,062 --> 00:00:30,727
+the MCP client. And if these two things are running
+
+12
+00:00:30,827 --> 00:00:33,369
+on the same machine, then they can communicate over standard
+
+13
+00:00:33,509 --> 00:00:36,094
+input output. And that's what we are going to be setting up
+
+14
+00:00:36,253 --> 00:00:38,796
+later on inside this section. There are,
+
+15
+00:00:38,856 --> 00:00:41,359
+however, other ways we can connect the MCP client
+
+16
+00:00:41,479 --> 00:00:44,024
+with the MCP server. So they can also connect
+
+17
+00:00:44,084 --> 00:00:46,667
+over HTTP or Web Sockets or
+
+18
+00:00:46,686 --> 00:00:49,731
+any of a number of other varieties or techniques.
+
+19
+00:00:50,284 --> 00:00:52,793
+Once a connection has been formed between the client and the
+
+20
+00:00:52,834 --> 00:00:55,404
+server, they communicate by exchanging messages.
+
+21
+00:00:56,085 --> 00:00:58,996
+The exact messages that are allowed are all defined inside
+
+22
+00:00:59,057 --> 00:01:01,792
+of the MCP spec. Some of the message types
+
+23
+00:01:01,813 --> 00:01:04,495
+that you and I are going to be focusing are the list
+
+24
+00:01:04,615 --> 00:01:07,239
+tools request and the list tools result.
+
+25
+00:01:08,099 --> 00:01:10,804
+As you guessed, list tools request is sent from the client
+
+26
+00:01:10,823 --> 00:01:13,647
+to the server and asks the server to list out all the different tools
+
+27
+00:01:13,686 --> 00:01:16,290
+that it provides. The server would then respond with
+
+28
+00:01:16,390 --> 00:01:18,953
+a list tools result message, which contains
+
+29
+00:01:18,972 --> 00:01:21,596
+a list of all the different tools that it can provide.
+
+30
+00:01:22,016 --> 00:01:24,618
+Two other common message types that you and I are going to see are
+
+31
+00:01:24,659 --> 00:01:27,683
+the call tool request and call tool result.
+
+32
+00:01:27,662 --> 00:01:30,236
+The first will ask the server to run a tool with some
+
+33
+00:01:30,277 --> 00:01:33,272
+particular arguments, and the second will contain the result
+
+34
+00:01:33,493 --> 00:01:36,045
+of the tool run. Now, at this point
+
+35
+00:01:36,185 --> 00:01:38,728
+in time, we've got this idea of a server and
+
+36
+00:01:38,849 --> 00:01:41,534
+a client. But I suspect it's probably
+
+37
+00:01:41,593 --> 00:01:44,558
+not really clear how all this stuff really works together. So
+
+38
+00:01:44,819 --> 00:01:47,362
+here's what we're going to do in the remainder of this video. We
+
+39
+00:01:47,403 --> 00:01:50,468
+are going to walk through a example call between
+
+40
+00:01:50,487 --> 00:01:53,091
+a lot of different things. So it's going to be kind of an involved
+
+41
+00:01:53,132 --> 00:01:55,956
+process. But we're going to imagine the communication that goes on between
+
+42
+00:01:55,975 --> 00:01:59,120
+a user or a server that we're putting together.
+
+43
+00:01:59,100 --> 00:02:01,828
+A MCP client, the MCP server, GitHub
+
+44
+00:02:01,968 --> 00:02:04,957
+as some provider that we're trying to access some data from, and
+
+45
+00:02:05,018 --> 00:02:08,266
+Claude. So let's get to it. Again, Stephen Grider, first
+
+46
+00:02:08,287 --> 00:02:10,974
+thing we would expect to happen is a user to submit some kind of query
+
+47
+00:02:11,074 --> 00:02:13,581
+or question to our server, like what repositories do
+
+48
+00:02:13,663 --> 00:02:16,307
+I have? At this point, it would be up to our server
+
+49
+00:02:16,528 --> 00:02:19,073
+to make a request off to Claude. But in that
+
+50
+00:02:19,133 --> 00:02:21,777
+request, we want to list out all the different tools that Claude has
+
+51
+00:02:21,818 --> 00:02:24,562
+access to. So before our server can make the request
+
+52
+00:02:24,603 --> 00:02:27,568
+off to Claude, it's first going to go through a little side detour
+
+53
+00:02:27,788 --> 00:02:30,293
+through the MCP client and the server. So here's what
+
+54
+00:02:30,312 --> 00:02:32,818
+happens. The server is going to realize that it
+
+55
+00:02:32,899 --> 00:02:35,484
+needs to see a list of tools to send off
+
+56
+00:02:35,524 --> 00:02:38,069
+to Claude, along with the user's query. So it's going to
+
+57
+00:02:38,090 --> 00:02:40,917
+ask the MCP client to get a list of tools. The
+
+58
+00:02:40,997 --> 00:02:43,682
+MCP client, in turn, is going to send a list
+
+59
+00:02:43,723 --> 00:02:46,269
+tools request off to the server, and the server
+
+60
+00:02:46,389 --> 00:02:49,155
+will respond with a list tools result.
+
+61
+00:02:49,134 --> 00:02:51,858
+Now that our MCP client has a list of the tools,
+
+62
+00:02:52,199 --> 00:02:54,842
+it will give that list of tools back to the server. And
+
+63
+00:02:54,861 --> 00:02:57,604
+now our server has everything it needs to make an initial
+
+64
+00:02:57,664 --> 00:03:00,408
+request off to Claude. It has both the original
+
+65
+00:03:00,468 --> 00:03:03,032
+message from the user and a list of tools to include.
+
+66
+00:03:03,772 --> 00:03:06,616
+So our server can make a request off to Claude with that query
+
+67
+00:03:06,776 --> 00:03:09,299
+and the set of tools. Claude is going to take a look
+
+68
+00:03:09,378 --> 00:03:12,362
+at the tools and realize, you know what, in order to answer
+
+69
+00:03:12,423 --> 00:03:15,105
+the user's original question right here, I really want
+
+70
+00:03:15,145 --> 00:03:17,971
+to call a tool. So Claude would respond
+
+71
+00:03:18,211 --> 00:03:20,796
+with some tool use message part. At
+
+72
+00:03:20,818 --> 00:03:23,524
+this point, our server is going to realize that Claude wants
+
+73
+00:03:23,584 --> 00:03:26,150
+to run a tool. But our server is no longer
+
+74
+00:03:26,189 --> 00:03:29,015
+really in charge of executing any tools. Instead,
+
+75
+00:03:29,036 --> 00:03:32,524
+our tools are going to be executed by the MCP server.
+
+76
+00:03:32,503 --> 00:03:35,146
+So in order to run the tool that Claude is asking
+
+77
+00:03:35,206 --> 00:03:38,030
+for, our server is going to ask the MCP client
+
+78
+00:03:38,090 --> 00:03:40,671
+to run a tool with some particular arguments that were
+
+79
+00:03:40,692 --> 00:03:43,395
+provided by Claude. The MCP client, however,
+
+80
+00:03:43,435 --> 00:03:46,418
+doesn't actually run the tool. It's going to send a call
+
+81
+00:03:46,457 --> 00:03:49,461
+tool request off to the MCP server. The
+
+82
+00:03:49,561 --> 00:03:52,123
+MCP server will receive that request and make
+
+83
+00:03:52,144 --> 00:03:55,086
+a follow request off to GitHub. So
+
+84
+00:03:55,106 --> 00:03:57,870
+this is where we would actually be getting a list of repositories
+
+85
+00:03:57,909 --> 00:04:00,551
+that belong to this particular user. GitHub
+
+86
+00:04:00,573 --> 00:04:03,915
+would respond with that list of repositories. Then
+
+87
+00:04:03,955 --> 00:04:06,538
+the MCP server would wrap up that data
+
+88
+00:04:06,639 --> 00:04:09,241
+inside of a call tool result and send
+
+89
+00:04:09,282 --> 00:04:12,085
+that back to the MCP client. Then the MCP
+
+90
+00:04:12,125 --> 00:04:14,907
+client in turn would hand the result off to our server.
+
+91
+00:04:15,788 --> 00:04:18,291
+Now our server has the list of repositories
+
+92
+00:04:19,233 --> 00:04:21,995
+and it can make a follow up request to Claude with
+
+93
+00:04:22,036 --> 00:04:24,699
+the tool result part inside of a user
+
+94
+00:04:24,738 --> 00:04:27,262
+message. So this tool result would include the list
+
+95
+00:04:27,302 --> 00:04:29,865
+of repositories that Claude was asking for.
+
+96
+00:04:30,300 --> 00:04:33,108
+And now Claude has all the information it needs to formulate
+
+97
+00:04:33,187 --> 00:04:35,774
+a final response. So it'll write out some text
+
+98
+00:04:35,834 --> 00:04:38,461
+of something like your repositories are, and then send that back
+
+99
+00:04:38,482 --> 00:04:41,127
+to our server, and our server would send it on back to our
+
+100
+00:04:41,228 --> 00:04:43,875
+user. All right, so this flow,
+
+101
+00:04:44,055 --> 00:04:46,882
+yes, it is rather complicated. The reason I want
+
+102
+00:04:46,903 --> 00:04:49,468
+to show you this is that we are going to see all these different
+
+103
+00:04:49,490 --> 00:04:52,055
+pieces as you and I start to implement our own
+
+104
+00:04:52,115 --> 00:04:54,622
+custom MCP client and MCP
+
+105
+00:04:54,682 --> 00:04:56,427
+server a little bit later on.

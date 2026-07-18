@@ -1,0 +1,427 @@
+1
+00:00:00,638 --> 00:00:03,209
+Now that we understand the entire RAG flow, we're
+
+2
+00:00:03,229 --> 00:00:06,323
+going to walk through an example inside of another notebook called
+
+3
+00:00:06,343 --> 00:00:09,103
+003 VectorDB. So
+
+4
+00:00:09,163 --> 00:00:11,929
+in this notebook, I've provided a sample implementation
+
+5
+00:00:12,109 --> 00:00:15,256
+of a vector database. And I've called it Claude
+
+6
+00:00:15,696 --> 00:00:18,262
+vector index right here. If you want to, feel free to
+
+7
+00:00:18,321 --> 00:00:20,847
+take a glance at it, but I'll walk through everything you need to
+
+8
+00:00:20,986 --> 00:00:23,512
+understand about it. Now in this notebook, we're going
+
+9
+00:00:23,532 --> 00:00:26,117
+to walk through the entire RAG flow by implementing five
+
+10
+00:00:26,157 --> 00:00:28,762
+different steps. The same five steps we just spoke
+
+11
+00:00:28,801 --> 00:00:31,606
+about in the last video. So let's get to it.
+
+12
+00:00:31,586 --> 00:00:34,289
+Step number one, I have already opened up the file and
+
+13
+00:00:34,331 --> 00:00:37,655
+read the text from it, specifically our report.md
+
+14
+00:00:37,674 --> 00:00:40,658
+file, which should be in the same directory as the notebook.
+
+15
+00:00:40,679 --> 00:00:43,402
+So in step one, we're going to chunk the text by
+
+16
+00:00:43,521 --> 00:00:46,365
+section. I've already added in a function
+
+17
+00:00:46,386 --> 00:00:48,929
+to help with that. So the same chunk by section function we had
+
+18
+00:00:48,988 --> 00:00:51,912
+previously. So to do our chunking, chunking
+
+19
+00:00:51,972 --> 00:00:54,877
+process, I'll say chunks is chunk by
+
+20
+00:00:55,097 --> 00:00:58,316
+section and pass in all that text. And
+
+21
+00:00:58,356 --> 00:01:01,143
+now just to test things out and make sure I've got everything
+
+22
+00:01:01,503 --> 00:01:04,329
+working correctly, I'll try printing out chunks
+
+23
+00:01:04,611 --> 00:01:07,597
+at index two. And
+
+24
+00:01:07,638 --> 00:01:10,243
+I should see a printout of the table of contents.
+
+25
+00:01:10,704 --> 00:01:13,391
+And then if I go to index three, I should see the
+
+26
+00:01:13,492 --> 00:01:16,197
+next section down and then the next section
+
+27
+00:01:16,218 --> 00:01:19,462
+and so on. Then,
+
+28
+00:01:19,682 --> 00:01:22,204
+on to step two. In step two, we're going to create an embedding
+
+29
+00:01:22,284 --> 00:01:25,106
+for each chunk. Now, just so you know, I rewrote
+
+30
+00:01:25,126 --> 00:01:27,730
+the embedding function slightly so that now we can
+
+31
+00:01:27,769 --> 00:01:30,292
+pass in either a single string or a list
+
+32
+00:01:30,331 --> 00:01:32,933
+of strings. And if we pass in a list of strings, it will create
+
+33
+00:01:33,013 --> 00:01:35,617
+an embedding for each of them and then return that as a list of
+
+34
+00:01:35,677 --> 00:01:38,239
+embeddings. So to implement step number two,
+
+35
+00:01:38,780 --> 00:01:41,462
+we will call generate_embedding and
+
+36
+00:01:41,522 --> 00:01:44,504
+pass in all the chunks and then assign the result to embeddings.
+
+37
+00:01:45,786 --> 00:01:48,347
+Next up, in step three, we are going to create an instance of the
+
+38
+00:01:48,507 --> 00:01:51,034
+vector store. Once
+
+39
+00:01:51,075 --> 00:01:53,924
+the store has been created, we will then loop over all the different pairs
+
+40
+00:01:54,063 --> 00:01:56,671
+of chunks and embeddings. We're going to zip them
+
+41
+00:01:56,731 --> 00:01:59,400
+together, and then as we take each pair, we're going to insert
+
+42
+00:01:59,421 --> 00:02:01,975
+them into the store. We'll do that with a
+
+43
+00:02:02,135 --> 00:02:05,219
+for embedding, chunk in
+
+44
+00:02:05,299 --> 00:02:08,484
+zip(embeddings, chunks). And
+
+45
+00:02:08,524 --> 00:02:11,427
+again, for each of those different pairs of embeddings and chunks, we'll
+
+46
+00:02:11,448 --> 00:02:14,070
+do a store.add(vector=embedding, metadata={"content": chunk}).
+
+47
+00:02:14,110 --> 00:02:16,794
+the embedding in. And then as the second argument, we'll
+
+48
+00:02:16,835 --> 00:02:20,460
+put in a dictionary with content of chunk.
+
+49
+00:02:20,479 --> 00:02:23,263
+Now, I went over this step rather quickly. So let's do a quick aside
+
+50
+00:02:23,383 --> 00:02:26,287
+and explain why we are looping over all these things, why
+
+51
+00:02:26,306 --> 00:02:28,991
+we were chunking it, and why we were adding in this extra dictionary
+
+52
+00:02:29,211 --> 00:02:32,294
+with the content of chunk. As we just discussed,
+
+53
+00:02:32,314 --> 00:02:35,000
+eventually at some point in time, we're going to reach out to our vector database
+
+54
+00:02:35,561 --> 00:02:38,406
+and give back a list of all the different related embeddings
+
+55
+00:02:38,445 --> 00:02:41,069
+to the input. Now, when we get back this list right
+
+56
+00:02:41,110 --> 00:02:43,713
+here, just getting the number by itself, just
+
+57
+00:02:43,734 --> 00:02:46,318
+getting the embedding is not really useful to us because
+
+58
+00:02:46,338 --> 00:02:48,923
+the embedding doesn't really have a lot of meaning to you and
+
+59
+00:02:49,022 --> 00:02:51,867
+I as developers. What we really care about is the
+
+60
+00:02:52,027 --> 00:02:54,813
+text associated with that embedding. So usually
+
+61
+00:02:54,834 --> 00:02:57,520
+whenever you store these different embeddings inside of your vector
+
+62
+00:02:57,561 --> 00:03:00,068
+database, you're also going to include either the
+
+63
+00:03:00,168 --> 00:03:02,775
+text from the chunk that the embedding was generated
+
+64
+00:03:02,876 --> 00:03:05,723
+from, or at least the ID of the chunk, something
+
+65
+00:03:05,764 --> 00:03:08,290
+to at least point you back to the original chunk
+
+66
+00:03:08,431 --> 00:03:11,175
+text. So in this case, I'm going to include
+
+67
+00:03:11,537 --> 00:03:14,080
+the original chunk text along with
+
+68
+00:03:14,281 --> 00:03:16,884
+each embedding. Again, just so when we do the look-up later on,
+
+69
+00:03:17,526 --> 00:03:20,150
+and I get back the most similar chunks, I've got the actual
+
+70
+00:03:20,229 --> 00:03:22,954
+text that I'm looking for. Now onto step four. So
+
+71
+00:03:23,014 --> 00:03:25,677
+in step four, at some point in time in the future, a user is going to ask
+
+72
+00:03:25,737 --> 00:03:28,282
+us a question. We need to take that question and generate
+
+73
+00:03:28,322 --> 00:03:31,627
+an embedding for it. So we'll make a user embedding
+
+74
+00:03:32,328 --> 00:03:35,073
+by calling generate_embedding. And
+
+75
+00:03:35,092 --> 00:03:37,735
+then my question here, is going to be what
+
+76
+00:03:38,356 --> 00:03:40,961
+did the software engineering
+
+77
+00:03:41,001 --> 00:03:43,864
+department do last year. Finally,
+
+78
+00:03:44,044 --> 00:03:46,587
+on step five, where we are going to try to find some relevant
+
+79
+00:03:46,627 --> 00:03:49,211
+documents. So I want to search the store
+
+80
+00:03:49,230 --> 00:03:51,955
+with the embedding and I want to find the two most
+
+81
+00:03:52,115 --> 00:03:54,638
+relevant chunks, not just the most relevant. I want to
+
+82
+00:03:54,677 --> 00:03:57,521
+get the two chunks that seem to be most relevant to this
+
+83
+00:03:57,562 --> 00:04:00,125
+question right here. So for that, I'll
+
+84
+00:04:00,145 --> 00:04:02,829
+do a results = store.search(
+
+85
+00:04:03,610 --> 00:04:09,140
+I'm going to pass in the user embedding and
+
+86
+00:04:09,161 --> 00:04:11,706
+I'm going to pass in another argument here of two because I want to find the
+
+87
+00:04:11,747 --> 00:04:14,653
+two most relevant chunks. And
+
+88
+00:04:14,693 --> 00:04:17,321
+then I will print out for
+
+89
+00:04:17,420 --> 00:04:20,127
+doc, distance in results:
+
+90
+00:04:21,762 --> 00:04:25,505
+I'm going to print out the distance, a new line, and
+
+91
+00:04:25,526 --> 00:04:28,110
+then the document's content. And because
+
+92
+00:04:28,149 --> 00:04:30,733
+each chunk here is really, really large, I'm going
+
+93
+00:04:30,752 --> 00:04:33,755
+to print out just the first 200 characters. And
+
+94
+00:04:33,776 --> 00:04:36,560
+then another new line like so. And
+
+95
+00:04:36,600 --> 00:04:39,142
+I'll run this. And there's our result.
+
+96
+00:04:39,822 --> 00:04:42,627
+So we get back section two as our best result.
+
+97
+00:04:42,966 --> 00:04:45,529
+We also see the cosine distance here. So it's
+
+98
+00:04:45,550 --> 00:04:48,274
+0.71. And the next
+
+99
+00:04:48,494 --> 00:04:51,057
+closest chunk is at .72, and that was the
+
+100
+00:04:51,218 --> 00:04:53,762
+methodology section. So these were the two
+
+101
+00:04:53,822 --> 00:04:56,466
+chunks that were found most relevant for the user query
+
+102
+00:04:56,547 --> 00:04:59,372
+that we just submitted. All right, so that is our entire
+
+103
+00:04:59,432 --> 00:05:01,995
+RAG workflow. Now all this works, but
+
+104
+00:05:02,016 --> 00:05:04,560
+there is one or two scenarios where everything doesn't
+
+105
+00:05:04,740 --> 00:05:07,345
+quite work as expected. So there are still
+
+106
+00:05:07,425 --> 00:05:09,928
+a couple of improvements that we could add into our workflow, and
+
+107
+00:05:09,949 --> 00:05:11,951
+let's start to discuss those in just a moment.

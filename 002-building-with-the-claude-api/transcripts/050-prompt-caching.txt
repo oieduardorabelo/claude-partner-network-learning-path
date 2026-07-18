@@ -1,0 +1,311 @@
+1
+00:00:00,031 --> 00:00:02,615
+The next feature that we are going to focus on is prompt
+
+2
+00:00:02,694 --> 00:00:05,219
+caching. Prompt caching is used to speed up
+
+3
+00:00:05,278 --> 00:00:07,963
+Claude's response and decrease the cost of text
+
+4
+00:00:08,003 --> 00:00:10,586
+generation. To help you understand how prompt caching
+
+5
+00:00:10,647 --> 00:00:13,191
+works, we're going to walk through what happens inside of
+
+6
+00:00:13,250 --> 00:00:15,814
+Claude during a typical request that we make without
+
+7
+00:00:16,056 --> 00:00:18,739
+any kind of prompt caching enabled at all. So again,
+
+8
+00:00:18,760 --> 00:00:21,344
+this is just a normal request. And we've already
+
+9
+00:00:21,423 --> 00:00:24,187
+spoken a little bit about normal requests on the entire flow. But
+
+10
+00:00:24,388 --> 00:00:27,032
+don't worry, this time, I'm going to add in a little bit of detail on
+
+11
+00:00:27,071 --> 00:00:29,574
+what happens inside of Claude itself. As usual,
+
+12
+00:00:29,754 --> 00:00:32,319
+everything begins with us sending a message off to Claude.
+
+13
+00:00:32,918 --> 00:00:35,582
+And when Claude receives this message, before actually
+
+14
+00:00:35,643 --> 00:00:38,186
+generating any output text at all, it does a
+
+15
+00:00:38,387 --> 00:00:41,131
+tremendous amount of work on the input message.
+
+16
+00:00:41,151 --> 00:00:43,993
+In other words, Claude is going to internally create a tremendous
+
+17
+00:00:44,054 --> 00:00:46,997
+number of internal data structures and do a tremendous
+
+18
+00:00:47,037 --> 00:00:49,561
+number of calculations solely on the input
+
+19
+00:00:49,621 --> 00:00:52,405
+text. It will then eventually generate the output text
+
+20
+00:00:52,646 --> 00:00:55,168
+using all that earlier work it did, and then send
+
+21
+00:00:55,189 --> 00:00:58,033
+a response back to us in the form of some assistant message.
+
+22
+00:00:59,015 --> 00:01:01,537
+After the response is sent off to us, Claude is
+
+23
+00:01:01,557 --> 00:01:04,141
+going to then take the output text and the result
+
+24
+00:01:04,182 --> 00:01:06,805
+of all those earlier calculations that were done
+
+25
+00:01:06,965 --> 00:01:09,709
+on the input message and just throw them all into
+
+26
+00:01:09,728 --> 00:01:12,352
+the trash. A way it all goes, we see all that work
+
+27
+00:01:12,393 --> 00:01:15,156
+kind of go up in smoke entirely. Once Claude
+
+28
+00:01:15,197 --> 00:01:17,819
+has gone through all that cleanup, it declares the world I am
+
+29
+00:01:17,879 --> 00:01:20,524
+ready to process the next request. Now, let's
+
+30
+00:01:20,563 --> 00:01:23,347
+imagine for a moment that after making this initial request,
+
+31
+00:01:23,789 --> 00:01:26,352
+we then make a follow-up request. And in
+
+32
+00:01:26,371 --> 00:01:28,896
+this follow-up request, let's just imagine that we are continuing
+
+33
+00:01:28,956 --> 00:01:31,519
+this conversation. So we're going to attach
+
+34
+00:01:31,680 --> 00:01:34,263
+a list of messages. The first one will be the exact
+
+35
+00:01:34,403 --> 00:01:36,966
+same message we had sent in a moment ago, and
+
+36
+00:01:36,986 --> 00:01:39,951
+then the assistant message response we got back, and then some
+
+37
+00:01:40,031 --> 00:01:42,615
+new user message that we're going to attach just to further
+
+38
+00:01:42,656 --> 00:01:45,179
+the conversation along. So we're going to take all these
+
+39
+00:01:45,218 --> 00:01:48,141
+messages and send them into Claude. And internally,
+
+40
+00:01:48,402 --> 00:01:51,004
+Claude is probably going to be a little bit frustrated when
+
+41
+00:01:51,045 --> 00:01:53,546
+it sees that first message. Because Claude
+
+42
+00:01:53,587 --> 00:01:56,250
+is going to see that first message and think to itself, of course,
+
+43
+00:01:56,310 --> 00:01:58,972
+isn't quite what happens. We can imagine this is kind
+
+44
+00:01:59,013 --> 00:02:01,515
+of what's going on behind the scenes. Claude is going to see that first
+
+45
+00:02:01,575 --> 00:02:04,117
+message and say, I just saw this message.
+
+46
+00:02:04,317 --> 00:02:06,980
+I just did so much work to process it. And then I threw
+
+47
+00:02:07,021 --> 00:02:09,563
+away all those calculations. And Claude is
+
+48
+00:02:09,584 --> 00:02:12,150
+going to think to itself, I really wish I could reuse
+
+49
+00:02:12,289 --> 00:02:14,876
+all that work that I did just 10 seconds ago
+
+50
+00:02:14,915 --> 00:02:17,741
+and threw away. If Claude had saved
+
+51
+00:02:17,822 --> 00:02:20,447
+that work that it threw away just a moment ago, it would probably
+
+52
+00:02:20,487 --> 00:02:23,052
+be able to send us back a response much more quickly
+
+53
+00:02:23,212 --> 00:02:26,223
+because it doesn't have to repeat all that work. So
+
+54
+00:02:26,283 --> 00:02:28,986
+now that we have seen this problem, let's think of some
+
+55
+00:02:29,027 --> 00:02:31,631
+possible way to solve it. Well, here's one
+
+56
+00:02:31,871 --> 00:02:34,633
+possible way that we could handle this problem. Maybe
+
+57
+00:02:34,674 --> 00:02:37,276
+we could say that whenever we make an initial request
+
+58
+00:02:37,397 --> 00:02:40,181
+off to Claude, and Claude goes through all that initial work
+
+59
+00:02:40,501 --> 00:02:43,164
+on our user message that we are sending in, rather
+
+60
+00:02:43,224 --> 00:02:45,728
+than taking the results of all that analysis
+
+61
+00:02:46,048 --> 00:02:49,132
+and throwing into the trash, maybe we could instead cache
+
+62
+00:02:49,211 --> 00:02:51,814
+all that work or put it into some temporary data
+
+63
+00:02:51,835 --> 00:02:54,560
+store. Then if we ever make a follow-up
+
+64
+00:02:54,599 --> 00:02:57,402
+request and we include the exact same input
+
+65
+00:02:57,502 --> 00:03:00,407
+user message, Claude could go into its cache
+
+66
+00:03:01,046 --> 00:03:03,669
+and say, hey, I just saw this exact same
+
+67
+00:03:03,729 --> 00:03:06,272
+message a moment ago and I saved the work of
+
+68
+00:03:06,372 --> 00:03:09,156
+all the analysis around that particular message. So
+
+69
+00:03:09,217 --> 00:03:12,180
+rather than re-analyze the message again, it could reuse
+
+70
+00:03:12,280 --> 00:03:15,122
+all the work that it did previously. And hopefully this
+
+71
+00:03:15,182 --> 00:03:17,925
+would dramatically speed up the process of generating some out of text
+
+72
+00:03:18,006 --> 00:03:20,568
+because again, we are reusing some work that we
+
+73
+00:03:20,609 --> 00:03:23,135
+had already done. This idea of saving
+
+74
+00:03:23,216 --> 00:03:26,068
+some work from request to be used later on is exactly
+
+75
+00:03:26,109 --> 00:03:28,741
+what prompt caching is all about. So let's come back
+
+76
+00:03:28,781 --> 00:03:31,492
+in just a moment and we're going to walk through some of the implementation
+
+77
+00:03:31,532 --> 00:03:34,084
+details of prompt caching and really understand
+
+78
+00:03:34,125 --> 00:03:35,831
+how it is implemented by Claude.

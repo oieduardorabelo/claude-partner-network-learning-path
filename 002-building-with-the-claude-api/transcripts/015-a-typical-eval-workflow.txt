@@ -1,0 +1,387 @@
+1
+00:00:00,031 --> 00:00:02,794
+In this video, we're going to walk through all these steps implemented
+
+2
+00:00:02,855 --> 00:00:05,780
+by a typical prompt evaluation workflow. Before
+
+3
+00:00:05,799 --> 00:00:08,364
+we go through any of these steps, however, I just want you to understand two
+
+4
+00:00:08,484 --> 00:00:10,987
+important things. First is, there are many different
+
+5
+00:00:11,048 --> 00:00:14,092
+ways you can assemble a workflow. There's no one
+
+6
+00:00:14,212 --> 00:00:16,917
+set methodology set in stone that is standard across
+
+7
+0000:00:16,957 --> 00:00:19,481
+the industry. The second thing to understand is that
+
+8
+00:00:19,521 --> 00:00:22,184
+there are many different open source packages and even paid
+
+9
+00:00:22,204 --> 00:00:24,908
+options online that will help you implement your own
+
+10
+00:00:25,070 --> 00:00:27,772
+workflows. Now, in this video
+
+11
+00:00:27,934 --> 00:00:30,757
+and this module, we're going to start to implement our own custom
+
+12
+00:00:30,797 --> 00:00:33,380
+workflow from scratch inside of a Jupyter notebook.
+
+13
+00:00:33,801 --> 00:00:36,304
+The reason we're doing this is to, of course, just help you understand
+
+14
+00:00:36,363 --> 00:00:39,027
+how these workflows behave, but also to help you understand
+
+15
+00:00:39,087 --> 00:00:41,990
+that you don't have to get a really heavy weight solution
+
+16
+00:00:42,310 --> 00:00:44,973
+to do prompt evals. You can start small just
+
+17
+00:00:44,993 --> 00:00:47,597
+to get started and get a sense of how everything works and
+
+18
+00:00:47,616 --> 00:00:50,173
+then scale up from there. All right, so let's get
+
+19
+00:00:50,192 --> 00:00:52,777
+to it. Step one of a typical prompt
+
+20
+00:00:52,878 --> 00:00:55,823
+eVal. Step one, we're going to write out an initial
+
+21
+00:00:55,942 --> 00:00:58,627
+prompt draft. So you and I will sit down
+
+22
+00:00:58,707 --> 00:01:01,252
+and just write out some kind of prompt that we want to improve
+
+23
+00:01:01,411 --> 00:01:03,915
+in some way. For this example, we're going
+
+24
+00:01:03,936 --> 00:01:06,441
+to have a very simple prompt that just says, please
+
+25
+00:01:06,561 --> 00:01:09,344
+answer the user's question. And then we're going to interpolate
+
+26
+00:01:09,525 --> 00:01:12,490
+in some user input. So some question provided
+
+27
+00:01:12,531 --> 00:01:15,046
+by a user. In step two,
+
+28
+00:01:15,487 --> 00:01:18,534
+we're going to create an evaluation data set. This
+
+29
+00:01:18,573 --> 00:01:21,239
+data set is going to contain some number of possible
+
+30
+00:01:21,361 --> 00:01:23,986
+inputs that we might want to put into our prompt.
+
+31
+00:01:24,528 --> 00:01:27,433
+So for us, our prompt only has one input, a
+
+32
+00:01:27,474 --> 00:01:30,120
+question provided by user. So for our
+
+33
+00:01:30,319 --> 00:01:33,165
+Eval data set, we'll have a list of different possible
+
+34
+00:01:33,225 --> 00:01:36,471
+questions that we might want to put into our prompt. My
+
+35
+00:01:36,712 --> 00:01:39,216
+data set is only going to have three different questions inside of it.
+
+36
+00:01:39,656 --> 00:01:42,662
+But in real-world Evals, you might have tens, hundreds,
+
+37
+00:01:42,783 --> 00:01:46,829
+even thousands of different records in your data set. Now
+
+38
+00:01:46,870 --> 00:01:49,435
+you can assemble these data sets by hand, or
+
+39
+00:01:49,474 --> 00:01:52,140
+you can of course also use Claude to generate them for
+
+40
+00:01:52,180 --> 00:01:55,045
+you. Once we have our eval dataset,
+
+41
+00:01:55,525 --> 00:01:58,328
+we're then going to feed each of these different questions into
+
+42
+00:01:58,448 --> 00:02:01,173
+our prompt. So we get a fully fleshed out prompt
+
+43
+00:02:01,492 --> 00:02:04,115
+that we can then feed into Claude. So we might have
+
+44
+00:02:04,156 --> 00:02:06,679
+prompt one right here, where we have, please answer the
+
+45
+00:02:06,718 --> 00:02:09,682
+user's question, and then a sample question out of our dataset,
+
+46
+00:02:09,862 --> 00:02:12,385
+like what's two plus two? And then we
+
+47
+00:02:12,406 --> 00:02:15,250
+will repeat for all the other records inside of our dataset.
+
+48
+00:02:15,430 --> 00:02:18,347
+So yours two and three. We'll
+
+49
+00:02:18,366 --> 00:02:21,312
+then feed each of these into Claude and get an actual
+
+50
+00:02:21,372 --> 00:02:24,156
+response out of Claude. So for the first one, we might get back
+
+51
+00:02:24,216 --> 00:02:26,819
+a response of something like 2 plus 2 is 4, and
+
+52
+00:02:26,860 --> 00:02:29,562
+then something about how to make oatmeal, and then something about
+
+53
+00:02:29,584 --> 00:02:32,146
+the distance to the moon. Once we
+
+54
+00:02:32,206 --> 00:02:35,050
+have these actual answers coming out of Claude, we're
+
+55
+00:02:35,091 --> 00:02:38,075
+then going to grade them in some way. During
+
+56
+00:02:38,116 --> 00:02:40,659
+this grading step, we're going to take each of the questions out
+
+57
+00:02:40,680 --> 00:02:43,302
+of our data set, and the answers we got out of Claude.
+
+58
+00:02:43,843 --> 00:02:46,807
+We'll pair them all off together, and we'll feed them into a grader
+
+59
+00:02:46,828 --> 00:02:49,492
+one by one. There are many different ways we can implement
+
+60
+00:02:49,532 --> 00:02:52,197
+this grader. We'll take a look at some of the different methodologies a little
+
+61
+00:02:52,217 --> 00:02:54,841
+bit later. The grader will then give us a score,
+
+62
+00:02:55,020 --> 00:02:57,604
+maybe from 1 up to 10, based upon the
+
+63
+00:02:57,764 --> 00:03:00,389
+quality of the answer that was produced by Claude. So
+
+64
+00:03:00,429 --> 00:03:03,074
+a 10 would mean we got a perfect answer and there's really no
+
+65
+00:03:03,133 --> 00:03:05,677
+possible way we could improve it. And maybe something like a 4
+
+66
+00:03:05,777 --> 00:03:08,562
+indicates that there's definitely room for improvement there.
+
+67
+00:03:08,542 --> 00:03:11,185
+Now, as you can guess, there's kind of a lot of hidden complexity
+
+68
+00:03:11,245 --> 00:03:13,788
+here with a grader, because you're probably curious or wondering,
+
+69
+00:03:14,188 --> 00:03:16,812
+well, how do we actually get these scores at all? And
+
+70
+00:03:16,852 --> 00:03:19,596
+again, don't worry. We're going to cover these grader things in
+
+71
+00:03:19,635 --> 00:03:22,258
+much greater detail in a little bit. After
+
+72
+00:03:22,318 --> 00:03:25,182
+we get these scores, we're then going to average them all together.
+
+73
+00:03:25,502 --> 00:03:28,225
+So in this case, I would add the scores together, divide
+
+74
+00:03:28,265 --> 00:03:31,811
+by three, and get an average score of 7.66. So
+
+75
+00:03:31,850 --> 00:03:34,753
+I now have some kind of objective way of
+
+76
+00:03:34,813 --> 00:03:37,737
+describing how well our original prompt performed.
+
+77
+00:03:39,018 --> 00:03:41,521
+Now that we have this score, we can then change
+
+78
+00:03:41,562 --> 00:03:44,185
+our prompt in some way and iterate or repeat
+
+79
+00:03:44,224 --> 00:03:47,008
+this entire process. So if I want to improve
+
+80
+00:03:47,049 --> 00:03:49,913
+my score, I might try adding in a little bit more detail to the
+
+81
+00:03:49,954 --> 00:03:52,497
+prompt to hopefully guide Claude a little bit more
+
+82
+00:03:52,818 --> 00:03:55,520
+and help to understand what kind of output we want. So maybe
+
+83
+00:03:55,602 --> 00:03:58,425
+I would add on to the end of the prompt, something like answer
+
+84
+00:03:58,466 --> 00:04:01,149
+the question with ample detail. Once
+
+85
+00:04:01,169 --> 00:04:03,693
+I have the second version of my prompt, I would then
+
+86
+00:04:03,733 --> 00:04:06,477
+run it through this entire pipeline again.
+
+87
+00:04:06,828 --> 00:04:09,370
+I would then have a score for prompt version one
+
+88
+00:04:09,610 --> 00:04:12,212
+and prompt version two. I could then compare these two
+
+89
+00:04:12,252 --> 00:04:14,914
+scores and whichever score is greater or higher.
+
+90
+00:04:14,955 --> 00:04:17,557
+It's kind of an objective sign, better than
+
+91
+00:04:17,617 --> 00:04:20,259
+nothing that tells me that prompt V2 in this
+
+92
+00:04:20,319 --> 00:04:22,822
+case is perhaps the better version of our prompt.
+
+93
+00:04:23,541 --> 00:04:26,324
+So now that we have a high level overview of this entire
+
+94
+00:04:26,384 --> 00:04:29,326
+process, as I mentioned, we're gonna start to implement
+
+95
+00:04:29,406 --> 00:04:31,970
+our own custom eval framework inside of
+
+96
+00:04:32,009 --> 00:04:34,711
+a Jupyter notebook. So let's get started on an implementation
+
+97
+00:04:34,752 --> 00:04:35,872
+in the next video.

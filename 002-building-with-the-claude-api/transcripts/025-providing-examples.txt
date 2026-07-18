@@ -1,0 +1,563 @@
+1
+00:00:00,031 --> 00:00:02,794
+I'm really excited about this next prompt engineering technique
+
+2
+00:00:02,815 --> 00:00:05,899
+we're going to discuss because it is probably one of the most effective
+
+3
+00:00:05,939 --> 00:00:08,942
+that you're going to find. It's the idea of providing examples
+
+4
+00:00:09,063 --> 00:00:11,586
+inside of your prompt. This is often referred to
+
+5
+00:00:11,627 --> 00:00:14,451
+as one-shot or multi-shot prompting,
+
+6
+00:00:14,730 --> 00:00:17,554
+depending upon whether or not you are providing just one example or multiple
+
+7
+00:00:17,594 --> 00:00:20,379
+examples. Understanding this concept is definitely easiest
+
+8
+00:00:20,458 --> 00:00:23,141
+if you take a look and example, so let's do that right away.
+
+9
+00:00:23,643 --> 00:00:26,286
+Consider the prompt on the right-hand side. I'm asking Claude to
+
+10
+00:00:26,387 --> 00:00:28,890
+categorize the sentiment of a tweet.
+
+11
+00:00:28,870 --> 00:00:31,713
+Just be clear, when we say sentiment, we mean kind of, does
+
+12
+00:00:31,754 --> 00:00:34,459
+this seem kind of happy or positive in nature
+
+13
+00:00:34,639 --> 00:00:37,222
+or unhappy or negative? In this
+
+14
+00:00:37,423 --> 00:00:39,966
+particular instance, I provided an input
+
+15
+00:00:39,987 --> 00:00:42,551
+tweet of, yeah, sure, that was the best
+
+16
+00:00:42,631 --> 00:00:45,816
+movie I've ever seen since Plan 9 from Outer Space.
+
+17
+00:00:45,795 --> 00:00:48,460
+Now if you're not aware, Plan 9 from Outer Space is
+
+18
+00:00:48,540 --> 00:00:51,265
+a famously bad movie. So if someone
+
+19
+00:00:51,286 --> 00:00:53,929
+were to tweet something like this, they're actually probably being
+
+20
+00:00:54,070 --> 00:00:56,674
+sarcastic and they probably did not like the
+
+21
+00:00:56,695 --> 00:00:59,219
+movie they just watched at all. So we would probably want to
+
+22
+00:00:59,259 --> 00:01:01,783
+classify the tweet as being negative. But
+
+23
+00:01:01,904 --> 00:01:04,808
+Claude could potentially have some issue categorizing this. One
+
+24
+00:01:04,849 --> 00:01:07,754
+way to solve the problem would be by using multi-shot prompting.
+
+25
+00:01:08,174 --> 00:01:10,941
+So here's how we would fix this. We would take our
+
+26
+00:01:11,180 --> 00:01:13,722
+starting prompt we have on the left-hand side and add in some
+
+27
+00:01:13,882 --> 00:01:16,426
+examples, which I've added in on the bottom half of the
+
+28
+00:01:16,465 --> 00:01:19,308
+prompt right here. To add in an example,
+
+29
+00:01:19,409 --> 00:01:22,251
+we will very directly tell Claude that we are about
+
+30
+00:01:22,290 --> 00:01:24,974
+to give it some example input and an ideal,
+
+31
+00:01:25,174 --> 00:01:27,796
+perfect world kind of response. We'll almost
+
+32
+00:01:27,855 --> 00:01:30,578
+always wrap these inputs and outputs inside of some XML
+
+33
+00:01:30,618 --> 00:01:33,501
+tags, just to better structure our prompt and make it super
+
+34
+00:01:33,522 --> 00:01:36,164
+clear to Claude with the purpose of the input and output
+
+35
+00:01:36,343 --> 00:01:38,888
+pair. So in this particular example, I have
+
+36
+00:01:38,927 --> 00:01:41,552
+given a sample input of great game
+
+37
+00:01:41,591 --> 00:01:44,397
+tonight, which I would say is definitely positive in nature.
+
+38
+00:01:44,936 --> 00:01:47,561
+So right after that, I would then put in an ideal output of
+
+39
+00:01:47,682 --> 00:01:50,266
+simply positive. This gives Claude a
+
+40
+00:01:50,406 --> 00:01:53,129
+concrete objective example of how to deal
+
+41
+00:01:53,290 --> 00:01:55,855
+with some kind of input. So now Claude knows that
+
+42
+00:01:55,894 --> 00:01:58,459
+if it ever sees some kind of input like this again in the
+
+43
+00:01:58,478 --> 00:02:01,362
+future, well, it should probably label it as positive
+
+44
+00:02:01,664 --> 00:02:04,572
+because that's how it was done in the past. We
+
+45
+00:02:04,593 --> 00:02:07,215
+can make use of multi-shot prompting, that's where
+
+46
+00:02:07,236 --> 00:02:10,058
+we provide multiple different examples whenever
+
+47
+00:02:10,098 --> 00:02:13,242
+we want to handle corner cases. And dealing with sarcastic
+
+48
+00:02:13,282 --> 00:02:15,824
+tweets like this is definitely a corner case that we kind
+
+49
+00:02:15,865 --> 00:02:18,669
+of want to highlight to Claude. When adding
+
+50
+00:02:18,729 --> 00:02:21,371
+examples that highlight corner cases, add in some
+
+51
+00:02:21,451 --> 00:02:24,114
+context to Claude, and tell it should be especially
+
+52
+00:02:24,155 --> 00:02:26,736
+aware of certain scenarios. So for example,
+
+53
+00:02:26,836 --> 00:02:29,721
+we might say, be especially careful with tweets that contain
+
+54
+00:02:29,760 --> 00:02:32,463
+some sarcasm, and then provide an immediate
+
+55
+00:02:32,544 --> 00:02:35,187
+example of that. So now, in this case, I've got
+
+56
+00:02:35,228 --> 00:02:37,854
+an example tweet or a sample input of, oh
+
+57
+00:02:37,894 --> 00:02:40,459
+yeah, I really need a flight delayed tonight, excellent.
+
+58
+00:02:41,020 --> 00:02:43,626
+If you didn't understand the concept of sarcasm, this would seem
+
+59
+00:02:43,686 --> 00:02:46,251
+like a positive sentiment tweet. But of course,
+
+60
+00:02:46,412 --> 00:02:48,937
+we can probably understand that this is sarcasm and so it
+
+61
+00:02:49,037 --> 00:02:51,984
+probably is actually negative. Once again, Claude
+
+62
+00:02:52,003 --> 00:02:54,568
+can take a look at this example when grading our
+
+63
+00:02:54,609 --> 00:02:57,495
+provided input up here, the original input, and
+
+64
+00:02:57,534 --> 00:03:00,061
+Claude will have a better chance of recognizing that, oh
+
+65
+00:03:00,080 --> 00:03:02,806
+yeah, this looks like it's sarcasm too, this is also
+
+66
+00:03:02,846 --> 00:03:05,723
+probably negative in nature. Now,
+
+67
+00:03:05,985 --> 00:03:08,650
+multi-shot prompting like this can be used not only
+
+68
+00:03:08,689 --> 00:03:11,395
+for capturing corner cases or giving a little bit more clarity
+
+69
+00:03:11,435 --> 00:03:13,979
+to Claude, but also helping Claude understand
+
+70
+00:03:14,019 --> 00:03:16,544
+more complex output formats. So if
+
+71
+00:03:16,584 --> 00:03:19,269
+you ever need to generate a JSON object that is rather
+
+72
+00:03:19,368 --> 00:03:22,114
+complex in nature, you might provide a sample
+
+73
+00:03:22,213 --> 00:03:24,838
+input and an example output and show
+
+74
+00:03:24,878 --> 00:03:27,663
+that kind of complex JSON structure to Claude.
+
+75
+00:03:27,644 --> 00:03:30,266
+And now it will have a better idea of the exact structure
+
+76
+00:03:30,326 --> 00:03:33,009
+of output that it is going for. Providing examples
+
+77
+00:03:33,050 --> 00:03:35,552
+is especially effective whenever you are doing prompt
+
+78
+00:03:35,673 --> 00:03:38,376
+evals as we currently are. Remember whenever
+
+79
+00:03:38,415 --> 00:03:41,159
+you run a prompt eval using our little framework inside
+
+80
+00:03:41,180 --> 00:03:44,062
+the notebook, it creates an HTML file inside the same directory.
+
+81
+00:03:44,584 --> 00:03:47,387
+So we can hunt through this file until we find a perfect
+
+82
+00:03:47,407 --> 00:03:50,090
+10, or hopefully just a test case
+
+83
+00:03:50,110 --> 00:03:52,612
+with a rather high score. If I scroll through, I
+
+84
+00:03:53,032 --> 00:03:55,676
+will find a 10 right here. Now, you
+
+85
+00:03:55,736 --> 00:03:58,280
+might not have any tens inside of your output. If you don't,
+
+86
+00:03:58,319 --> 00:04:01,002
+that's totally fine. Just try to find the record with the highest score.
+
+87
+00:04:01,864 --> 00:04:04,447
+So this is an example of where we had some input and
+
+88
+00:04:04,567 --> 00:04:07,169
+output that was gauged to be pretty much as
+
+89
+00:04:07,289 --> 00:04:10,152
+good as we're going to get by our model grader. So
+
+90
+00:04:10,173 --> 00:04:12,675
+we might decide to provide this as an example inside of
+
+91
+00:04:12,716 --> 00:04:15,258
+our prompt. And hopefully, that will guide Claude to
+
+92
+00:04:15,319 --> 00:04:18,322
+producing output that looks like this a little bit more often.
+
+93
+00:04:19,264 --> 00:04:21,829
+Let's try this out. I'm going to copy this input
+
+94
+00:04:21,848 --> 00:04:24,612
+right here. Go back over to my prompt.
+
+95
+00:04:25,394 --> 00:04:28,459
+I'm going to scroll underneath the guideline section. And
+
+96
+00:04:28,478 --> 00:04:31,324
+I'm going to explicitly tell Claude that I'm about to provide
+
+97
+00:04:31,343 --> 00:04:33,867
+it an example that's going to contain a sample input
+
+98
+00:04:34,187 --> 00:04:36,752
+and an ideal output. So I'll say here is
+
+99
+00:04:36,771 --> 00:04:39,295
+a an example with
+
+100
+00:04:39,375 --> 00:04:41,959
+a sample input and an ideal
+
+101
+00:04:42,300 --> 00:04:45,045
+output. I'll then put in my sample input
+
+102
+00:04:45,185 --> 00:04:51,521
+inside of XML tags. and
+
+103
+00:04:51,620 --> 00:04:57,175
+an ideal output. And
+
+104
+00:04:57,255 --> 00:04:59,822
+inside those tags, I'm going to go back over and copy
+
+105
+00:04:59,882 --> 00:05:02,730
+paste the output from right here. I'll
+
+106
+00:05:02,750 --> 00:05:05,377
+then paste it in like so and
+
+107
+00:05:05,416 --> 00:05:08,086
+fix some indentation. Before
+
+108
+00:05:08,127 --> 00:05:10,629
+we rerun our eval, there's one last thing I want to show you.
+
+109
+00:05:10,829 --> 00:05:13,392
+This last step is completely optional, but I personally have
+
+110
+00:05:13,432 --> 00:05:16,055
+had great success with it. It's often very
+
+111
+00:05:16,115 --> 00:05:18,718
+beneficial to help Claude understand exactly why
+
+112
+00:05:18,759 --> 00:05:21,380
+this is ideal output. If we go back over to
+
+113
+00:05:21,440 --> 00:05:24,024
+our report, remember we have this last column over here
+
+114
+00:05:24,064 --> 00:05:26,586
+that explains exactly why the grader thought that
+
+115
+00:05:26,607 --> 00:05:29,110
+this was some ideal output. So we can copy
+
+116
+00:05:29,269 --> 00:05:32,112
+just the kind of first half of some message over here where
+
+117
+00:05:32,132 --> 00:05:35,255
+it says or lists out why this is a good response.
+
+118
+00:05:36,603 --> 00:05:39,245
+Take that back over, and then underneath the closing
+
+119
+00:05:39,406 --> 00:05:41,968
+ideal output tag, we could paste in that
+
+120
+00:05:42,028 --> 00:05:44,569
+reasoning. And then maybe update the grammar just a little bit
+
+121
+00:05:44,589 --> 00:05:47,132
+to say, this example meal plan
+
+122
+00:05:47,192 --> 00:05:49,875
+is well structured, etc. So now Claude has a better idea
+
+123
+00:05:50,014 --> 00:05:52,617
+of exactly why this is considered to be ideal
+
+124
+00:05:52,718 --> 00:05:55,459
+output. And it's going to better reinforce the idea
+
+125
+00:05:55,500 --> 00:05:58,523
+that Claude needs to return a well structured output
+
+126
+00:05:58,682 --> 00:06:01,264
+that contains some detailed information on the food choices
+
+127
+00:06:01,485 --> 00:06:04,367
+and quantities, and most importantly, matches
+
+128
+00:06:04,387 --> 00:06:07,754
+the athlete's goals and restrictions. Okay,
+
+129
+00:06:07,774 --> 00:06:10,285
+so let's now run that cell and
+
+130
+00:06:10,305 --> 00:06:13,838
+then rerun our eval and see how we are doing. So
+
+131
+00:06:13,858 --> 00:06:16,369
+I'm going to rerun this and are we going to go
+
+132
+00:06:16,389 --> 00:06:18,994
+up or down. We end up going
+
+133
+00:06:19,033 --> 00:06:22,278
+up just a little bit to 7.96. Well,
+
+134
+00:06:22,358 --> 00:06:24,901
+let's wrap things up. As a reminder, this technique is
+
+135
+00:06:24,980 --> 00:06:27,744
+often referred to as one shot or multi-shot prompting.
+
+136
+00:06:28,305 --> 00:06:30,927
+One shot is where you provide a single example, multi-shot
+
+137
+00:06:30,968 --> 00:06:33,490
+is where you provide multiple examples. And this
+
+138
+00:06:33,550 --> 00:06:36,074
+is a technique you're going to very often use anytime
+
+139
+00:06:36,093 --> 00:06:38,637
+you want to make sure Claude handles corner cases, or
+
+140
+00:06:38,737 --> 00:06:41,380
+especially when you want Claude to make sure it matches
+
+141
+00:06:41,401 --> 00:06:43,362
+some kind of complex output format.

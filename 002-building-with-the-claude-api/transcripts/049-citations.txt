@@ -1,0 +1,447 @@
+1
+00:00:00,335 --> 00:00:02,918
+In the PDF file that we were just working with, I'm going to scroll down
+
+2
+00:00:02,938 --> 00:00:05,681
+to the very bottom page. And done here at the bottom,
+
+3
+00:00:05,740 --> 00:00:08,564
+you'll notice that it mentions that Earth's atmosphere in oceans
+
+4
+00:00:08,605 --> 00:00:11,227
+were formed by volcanic activity and outgassing.
+
+5
+00:00:11,747 --> 00:00:14,391
+Now, as a little exercise, I want to try to ask Claude
+
+6
+00:00:14,711 --> 00:00:17,655
+a very simple question. I want to ask it how Earth's atmospheres
+
+7
+00:00:17,754 --> 00:00:20,378
+and oceans were formed. And I would probably expect
+
+8
+00:00:20,417 --> 00:00:22,960
+to see some kind of answer that says something like volcanic activity
+
+9
+00:00:23,080 --> 00:00:26,144
+and outgassing. So I'm going to copy this right here and
+
+10
+00:00:26,204 --> 00:00:29,163
+put it into my prompt, and ask Claude. Power,
+
+11
+00:00:29,224 --> 00:00:32,408
+Earth's atmosphere and oceans formed. Now,
+
+12
+00:00:32,448 --> 00:00:35,072
+I'm going to run this really quick. And for me at
+
+13
+00:00:35,152 --> 00:00:37,774
+least, I'll notice that in the very first sentence here, I'm given
+
+14
+00:00:37,795 --> 00:00:40,378
+a very appropriate answer. I'm told that these were
+
+15
+00:00:40,439 --> 00:00:43,061
+formed by volcanic activity and outgassing. So that's
+
+16
+00:00:43,243 --> 00:00:46,087
+really exactly what I would expect. But I want you to imagine
+
+17
+00:00:46,127 --> 00:00:48,710
+getting this answer from the perspective of a user. When
+
+18
+00:00:48,729 --> 00:00:51,353
+a user sees this generated text, they might think that it's just
+
+19
+00:00:51,514 --> 00:00:54,097
+Claude speaking directly from memory here. And the
+
+20
+00:00:54,116 --> 00:00:56,820
+user might not really understand that we are actually citing some
+
+21
+00:00:56,860 --> 00:00:59,384
+kind of source here. In this case, the source is not perfect. It
+
+22
+00:00:59,463 --> 00:01:02,167
+is Wikipedia, but at least it is something.
+
+23
+00:01:02,148 --> 00:01:04,731
+So what would be really fantastic is if there was some kind
+
+24
+00:01:04,751 --> 00:01:07,436
+of way to somehow inform the user or tell them how
+
+25
+00:01:07,516 --> 00:01:10,040
+we are getting this information. Luckily, Claude has
+
+26
+00:01:10,141 --> 00:01:13,165
+access to a feature called Citations. Citations
+
+27
+00:01:13,185 --> 00:01:15,769
+allow Claude to refer to some outside source
+
+28
+00:01:15,789 --> 00:01:18,352
+of information directly and say that it got its answer
+
+29
+00:01:18,453 --> 00:01:21,037
+by looking at some other document or some other source of
+
+30
+00:01:21,097 --> 00:01:23,781
+text. Now, let me show you how citations work
+
+31
+00:01:23,881 --> 00:01:26,483
+because once you see it in action, I think you'll have a really
+
+32
+00:01:26,504 --> 00:01:29,027
+good idea of what's going on. I'm going to scroll up to
+
+33
+00:01:29,126 --> 00:01:32,010
+our prompt right here, and I'm going to make a little modification
+
+34
+00:01:32,049 --> 00:01:34,753
+to the first block that we're putting into
+
+35
+00:01:34,772 --> 00:01:37,275
+this message. Right after the source field, I'm going
+
+36
+00:01:37,295 --> 00:01:40,399
+to add in a title of earth.pdf
+
+37
+00:01:40,519 --> 00:01:43,621
+because that is the name of the PDF file that we are opening and
+
+38
+00:01:43,641 --> 00:01:46,344
+a citations field that will be a dictionary with
+
+39
+00:01:46,465 --> 00:01:49,147
+enabled true, like so.
+
+40
+00:01:50,495 --> 00:01:53,319
+Now I'm going to send off this request again. And
+
+41
+00:01:53,460 --> 00:01:56,305
+let's see what we get back now. Now we're going to see that our response
+
+42
+00:01:56,445 --> 00:01:59,251
+is much more complicated than it was previously. Our
+
+43
+00:01:59,352 --> 00:02:02,076
+content field right here is a list that has some text
+
+44
+00:02:02,117 --> 00:02:04,762
+blocks and some of these text block things have a
+
+45
+00:02:04,902 --> 00:02:07,626
+citations list with something called a citation page
+
+46
+00:02:07,746 --> 00:02:10,292
+location. So let's focus on exactly what
+
+47
+00:02:10,353 --> 00:02:13,419
+a citation page location is for just a moment. Let's
+
+48
+00:02:13,438 --> 00:02:16,003
+show you a diagram. A citation page location
+
+49
+00:02:16,044 --> 00:02:18,590
+is Claude's way of telling us exactly where it got some
+
+50
+00:02:18,689 --> 00:02:21,194
+fact or some piece of information from. So
+
+51
+00:02:21,275 --> 00:02:23,820
+in our case, we got back a structure that has
+
+52
+00:02:23,860 --> 00:02:26,445
+a cited text, document index, document title,
+
+53
+00:02:26,485 --> 00:02:29,230
+start page, and end page. The cited text is
+
+54
+00:02:29,251 --> 00:02:32,555
+the text out of the source document, in our case, earth.pdf,
+
+55
+00:02:33,116 --> 00:02:35,818
+that is somehow supporting Claude's statement. The
+
+56
+00:02:35,859 --> 00:02:38,662
+document index and the document title tell us exactly where
+
+57
+00:02:38,741 --> 00:02:41,525
+this statement was made, and the start and end page
+
+58
+00:02:41,544 --> 00:02:44,147
+tell us exactly where inside of that document that
+
+59
+00:02:44,188 --> 00:02:46,730
+statement was made. Now, the real intent behind
+
+60
+00:02:46,792 --> 00:02:49,414
+giving you these citations is to allow you to build up a user
+
+61
+00:02:49,435 --> 00:02:52,377
+interface that looks something like this out of Claude's answer.
+
+62
+00:02:52,358 --> 00:02:55,062
+So I took the response that we just got out of Claude. I
+
+63
+00:02:55,102 --> 00:02:57,806
+fed it back into Claude and asked it to render
+
+64
+00:02:57,846 --> 00:03:00,670
+that entire response in a nicely formatted document and
+
+65
+00:03:00,691 --> 00:03:03,414
+give me some popups to represent all the different citations.
+
+66
+00:03:03,435 --> 00:03:06,038
+But now if I mouse over the one or the two or the
+
+67
+00:03:06,118 --> 00:03:08,663
+three, I'll see a nicely formatted popup appear.
+
+68
+00:03:09,022 --> 00:03:12,008
+This popup contains all the information out of that citation
+
+69
+00:03:12,068 --> 00:03:14,771
+page location object. It is meant to inform the user
+
+70
+00:03:14,912 --> 00:03:17,537
+that Claude's response here, specifically this sentence,
+
+71
+00:03:17,576 --> 00:03:20,181
+really, is being informed by some outside document.
+
+72
+00:03:20,602 --> 00:03:24,548
+So in this case, this sentence is coming from earth.pdf,
+
+73
+00:03:24,568 --> 00:03:27,111
+specifically some text on pages four to five,
+
+74
+00:03:27,592 --> 00:03:30,237
+and the actual text that we're citing is earth's atmosphere was,
+
+75
+00:03:30,457 --> 00:03:33,241
+et cetera, et cetera. So this entire citations feature
+
+76
+00:03:33,262 --> 00:03:36,046
+allows you to build up interfaces like this where a user
+
+77
+00:03:36,086 --> 00:03:38,770
+can be assured that the information being presented by Claude
+
+78
+00:03:38,811 --> 00:03:41,655
+is coming from some actual outside source. The
+
+79
+00:03:41,715 --> 00:03:44,278
+user can then go and refer to that source and make sure that Claude
+
+80
+00:03:44,318 --> 00:03:46,962
+is correctly interpreting the information inside
+
+81
+00:03:47,002 --> 00:03:49,706
+that outside document. This citations feature is
+
+82
+00:03:49,766 --> 00:03:52,891
+not restricted to only being used with PDF documents.
+
+83
+00:03:52,872 --> 00:03:55,656
+You can also use it with plain text as well. So
+
+84
+00:03:55,735 --> 00:03:58,719
+as a very quick example, in the cell right above, I
+
+85
+00:03:58,759 --> 00:04:01,623
+manually copy pasted in some text out of the PDF
+
+86
+00:04:01,663 --> 00:04:04,467
+document, and I assigned it to a variable of article text.
+
+87
+00:04:04,487 --> 00:04:07,271
+Now I can go back down to where I'm making my request down here, and
+
+88
+00:04:07,292 --> 00:04:10,156
+I'm going to make a big update to this block. I'm
+
+89
+00:04:10,175 --> 00:04:12,778
+going to leave the type of document. I'm going to leave this
+
+90
+00:04:12,838 --> 00:04:16,264
+source, but I'm going to change the type to be text.
+
+91
+00:04:16,283 --> 00:04:19,267
+I'm going to change the media type to be text slash plain,
+
+92
+00:04:19,307 --> 00:04:21,834
+and then the data. to
+
+93
+00:04:21,875 --> 00:04:24,478
+be article. So that is the text.
+
+94
+00:04:24,499 --> 00:04:27,142
+That was, oh, sorry, it's article text. There we go. So that's
+
+95
+00:04:27,163 --> 00:04:30,548
+the text that I assigned to that variable up there. I'm
+
+96
+00:04:30,567 --> 00:04:33,211
+then going to change the title to how about something
+
+97
+00:04:33,271 --> 00:04:36,437
+like earth article, since it's not really directly
+
+98
+00:04:36,456 --> 00:04:39,281
+a PDF file anymore. And then I can leave the enabled
+
+99
+00:04:39,300 --> 00:04:42,045
+true with citations in there. So now if I run
+
+100
+00:04:42,064 --> 00:04:44,947
+this again, and take a look at the response,
+
+101
+00:04:45,569 --> 00:04:48,153
+we will see that instead of a citation page location,
+
+102
+00:04:48,192 --> 00:04:51,218
+now we get a citation chart location. So
+
+103
+00:04:51,259 --> 00:04:53,802
+this is going to give us a position inside of that big block
+
+104
+00:04:53,843 --> 00:04:56,447
+of text that Claude is citing from. We can
+
+105
+00:04:56,466 --> 00:04:59,091
+now use this to build up a very similar interface to the one I just showed
+
+106
+00:04:59,112 --> 00:05:02,055
+you inside the browser. So again, you can cite from plain
+
+107
+00:05:02,096 --> 00:05:04,781
+text or PDF documents. Either way,
+
+108
+00:05:05,041 --> 00:05:07,687
+I really recommend you make use of the citations feature anytime
+
+109
+00:05:07,708 --> 00:05:10,233
+that it's critical to make sure that users can somehow
+
+110
+00:05:10,374 --> 00:05:13,199
+investigate how Claude is building up its response and
+
+111
+00:05:13,240 --> 00:05:15,745
+ensure that Claude is drawing information from some
+
+112
+00:05:16,086 --> 00:05:18,853
+source documents, either a PDF or plain text.

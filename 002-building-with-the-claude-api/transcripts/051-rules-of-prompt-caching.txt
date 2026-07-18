@@ -1,0 +1,575 @@
+1
+00:00:00,031 --> 00:00:02,755
+Now that we understand the theory, we are going to explore how prompt
+
+2
+00:00:02,775 --> 00:00:05,299
+caching Claude actually works. The core idea of
+
+3
+00:00:05,339 --> 00:00:08,005
+prompt caching is identical to what we discussed in the last
+
+4
+00:00:08,044 --> 00:00:10,728
+video. We will make an initial request off
+
+5
+00:00:10,750 --> 00:00:13,374
+to Claude. Claude is going to do some processing
+
+6
+00:00:13,413 --> 00:00:15,917
+on that initial message, and then Claude is going to
+
+7
+00:00:15,958 --> 00:00:18,562
+save all that work into a temporary cache.
+
+8
+00:00:19,657 --> 00:00:22,242
+Then if we make a fault request at some future point
+
+9
+00:00:22,283 --> 00:00:24,968
+in time and include the identical exact
+
+10
+00:00:25,088 --> 00:00:27,754
+same message, rather than processing that message
+
+11
+00:00:27,794 --> 00:00:30,620
+all over again, Claude is going to instead look into the cache,
+
+12
+00:00:31,001 --> 00:00:33,706
+find the work that it had already saved, and load
+
+13
+00:00:33,726 --> 00:00:36,332
+it up. Just to be clear, the work that be saved the
+
+14
+00:00:36,371 --> 00:00:39,018
+cache does not persist forever. It is only stored
+
+15
+00:00:39,037 --> 00:00:41,701
+there for one hour. You're going to find prompt caching is
+
+16
+00:00:41,741 --> 00:00:44,487
+most useful any time that you are repeatedly sending
+
+17
+00:00:44,527 --> 00:00:47,210
+the same content over to Claude again and again and again,
+
+18
+00:00:47,610 --> 00:00:50,515
+because it really is this kind of two phase process. We
+
+19
+00:00:50,555 --> 00:00:53,079
+have to make that initial request to write some data into the
+
+20
+00:00:53,100 --> 00:00:55,624
+cache, and then only the follow up requests are
+
+21
+00:00:55,664 --> 00:00:58,287
+going to be able to take advantage of that work that was done ahead
+
+22
+00:00:58,328 --> 00:01:00,851
+of time. This caching system is not enabled by
+
+23
+00:01:00,892 --> 00:01:03,415
+default with Claude. Instead, to turn on
+
+24
+00:01:03,456 --> 00:01:06,099
+caching, we have to manually add a cache breakpoint
+
+25
+00:01:06,079 --> 00:01:08,584
+to a block inside of one of our different messages. And
+
+26
+00:01:08,623 --> 00:01:11,528
+I've showed an example of that on the right-hand side in this example
+
+27
+00:01:11,629 --> 00:01:14,533
+user message. So all we have to do to turn on caching
+
+28
+00:01:14,552 --> 00:01:17,096
+is put in that little cache control field. And
+
+29
+00:01:17,117 --> 00:01:19,921
+there's a lot of rules around what that cache control thing actually
+
+30
+00:01:19,981 --> 00:01:22,605
+does. But before we go into those rules and really explain
+
+31
+00:01:22,646 --> 00:01:25,311
+what's going on, I want to give you a little tip
+
+32
+00:01:25,350 --> 00:01:28,155
+here, something that's going to make your life a little bit easier.
+
+33
+00:01:28,135 --> 00:01:31,021
+Throughout this course, we've been making use of a little shorthand
+
+34
+00:01:31,120 --> 00:01:33,745
+for writing out text blocks very frequently. And I'm
+
+35
+00:01:33,786 --> 00:01:36,471
+showing that on the left hand side. So this is a user message
+
+36
+00:01:36,772 --> 00:01:39,537
+that is using the shorthand for defining a text block.
+
+37
+00:01:40,218 --> 00:01:42,763
+If we have a user message that only has a little bit of
+
+38
+00:01:42,783 --> 00:01:45,427
+text signed to it, we can assign a string directly
+
+39
+00:01:45,507 --> 00:01:48,167
+to that content field. There is another way
+
+40
+00:01:48,206 --> 00:01:51,093
+in which we can write out a text block, and I'm showing this alternative
+
+41
+00:01:51,132 --> 00:01:53,879
+way of writing out a text block on the right-hand side. So
+
+42
+00:01:53,918 --> 00:01:56,563
+the alternative method is to write out a content field,
+
+43
+00:01:57,225 --> 00:01:59,850
+assign a list to it, and then side there put a dictionary
+
+44
+00:01:59,870 --> 00:02:02,397
+that has a type of text, and then a text
+
+45
+00:02:02,417 --> 00:02:04,981
+field that contains your actual text. Now we have not
+
+46
+00:02:05,022 --> 00:02:07,625
+really been making use of that long-hand form, but
+
+47
+00:02:07,665 --> 00:02:10,549
+if you want to use cache control, you want to turn on this prompt
+
+48
+00:02:10,588 --> 00:02:13,171
+caching feature, you have to write out these text fields
+
+49
+00:02:13,552 --> 00:02:16,235
+in long form. So you can actually add on that
+
+50
+00:02:16,377 --> 00:02:19,060
+cache control field. In other words, we have
+
+51
+00:02:19,080 --> 00:02:21,703
+to write out cache control somewhere, and over here on the right-hand side,
+
+52
+00:02:21,743 --> 00:02:24,407
+we have some place to put it. If we use the short form, there's
+
+53
+00:02:24,486 --> 00:02:27,091
+no place for us to put it. When we add a breakpoint
+
+54
+00:02:27,191 --> 00:02:29,836
+into a block, all the content in our entire request
+
+55
+00:02:29,955 --> 00:02:32,621
+is going to be cached up to and including that
+
+56
+00:02:32,681 --> 00:02:35,466
+breakpoint. So in this scenario, if we send in a request
+
+57
+00:02:35,485 --> 00:02:38,412
+like this where the first block has a breakpoint, Claude
+
+58
+00:02:38,431 --> 00:02:40,996
+is going to do some amount of work processing this text right
+
+59
+00:02:41,015 --> 00:02:43,621
+here. And it's going to result in some amount of work
+
+60
+00:02:43,640 --> 00:02:46,406
+done. Because this text block has a breakpoint,
+
+61
+00:02:46,947 --> 00:02:49,711
+this work is going to be stored inside the cache.
+
+62
+00:02:49,692 --> 00:02:52,396
+But this later work is after the breakpoint,
+
+63
+00:02:52,556 --> 00:02:55,241
+so it's not going to be cache. If we then send a follow-up
+
+64
+00:02:55,262 --> 00:02:57,825
+request later on, Claude is going to take a look into the
+
+65
+00:02:57,846 --> 00:03:00,471
+cache and find that some work was already done for
+
+66
+00:03:00,531 --> 00:03:03,135
+processing this very first block. So it's going to retrieve
+
+67
+00:03:03,175 --> 00:03:05,980
+that work and use it to save itself a little bit of effort.
+
+68
+00:03:06,341 --> 00:03:08,846
+One thing to keep in mind is that our follow-up request must
+
+69
+00:03:08,906 --> 00:03:11,469
+have identical content inside of it all the way up to
+
+70
+00:03:11,509 --> 00:03:14,174
+that breakpoint. So for example, if our initial
+
+71
+00:03:14,234 --> 00:03:16,977
+text block right here that had a breakpoint, if we added in just
+
+72
+00:03:17,016 --> 00:03:19,661
+the word please to it. No longer is this content
+
+73
+00:03:19,741 --> 00:03:22,283
+identical, and so this work would not have been
+
+74
+00:03:22,343 --> 00:03:25,447
+used as out of the cache. Instead, Claude would reprocess
+
+75
+00:03:25,507 --> 00:03:28,411
+this entire block and all the content before it. Cache
+
+76
+00:03:28,431 --> 00:03:30,954
+breakpoints can span across multiple different messages
+
+77
+00:03:31,153 --> 00:03:33,896
+and multiple different blocks. So for example, if we send
+
+78
+00:03:33,977 --> 00:03:36,760
+in a user message and then an assistant and then another
+
+79
+00:03:36,860 --> 00:03:39,443
+user, and the very last message here has a block with
+
+80
+00:03:39,503 --> 00:03:42,187
+a breakpoint, Everything is going to be cached up
+
+81
+00:03:42,227 --> 00:03:44,871
+to and including this block right here. So
+
+82
+00:03:44,890 --> 00:03:47,614
+we'd imagine that the work that is done to process all
+
+83
+00:03:47,633 --> 00:03:50,858
+three of those messages is going to be stored inside the cache. Then
+
+84
+00:03:50,877 --> 00:03:53,861
+when we make our follow request later on, as long as everything
+
+85
+00:03:53,901 --> 00:03:56,745
+up to an including that break point is identical, the
+
+86
+00:03:56,805 --> 00:03:59,408
+work is going to be retrieved out of the cache. And again, we're
+
+87
+00:03:59,429 --> 00:04:02,271
+going to save ourselves a little bit of effort. We are not restricted
+
+88
+00:04:02,331 --> 00:04:04,915
+to adding cache points onto text blocks. We can
+
+89
+00:04:04,996 --> 00:04:07,599
+also add them onto almost any other type of block, like
+
+90
+00:04:07,620 --> 00:04:10,645
+an image block or a tool use or a tool result.
+
+91
+00:04:10,664 --> 00:04:13,468
+We can also add these onto tool schemas and
+
+92
+00:04:13,609 --> 00:04:16,372
+onto system prompts as well. And I've shown an example
+
+93
+00:04:16,473 --> 00:04:19,057
+of both those on the right hand side. You are very often going
+
+94
+00:04:19,096 --> 00:04:21,600
+to enable caching for your tools and for your system
+
+95
+00:04:21,620 --> 00:04:24,706
+prompt as well. Because it turns out that for most applications,
+
+96
+00:04:24,865 --> 00:04:27,410
+not all, but for many applications, your system prompt
+
+97
+00:04:27,550 --> 00:04:30,254
+and your list of tools don't end up changing. So these
+
+98
+00:04:30,293 --> 00:04:33,017
+are excellent places to place a cache breakpoint.
+
+99
+00:04:33,379 --> 00:04:36,182
+In total, we can apply a breakpoint to tool schemas, system
+
+100
+00:04:36,202 --> 00:04:38,807
+prompts, and message blocks. Now, these are
+
+101
+00:04:38,846 --> 00:04:41,471
+not three separate cache systems. And
+
+102
+00:04:41,690 --> 00:04:44,615
+let me show you exactly what I mean by that. Whenever
+
+103
+00:04:44,675 --> 00:04:47,540
+you add in tools, a system prompt, and messages, behind
+
+104
+00:04:47,579 --> 00:04:50,124
+the scenes, these all get joined together when they are
+
+105
+00:04:50,184 --> 00:04:52,887
+fed into Claude, and they get joined together in that particular
+
+106
+00:04:52,968 --> 00:04:55,752
+order. It is first the tools, then the system prompt,
+
+107
+00:04:55,992 --> 00:04:58,576
+and then your list of messages. So if you place a
+
+108
+00:04:58,617 --> 00:05:01,322
+cache breakpoint on your very last tool, everything
+
+109
+00:05:01,362 --> 00:05:04,108
+up to and including that last tool will
+
+110
+00:05:04,149 --> 00:05:06,694
+be cached. But the system prompt and your list
+
+111
+00:05:06,733 --> 00:05:09,279
+of messages will not be cached. So if we then
+
+112
+00:05:09,339 --> 00:05:12,105
+make a follow request and we change that assistant message
+
+113
+00:05:12,125 --> 00:05:14,803
+right there, toy fine. We're still going
+
+114
+00:05:14,843 --> 00:05:17,548
+to save ourselves a little bit of work because the list of tools
+
+115
+00:05:17,869 --> 00:05:20,634
+was cached ahead of time. Last thing I want to mention very quickly
+
+116
+00:05:20,673 --> 00:05:23,218
+is that we can add in multiple different cash breakpoints,
+
+117
+00:05:23,579 --> 00:05:26,204
+up to four in total. So I might decide to add
+
+118
+00:05:26,244 --> 00:05:28,827
+in a cash breakpoint at the last tool schema that
+
+119
+00:05:28,889 --> 00:05:31,673
+I pass in, and then maybe I add in a cash breakpoint
+
+120
+00:05:31,793 --> 00:05:34,298
+on this assistant message down here. If I then make
+
+121
+00:05:34,358 --> 00:05:36,860
+a follow request and I change the user message down
+
+122
+00:05:36,901 --> 00:05:39,725
+here, no problem. We're going to save ourselves
+
+123
+00:05:39,745 --> 00:05:42,548
+the work of having to reprocess the entire list of tools
+
+124
+00:05:42,910 --> 00:05:45,694
+and system prompt and user message as well. Likewise,
+
+125
+00:05:45,874 --> 00:05:48,377
+if we change the first user message, well, then we're
+
+126
+00:05:48,398 --> 00:05:50,920
+going to invalidate the cache for everything down here, but
+
+127
+00:05:50,940 --> 00:05:53,785
+we'll still have the cache work for our list of tools.
+
+128
+00:05:53,764 --> 00:05:56,408
+So we are very often going to add in multiple different cache
+
+129
+00:05:56,468 --> 00:05:59,033
+breakpoints if appropriate. We might decide to
+
+130
+00:05:59,074 --> 00:06:01,718
+cache our entire list of tools and the system prompt
+
+131
+00:06:01,997 --> 00:06:05,002
+and maybe some number of messages as well. Exactly
+
+132
+00:06:05,062 --> 00:06:07,607
+where you place these different breakpoints really just comes down to
+
+133
+00:06:07,646 --> 00:06:10,290
+your particular application. The very last thing I want to share
+
+134
+00:06:10,310 --> 00:06:13,175
+with you is that there is a minimum content length for caching.
+
+135
+00:06:13,675 --> 00:06:16,500
+So in order to cache some amount of content, we must cache
+
+136
+00:06:16,620 --> 00:06:19,163
+at least 1,024 tokens. So
+
+137
+00:06:19,204 --> 00:06:21,908
+on the top right-hand example, I've got a cache breakpoint
+
+138
+00:06:22,028 --> 00:06:24,672
+on a message that has only the text high there. This
+
+139
+00:06:24,733 --> 00:06:27,396
+is definitely not 1,024 tokens long, so
+
+140
+00:06:27,435 --> 00:06:30,060
+this content would not be written to the cache. But
+
+141
+00:06:30,100 --> 00:06:32,713
+if I took that text block and duplicated
+
+142
+00:06:32,733 --> 00:06:35,245
+500 times, now I've
+
+143
+00:06:35,346 --> 00:06:38,057
+probably got greater than 1,024 tokens, so
+
+144
+00:06:38,098 --> 00:06:41,052
+this entire list of different blocks would be cached.

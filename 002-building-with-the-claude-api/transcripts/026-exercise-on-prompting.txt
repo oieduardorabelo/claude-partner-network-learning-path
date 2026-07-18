@@ -1,0 +1,455 @@
+1
+00:00:00,031 --> 00:00:02,613
+Let's test your knowledge of prompt engineering by going through
+
+2
+00:00:02,633 --> 00:00:05,256
+a quick exercise. Now for this exercise,
+
+3
+00:00:05,315 --> 00:00:08,458
+I made a new notebook called 003 underscore
+
+4
+00:00:08,499 --> 00:00:11,060
+exercise. You do not have to download this one.
+
+5
+00:00:11,160 --> 00:00:13,763
+All I did was replace the task description, the
+
+6
+00:00:13,884 --> 00:00:16,606
+prompt input spec, and then adjusted
+
+7
+00:00:16,646 --> 00:00:19,309
+some of the extra criteria down here. So if you want to,
+
+8
+00:00:19,428 --> 00:00:21,931
+you could manually change all the stuff in the notebook you're working
+
+9
+00:00:21,971 --> 00:00:24,754
+out of, or alternatively just download this 003
+
+10
+00:00:25,013 --> 00:00:28,097
+exercise and get caught up with exactly where I am.
+
+11
+00:00:28,077 --> 00:00:30,942
+Your goal in this exercise is to improve an existing
+
+12
+00:00:31,001 --> 00:00:33,646
+prompt using all the prompt engineering topics we've learned about
+
+13
+00:00:33,725 --> 00:00:36,250
+inside this module. The dataset you're going to be
+
+14
+00:00:36,310 --> 00:00:38,835
+working with is going to create a series of
+
+15
+00:00:38,975 --> 00:00:41,679
+passages of text from a scholarly
+
+16
+00:00:41,798 --> 00:00:44,404
+article. The goal of your prompt is to
+
+17
+00:00:44,543 --> 00:00:47,148
+take in that passage of text and extract all
+
+18
+00:00:47,188 --> 00:00:49,752
+the topics from it into a JSON array
+
+19
+00:00:49,771 --> 00:00:52,335
+of strings. And when I say topic, I really just
+
+20
+00:00:52,396 --> 00:00:54,960
+mean, well, what does this article talk about?
+
+21
+00:00:55,360 --> 00:00:57,966
+So if it's an article about, say, solar panels, I
+
+22
+00:00:57,985 --> 00:01:00,792
+would want to get back a JSON array of strings that contains
+
+23
+00:01:01,353 --> 00:01:04,037
+solar panels inside of it, only with any other topics
+
+24
+00:01:04,197 --> 00:01:06,923
+mentioned inside that text. The only
+
+25
+00:01:06,962 --> 00:01:09,628
+input to the prompt is going to be a content property.
+
+26
+00:01:09,868 --> 00:01:12,608
+So that's going to be one paragraph of text. Now,
+
+27
+00:01:12,909 --> 00:01:15,751
+in my notebook that I've opened right now, I have already executed
+
+28
+00:01:15,792 --> 00:01:18,594
+the cell and generated a dataset. I
+
+29
+00:01:18,615 --> 00:01:21,198
+have already put together a starter prompt for
+
+30
+00:01:21,259 --> 00:01:24,281
+you, and right now it's a very poor prompt that can definitely
+
+31
+00:01:24,382 --> 00:01:27,025
+be improved quite a bit. So go ahead
+
+32
+00:01:27,165 --> 00:01:29,929
+and play around with this prompt and use some of the different techniques
+
+33
+00:01:29,948 --> 00:01:32,652
+we have learned about. In order to evaluate your progress,
+
+34
+00:01:33,013 --> 00:01:35,676
+go ahead and run the cell down here. I've already included
+
+35
+00:01:35,695 --> 00:01:38,299
+a couple of extra criteria to make sure that you're kind of
+
+36
+00:01:38,459 --> 00:01:41,066
+achieving the correct result. Remember,
+
+37
+00:01:41,227 --> 00:01:43,790
+whenever you run the evaluation, you can always open up
+
+38
+00:01:43,831 --> 00:01:46,834
+that report.html file and get a better understanding
+
+39
+00:01:46,875 --> 00:01:49,558
+of what's going on. By default, with that really
+
+40
+00:01:49,578 --> 00:01:52,281
+simple prompt, I've got an average score of 2.8.
+
+41
+00:01:52,662 --> 00:01:55,305
+And so I'm hoping we can at least get that average
+
+42
+00:01:55,346 --> 00:01:58,510
+score over maybe seven or so. As
+
+43
+00:01:58,609 --> 00:02:01,334
+usual, I would encourage you to pause the video right here and
+
+44
+00:02:01,394 --> 00:02:04,378
+go ahead and give this exercise a shot. Otherwise,
+
+45
+00:02:04,397 --> 00:02:07,120
+if you want to stick around, I'm gonna go over a solution right
+
+46
+00:02:07,162 --> 00:02:09,837
+away. All right, so to solve this, we
+
+47
+00:02:09,897 --> 00:02:12,479
+know without a doubt all the work we're going to be doing is
+
+48
+00:02:12,560 --> 00:02:15,082
+focused on this variable right here. We need to
+
+49
+00:02:15,182 --> 00:02:17,985
+improve this prompt in some way to get back some better
+
+50
+00:02:18,126 --> 00:02:20,769
+outputs. The first thing we might do here is
+
+51
+00:02:20,808 --> 00:02:23,491
+make sure you run the evaluation at least one time to
+
+52
+00:02:23,532 --> 00:02:26,235
+generate that output.html file. And
+
+53
+00:02:26,254 --> 00:02:28,978
+then once you have created that file, I would encourage you to open it up and
+
+54
+00:02:29,018 --> 00:02:31,540
+take a look at some of the reasoning on why the
+
+55
+00:02:31,661 --> 00:02:34,437
+output has been graded so poorly. You'll
+
+56
+00:02:34,457 --> 00:02:36,961
+notice a common theme between each of these. A real
+
+57
+00:02:37,002 --> 00:02:39,506
+common theme right away that we can see is that, well, it
+
+58
+00:02:39,566 --> 00:02:42,169
+doesn't like the fact that we are not returning a JSON
+
+59
+00:02:42,229 --> 00:02:44,834
+array of strings. To solve this problem, let's make
+
+60
+00:02:44,913 --> 00:02:47,677
+use of that technique of being simple and direct inside
+
+61
+00:02:47,698 --> 00:02:50,260
+of our prompt. If we expect to get back a JSON array
+
+62
+00:02:50,282 --> 00:02:52,925
+of strings that contains all the topics out of this content,
+
+63
+00:02:53,325 --> 00:02:55,990
+well, we need to be very simple and direct with Claude
+
+64
+00:02:56,069 --> 00:02:58,633
+and tell it exactly what we want. So I'm going to
+
+65
+00:02:58,734 --> 00:03:01,838
+update the first line of the prompt right here and I'll say extract
+
+66
+00:03:02,219 --> 00:03:04,824
+key topics mentioned from a passage
+
+67
+00:03:05,044 --> 00:03:08,631
+of text from a scholarly journal
+
+68
+00:03:09,331 --> 00:03:12,176
+into a JSON array of strings
+
+69
+00:03:13,218 --> 00:03:15,782
+as simple as I can phrase it and as direct as
+
+70
+00:03:15,843 --> 00:03:18,360
+I can possibly make it. And right away, if I
+
+71
+00:03:18,400 --> 00:03:21,223
+rerun the prompt with the evaluation, I
+
+72
+00:03:21,264 --> 00:03:24,449
+will see that I get up to a kind of shocking 9.5
+
+73
+00:03:24,468 --> 00:03:26,972
+almost immediately. So I kind of didn't really expect
+
+74
+00:03:27,012 --> 00:03:29,575
+it to go that well because there are still some other techniques
+
+75
+00:03:29,596 --> 00:03:32,139
+we might want to try out here. But if we take a
+
+76
+00:03:32,159 --> 00:03:35,223
+look at the report now, I'm definitely getting back this JSON
+
+77
+00:03:35,484 --> 00:03:38,108
+containing all the different topics mentioned. And it looks like
+
+78
+00:03:38,147 --> 00:03:41,012
+the model grader is extremely happy with this output.
+
+79
+00:03:41,717 --> 00:03:44,421
+Now, I don't really want to leave it here. Obviously,
+
+80
+00:03:44,461 --> 00:03:46,965
+there are some other techniques we can add in to make sure
+
+81
+00:03:46,985 --> 00:03:49,588
+that we get the correct kind of output. So the next
+
+82
+00:03:49,628 --> 00:03:52,192
+technique we might add in is structuring our
+
+83
+00:03:52,211 --> 00:03:55,456
+prompt a little bit better by using some XML tags.
+
+84
+00:03:55,477 --> 00:03:58,180
+Before and after the content that we're going to interpolate
+
+85
+00:03:58,219 --> 00:04:00,903
+in right here, I'm going to add in some XML tags
+
+86
+00:04:01,163 --> 00:04:03,927
+and I'm going to give them the name of simply text.
+
+87
+00:04:05,174 --> 00:04:07,679
+Now in this case, I'm choosing to call these tags
+
+88
+00:04:07,739 --> 00:04:10,444
+text because I earlier referred to some text
+
+89
+00:04:10,564 --> 00:04:13,371
+inside of the first line of the prompt. So now we
+
+90
+00:04:13,411 --> 00:04:15,937
+have just a little bit more clear connection between
+
+91
+00:04:15,977 --> 00:04:18,482
+us talking about a passage of text right here and
+
+92
+00:04:18,601 --> 00:04:21,329
+us providing the text right here. Another
+
+93
+00:04:21,410 --> 00:04:23,954
+improvement that we might add in is to be very specific
+
+94
+00:04:24,074 --> 00:04:26,658
+in what we want Claude to do. So I could put in
+
+95
+00:04:26,678 --> 00:04:29,463
+a series of steps for Claude to follow. Let's
+
+96
+00:04:29,485 --> 00:04:32,088
+try that out. I might say follow these steps
+
+97
+00:04:32,589 --> 00:04:35,115
+and then list out exactly what I want Claude to do
+
+98
+00:04:35,194 --> 00:04:38,199
+step by step. So we might say closely
+
+99
+00:04:38,240 --> 00:04:40,964
+examine the provided
+
+100
+00:04:40,985 --> 00:04:44,059
+text. Identify
+
+101
+00:04:44,079 --> 00:04:46,983
+each topic mentioned, add
+
+102
+00:04:47,103 --> 00:04:49,627
+each topic to a JSON array,
+
+103
+00:04:49,668 --> 00:04:52,591
+and then finally respond with the JSON
+
+104
+00:04:52,672 --> 00:04:55,175
+array. Do not provide any
+
+105
+00:04:55,315 --> 00:04:58,300
+other text or commentary. Now,
+
+106
+00:04:58,319 --> 00:05:00,944
+if you wanted to also add in an example using one
+
+107
+00:05:00,983 --> 00:05:03,528
+shot or multi-shot prompting, absolutely feel free
+
+108
+00:05:03,567 --> 00:05:06,151
+to do so. But we already have some pretty good scores,
+
+109
+00:05:06,512 --> 00:05:09,357
+so I think this is probably enough. I'm going to read on
+
+110
+00:05:09,396 --> 00:05:12,319
+this prompt. I'll then run the evaluation
+
+111
+00:05:12,360 --> 00:05:15,047
+again and I end up getting a 9.5 again.
+
+112
+00:05:15,367 --> 00:05:17,913
+So I would say that this is a pretty strong prompt and I
+
+113
+00:05:17,934 --> 00:05:20,560
+would definitely trust it to extract a list of topics
+
+114
+00:05:20,682 --> 00:05:21,603
+from an article.

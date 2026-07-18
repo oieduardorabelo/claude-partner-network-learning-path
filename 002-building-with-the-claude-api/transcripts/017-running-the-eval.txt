@@ -1,0 +1,519 @@
+1
+00:00:00,031 --> 00:00:02,553
+With our data set generation complete, we
+
+2
+00:00:02,613 --> 00:00:05,216
+now need to take every record in that data set, which we're
+
+3
+00:00:05,237 --> 00:00:07,780
+going to refer to as a test case. So we're going to take
+
+4
+00:00:07,820 --> 00:00:10,663
+each test case and merge it with the prompt. We're
+
+5
+00:00:10,682 --> 00:00:13,606
+then going to take the result and feed it into Claude. And
+
+6
+00:00:13,627 --> 00:00:16,230
+then once we have all these different outputs, we're going to feed them
+
+7
+00:00:16,269 --> 00:00:19,112
+through our grader. Remember, we have not discussed
+
+8
+00:00:19,193 --> 00:00:21,716
+graders just yet. Don't worry, that's going to come up very
+
+9
+00:00:21,775 --> 00:00:24,324
+quickly. And once again, just to save a little bit of
+
+10
+00:00:24,385 --> 00:00:27,009
+time, I've written out a little bit of code here just
+
+11
+00:00:27,028 --> 00:00:29,551
+to help guide this next phase of our
+
+12
+00:00:29,591 --> 00:00:32,415
+workflow. I put together three separate functions
+
+13
+00:00:32,777 --> 00:00:35,860
+with a very clear comment on what each one does. The
+
+14
+00:00:35,901 --> 00:00:38,765
+first one that's easiest to understand is the run prompt
+
+15
+00:00:38,804 --> 00:00:41,408
+function. This is going to be called with a test case.
+
+16
+00:00:42,149 --> 00:00:44,753
+And those JSON objects we generated just
+
+17
+00:00:44,814 --> 00:00:47,758
+a moment ago, each of these is a test case. So
+
+18
+00:00:47,777 --> 00:00:50,341
+you can imagine that each of these one by one are
+
+19
+00:00:50,362 --> 00:00:52,965
+going to flow into the run prompt function. So
+
+20
+00:00:53,005 --> 00:00:56,249
+inside of here, our goal is to merge that task
+
+21
+00:00:56,329 --> 00:00:59,051
+that we generated with our prompt, generate
+
+22
+00:00:59,072 --> 00:01:01,655
+some text with Claude, and then return the result. So
+
+23
+00:01:01,895 --> 00:01:04,457
+let's do that right away. I'm going to
+
+24
+00:01:04,558 --> 00:01:07,081
+put in my V1 prompt
+
+25
+00:01:07,120 --> 00:01:09,683
+right here, which
+
+26
+00:01:09,804 --> 00:01:12,667
+is very simple. Remember, we are starting off as simple as possible
+
+27
+00:01:12,706 --> 00:01:16,551
+here. So it'll just say something like, please
+
+28
+00:01:16,590 --> 00:01:19,414
+solve the following task.
+
+29
+00:01:20,254 --> 00:01:22,819
+And I want this to be a F string and I'm
+
+30
+00:01:22,859 --> 00:01:26,367
+going to put in test case task.
+
+31
+00:01:27,850 --> 00:01:30,637
+Next up, we want to send this off to Claude. So I'll make a list
+
+32
+00:01:30,677 --> 00:01:33,262
+of messages. I'll add in a user message.
+
+33
+00:01:38,212 --> 00:01:41,418
+I'm then going to pass this off to Claude by calling chat.
+
+34
+00:01:43,087 --> 00:01:45,918
+And we're going to get back some resulting text, some result,
+
+35
+00:01:45,998 --> 00:01:48,549
+or maybe we'll call it output this time around. And then for right now,
+
+36
+00:01:48,751 --> 00:01:51,850
+I'll just return the output. Now remember,
+
+37
+00:01:52,231 --> 00:01:54,734
+we don't have any kind of formatting included or any
+
+38
+00:01:54,795 --> 00:01:57,799
+formatting instructions inside the prompt right now. So we're
+
+39
+00:01:57,819 --> 00:02:00,382
+going to probably get back a lot more output than we
+
+40
+00:02:00,483 --> 00:02:03,126
+ever asked for. The real goal of our prompt
+
+41
+00:02:03,206 --> 00:02:05,930
+is to make sure that we get just Python or JSON
+
+42
+00:02:06,031 --> 00:02:08,615
+or that regular expression. And we don't have anything for
+
+43
+00:02:08,655 --> 00:02:11,258
+that right now. So we'll almost definitely have to come back and make
+
+44
+00:02:11,299 --> 00:02:13,962
+some improvements. But for right now, we at least have
+
+45
+00:02:13,983 --> 00:02:16,598
+a start to run prompt. The
+
+46
+00:02:16,639 --> 00:02:19,264
+next thing we're going to work on is run test case.
+
+47
+00:02:19,925 --> 00:02:22,750
+The goal of this function is to take in one of those individual
+
+48
+00:02:22,789 --> 00:02:25,534
+cases, call the run prompt function
+
+49
+00:02:25,574 --> 00:02:28,540
+we just put together, get some output from Claude, and then grade
+
+50
+00:02:28,580 --> 00:02:31,466
+the result and return a dictionary describing
+
+51
+00:02:31,526 --> 00:02:34,030
+the and everything that happened there. Now
+
+52
+00:02:34,151 --> 00:02:36,975
+that sounds really complicated, but in reality, it's
+
+53
+00:02:36,996 --> 00:02:39,560
+going to be surprisingly simple. So let me show you all we have to do
+
+54
+00:02:39,620 --> 00:02:43,299
+here. We're going to put in output
+
+55
+00:02:43,580 --> 00:02:46,266
+that's going to come from calling the function that we were just working
+
+56
+00:02:46,306 --> 00:02:52,021
+on a moment ago. So this run prompt function. Put
+
+57
+00:02:52,062 --> 00:02:54,949
+in our test case and then we're going to do some grading
+
+58
+00:02:54,989 --> 00:02:57,575
+right here that's going to be a to do.
+
+59
+00:02:57,674 --> 00:03:00,437
+Right now, I'll just say that we have a hard coded score of 10. So
+
+60
+00:03:00,457 --> 00:03:03,140
+we definitely have to come back and do a lot of heavy
+
+61
+00:03:03,341 --> 00:03:05,884
+lifting right there. And then at the bottom, we're just going to
+
+62
+00:03:05,905 --> 00:03:08,687
+return some information that summarizes everything about running
+
+63
+00:03:08,728 --> 00:03:12,633
+this test case. So I'll return a dictionary with
+
+64
+00:03:12,913 --> 00:03:15,677
+some output. Give me whatever got back from Claude.
+
+65
+00:03:16,658 --> 00:03:20,985
+I'll include the test case. And
+
+66
+00:03:21,004 --> 00:03:25,657
+then our score. And
+
+67
+00:03:25,677 --> 00:03:28,381
+then one final step here, we have to implement RunEval.
+
+68
+00:03:28,781 --> 00:03:31,843
+So this function is going to load up our data set or
+
+69
+00:03:32,204 --> 00:03:34,787
+receive it as an argument, either one is fine. And then
+
+70
+00:03:34,806 --> 00:03:37,348
+we're going to loop through that data set. And for every test case, we
+
+71
+00:03:37,389 --> 00:03:40,271
+will call run test case and then just assemble
+
+72
+00:03:40,391 --> 00:03:43,474
+all the results together. So
+
+73
+00:03:43,514 --> 00:03:46,578
+for our implementation here, I'll say results.
+
+74
+00:03:46,778 --> 00:03:49,341
+It's going to start off as an empty list. And
+
+75
+00:03:49,420 --> 00:03:52,123
+for every test case in data
+
+76
+00:03:52,144 --> 00:03:54,725
+set, I'm going to get our
+
+77
+00:03:54,806 --> 00:03:57,516
+result. from
+
+78
+00:03:57,578 --> 00:04:00,162
+calling run test case
+
+79
+00:04:01,444 --> 00:04:04,509
+and pass in the test case to it. And
+
+80
+00:04:04,530 --> 00:04:08,616
+then add that into our list of results. And
+
+81
+00:04:08,637 --> 00:04:11,742
+then down here, I'm just going to print up all
+
+82
+00:04:11,782 --> 00:04:14,829
+of our results. Actually, let's actually just go ahead and return
+
+83
+00:04:15,049 --> 00:04:19,177
+results. That's a little bit better. Okay,
+
+84
+00:04:19,197 --> 00:04:21,699
+so there's the outline for our three major functions.
+
+85
+00:04:22,261 --> 00:04:25,264
+Now believe it or not, this is like a vast majority
+
+86
+00:04:25,483 --> 00:04:28,187
+of what a eval pipeline is. We just put together the
+
+87
+00:04:28,226 --> 00:04:31,569
+vast majority with the obvious exception of grading. So
+
+88
+00:04:31,649 --> 00:04:34,173
+as you can see, there's not a whole lot of code that goes into this.
+
+89
+00:04:35,194 --> 00:04:38,757
+Let's now test this out. So
+
+90
+00:04:38,817 --> 00:04:41,360
+down here in the next cell down, I'm going to go into open
+
+91
+00:04:41,540 --> 00:04:52,091
+up our data set JSON file. And
+
+92
+00:04:52,151 --> 00:04:55,619
+parse it as JSON. And
+
+93
+00:04:55,658 --> 00:04:58,264
+then call the runEval function.
+
+94
+00:04:58,365 --> 00:05:01,130
+That's the one that we were just putting together right here with
+
+95
+00:05:01,170 --> 00:05:03,737
+the entire data set. Finally,
+
+96
+00:05:03,817 --> 00:05:07,125
+I'm going to assign the result to that to results.
+
+97
+00:05:08,641 --> 00:05:11,163
+I'm going to rerun all the cells above, just to make sure
+
+98
+00:05:11,204 --> 00:05:13,747
+that I executed all of them, and then I'm going to run
+
+99
+00:05:13,788 --> 00:05:16,391
+the cell. We'll see what happens. And just so you know,
+
+100
+00:05:16,430 --> 00:05:19,035
+the first time you run this, it is going to take a pretty good amount
+
+101
+00:05:19,055 --> 00:05:21,959
+of time, even if you are using high-coup. It's
+
+102
+00:05:21,978 --> 00:05:24,601
+going to end up taking me about 31 seconds to complete
+
+103
+00:05:24,642 --> 00:05:27,346
+this with high-coup. I'm going to show you some techniques for
+
+104
+00:05:27,365 --> 00:05:29,930
+speeding up our eval run time, but for right now, we're just
+
+105
+00:05:29,949 --> 00:05:33,213
+going to have it take a little bit longer, but don't worry, we will speed it up.
+
+106
+00:05:33,194 --> 00:05:36,237
+So now let's take a look at results and see what we have. Results
+
+107
+00:05:36,278 --> 00:05:39,060
+is going to be a rather large JSON object. So I'm going to print
+
+108
+00:05:39,081 --> 00:05:41,963
+it out really nicely with a print, JSON
+
+109
+00:05:42,043 --> 00:05:44,687
+dumps, with results,
+
+110
+00:05:45,507 --> 00:05:48,732
+and an indent of two. There
+
+111
+00:05:48,752 --> 00:05:51,915
+we go. So now we get an array of objects. Every
+
+112
+00:05:52,076 --> 00:05:54,598
+object represents the output from one of our
+
+113
+00:05:54,678 --> 00:05:57,302
+individual test cases. I've got the output
+
+114
+00:05:57,341 --> 00:05:59,925
+right here. That's the output coming from Claude. And we can see there
+
+115
+00:05:59,985 --> 00:06:02,660
+is a lot of stuff generated here. And
+
+116
+00:06:02,699 --> 00:06:05,226
+if I scroll down a little bit, I'll see
+
+117
+00:06:05,266 --> 00:06:08,153
+the definition of the test case that this was based upon. And
+
+118
+00:06:08,173 --> 00:06:10,720
+then the score, which again right now is just hard coded at
+
+119
+00:06:10,740 --> 00:06:13,266
+10. And then that's just going to repeat over and
+
+120
+00:06:13,365 --> 00:06:16,132
+over again. All right, so at this point in time, we
+
+121
+00:06:16,172 --> 00:06:18,875
+have successfully gone through this step
+
+122
+00:06:18,935 --> 00:06:21,557
+right here. We merged together our data
+
+123
+00:06:21,576 --> 00:06:24,240
+set with our test prompt and we got some output
+
+124
+00:06:24,279 --> 00:06:26,882
+from Claude and we kind of collated all this stuff together.
+
+125
+00:06:27,684 --> 00:06:30,226
+So now the last thing we really have to do here is take
+
+126
+00:06:30,266 --> 00:06:32,850
+the input and the result that we got out of Claude
+
+127
+00:06:33,050 --> 00:06:35,713
+and feed it into one of these different graders. So
+
+128
+00:06:35,752 --> 00:06:38,295
+this finally is the time where we're going to start to learn
+
+129
+00:06:38,415 --> 00:06:40,918
+about graders. We're going to start to discuss them in the
+
+130
+00:06:40,958 --> 00:06:41,658
+next video.

@@ -1,0 +1,251 @@
+1
+00:00:00,031 --> 00:00:02,794
+In this module, we are going to discuss tool use.
+
+2
+00:00:02,815 --> 00:00:05,679
+Tools allow Claude to access information from the outside
+
+3
+00:00:05,740 --> 00:00:08,364
+world. Now, understanding tool use can be a little bit
+
+4
+00:00:08,423 --> 00:00:10,968
+challenging, so in this video, I'm going to give you a really
+
+5
+00:00:11,048 --> 00:00:13,872
+soft introduction. We are going to walk through the entire
+
+6
+00:00:13,973 --> 00:00:17,277
+flow of tool use and understand what it's all about. I
+
+7
+00:00:17,358 --> 00:00:19,902
+want to first begin by giving you an example of where Claude
+
+8
+00:00:19,981 --> 00:00:22,707
+can, unfortunately, sometimes hit its
+
+9
+00:00:22,786 --> 00:00:25,289
+limits. Remember, by default, Claude
+
+10
+00:00:25,329 --> 00:00:27,873
+only has access to information that was actually trained on.
+
+11
+00:00:28,333 --> 00:00:30,856
+So in general, it doesn't really have any information about very
+
+12
+00:00:30,977 --> 00:00:33,619
+recent current events. As an example
+
+13
+00:00:33,659 --> 00:00:36,664
+of this, if we had a user making use of our chatbot, ask
+
+14
+00:00:36,723 --> 00:00:39,607
+a question of something like, what's the weather in San Francisco,
+
+15
+00:00:39,667 --> 00:00:42,551
+California right now? And so if that off to Claude, we
+
+16
+00:00:42,591 --> 00:00:45,255
+would probably get a response back of something like, I'm
+
+17
+00:00:45,314 --> 00:00:47,878
+sorry, but I don't have access to up to date weather
+
+18
+00:00:47,938 --> 00:00:50,680
+information like that. To fix this and give the user
+
+19
+00:00:50,781 --> 00:00:53,545
+a better response, we can make use of tools.
+
+20
+00:00:53,524 --> 00:00:56,429
+Let me show you a diagram that's going to break down tools with really
+
+21
+00:00:56,630 --> 00:00:59,334
+simple terminology. And I'll show you another one that's
+
+22
+00:00:59,393 --> 00:01:02,037
+going to give you an example of how we would solve this specific
+
+23
+00:01:02,158 --> 00:01:05,003
+weather problem. OK, so here's the entire
+
+24
+00:01:05,123 --> 00:01:07,887
+flow that we're going to eventually implement when we start to make
+
+25
+00:01:07,987 --> 00:01:10,751
+use of tools. We're going to send off an initial
+
+26
+00:01:10,792 --> 00:01:13,635
+request to Claude. We're going to ask a question or maybe
+
+27
+00:01:13,676 --> 00:01:16,200
+give Claude a task. And along with that, we're going to
+
+28
+00:01:16,260 --> 00:01:18,885
+include instructions on how Claude can get some extra
+
+29
+00:01:18,924 --> 00:01:21,527
+data from the outside world. Claude
+
+30
+00:01:21,546 --> 00:01:24,051
+will then take a look at whatever question it was asked or whatever
+
+31
+00:01:24,090 --> 00:01:26,674
+task it was given, and it might decide that it needs to
+
+32
+00:01:26,834 --> 00:01:29,498
+ask for some extra data. So it'll send a response
+
+33
+00:01:29,539 --> 00:01:32,123
+back to us where it asks for some extra data, and it's going
+
+34
+00:01:32,143 --> 00:01:34,647
+to give us some details on exactly what information it
+
+35
+00:01:34,706 --> 00:01:37,370
+needs. Then on our server, we
+
+36
+00:01:37,411 --> 00:01:39,974
+are going to run a little bit of code that will go in, get
+
+37
+00:01:40,015 --> 00:01:42,659
+the information that Claude asked for, and then respond
+
+38
+00:01:42,679 --> 00:01:45,503
+with that on a follow-up request back to Claude.
+
+39
+00:01:46,394 --> 00:01:49,118
+Now Claude has all the information it needs in theory
+
+40
+00:01:49,138 --> 00:01:51,703
+to give us a response. So it will generate a final
+
+41
+00:01:51,763 --> 00:01:54,268
+response that will be hopefully augmented or
+
+42
+00:01:54,287 --> 00:01:56,912
+improved by that extra data. Now
+
+43
+00:01:56,933 --> 00:01:59,858
+I'm going to show you the same exact flow, but I'm going to customize
+
+44
+00:01:59,959 --> 00:02:02,483
+each of these little steps for this scenario where a user
+
+45
+00:02:02,623 --> 00:02:05,287
+asks us for some current weather in a particular location.
+
+46
+00:02:05,890 --> 00:02:08,812
+So here's what happened. We would send an initial query
+
+47
+00:02:08,932 --> 00:02:11,596
+off to Claude, and it would include a prompt where the user asks
+
+48
+00:02:11,675 --> 00:02:14,237
+about the weather. And inside of that initial request,
+
+49
+00:02:14,397 --> 00:02:17,020
+we're going to include details on specifically how
+
+50
+00:02:17,039 --> 00:02:19,902
+to retrieve current weather data. Claude
+
+51
+00:02:19,923 --> 00:02:22,625
+would take a look at the prompt and decide, hey, to answer this
+
+52
+00:02:22,685 --> 00:02:25,707
+question, I need to get some current weather data. It
+
+53
+00:02:25,728 --> 00:02:28,229
+send response back to us, where we would then run some
+
+54
+00:02:28,310 --> 00:02:31,013
+code that would reach out to some maybe third party
+
+55
+00:02:31,052 --> 00:02:33,715
+weather API and actually get some live
+
+56
+00:02:33,754 --> 00:02:36,396
+details on what the current weather is for a particular
+
+57
+00:02:36,437 --> 00:02:39,402
+location. Once we have those details
+
+58
+00:02:39,604 --> 00:02:42,330
+from that outside API, we would then make a follow-up
+
+59
+00:02:42,370 --> 00:02:45,217
+request to Claude with that current weather data. And
+
+60
+00:02:45,276 --> 00:02:48,003
+now, Claude has all the information it needs. It has
+
+61
+00:02:48,024 --> 00:02:50,650
+the original prompt along with the up-to-date
+
+62
+00:02:50,710 --> 00:02:53,336
+weather data so it can generate a final response and
+
+63
+00:02:53,356 --> 00:02:54,318
+send it back to us.

@@ -1,0 +1,835 @@
+1
+00:00:00,031 --> 00:00:02,576
+We've got the first iteration of our RAG pipeline put
+
+2
+00:00:02,596 --> 00:00:05,201
+together. Everything looks good right now, but we're going
+
+3
+00:00:05,222 --> 00:00:07,807
+to very quickly realize that, well, maybe we are
+
+4
+00:00:07,847 --> 00:00:10,413
+not getting the best search results. Let me show you an
+
+5
+00:00:10,632 --> 00:00:13,378
+example. If you open up the report.md
+
+6
+00:00:13,398 --> 00:00:16,065
+file and scroll down just a little bit to
+
+7
+00:00:16,105 --> 00:00:18,864
+the software engineering section, here
+
+8
+00:00:18,885 --> 00:00:21,507
+it is right here. You'll notice that it has the statement
+
+9
+00:00:21,748 --> 00:00:24,370
+of INC, which is short for Incident, 2023
+
+10
+00:00:24,390 --> 00:00:27,254
+Q4-011. And
+
+11
+00:00:27,274 --> 00:00:30,117
+it looks like that search term occurs three times
+
+12
+00:00:30,158 --> 00:00:32,820
+inside of this paragraph. So here's one right here, two
+
+13
+00:00:32,881 --> 00:00:35,683
+right there, three right here. And if I continue
+
+14
+00:00:35,743 --> 00:00:38,427
+searching throughout the document, I'll see that it is also mentioned
+
+15
+00:00:38,448 --> 00:00:41,530
+down here inside of Section 10, Cybersecurity Analysis.
+
+16
+00:00:42,152 --> 00:00:44,755
+It's mentioned inside the header, and then one time inside the actual
+
+17
+00:00:44,814 --> 00:00:47,351
+paragraph itself right there. Now, I
+
+18
+00:00:47,393 --> 00:00:49,917
+want to try searching for this term, this incident
+
+19
+00:00:49,936 --> 00:00:52,442
+2023 Q4011. And we're just
+
+20
+00:00:52,462 --> 00:00:54,966
+going to see what happens. In other words, what search
+
+21
+00:00:55,006 --> 00:00:57,631
+results do we actually get back using semantic search?
+
+22
+00:00:58,253 --> 00:01:01,098
+So back inside of my notebook, I'm going to update the user
+
+23
+00:01:01,158 --> 00:01:03,704
+query right here to be what happened with incident
+
+24
+00:01:03,723 --> 00:01:06,308
+2023. Then I'm going to rerun
+
+25
+00:01:06,349 --> 00:01:09,254
+all cells and we'll see what result we get.
+
+26
+00:01:09,843 --> 00:01:12,367
+All right, so take a look at this. It's a little bit
+
+27
+00:01:12,406 --> 00:01:15,231
+surprising result. We get section 10, which
+
+28
+00:01:15,311 --> 00:01:17,876
+is good. That's definitely the result we would
+
+29
+00:01:17,915 --> 00:01:20,560
+want to see at first, in the list, because section
+
+30
+00:01:20,579 --> 00:01:23,164
+10 is all about this incident. But then
+
+31
+00:01:23,224 --> 00:01:26,049
+very surprisingly, the next result is section 3,
+
+32
+00:01:26,248 --> 00:01:29,054
+financial analysis. Well, if you open up section
+
+33
+00:01:29,073 --> 00:01:31,890
+3, right here, you'll
+
+34
+00:01:31,930 --> 00:01:34,635
+notice that nowhere inside of section 3
+
+35
+00:01:34,655 --> 00:01:37,159
+is that incident ever mentioned. So we
+
+36
+00:01:37,200 --> 00:01:39,944
+are getting some output from our semantic search that is a little
+
+37
+00:01:39,984 --> 00:01:42,489
+bit surprising here. What we really wanted to get
+
+38
+00:01:42,528 --> 00:01:45,033
+back was section 10 and then section 2,
+
+39
+00:01:45,554 --> 00:01:48,358
+but what we got was section 10 and then unfortunately
+
+40
+00:01:48,399 --> 00:01:50,944
+section 3. And section 3 appears to be
+
+41
+00:01:50,983 --> 00:01:54,108
+completely irrelevant when it comes to investigating
+
+42
+00:01:54,168 --> 00:01:56,974
+this incident. So even though the semantic search
+
+43
+00:01:57,034 --> 00:01:59,617
+technique we put together is really fantastic and it's going
+
+44
+00:01:59,637 --> 00:02:02,221
+to work well a lot of the time, there are these
+
+45
+00:02:02,260 --> 00:02:04,963
+corner cases where it really just doesn't quite work as
+
+46
+00:02:05,043 --> 00:02:07,808
+expected. So let's take a look at a technique
+
+47
+00:02:07,828 --> 00:02:10,472
+we can use to improve our search results and hopefully
+
+48
+00:02:10,512 --> 00:02:13,194
+get the results we want, which is Section 10
+
+49
+00:02:13,355 --> 00:02:15,961
+and then Section 2. All right, so here's
+
+50
+00:02:15,981 --> 00:02:18,963
+the general strategy we are going to use. Whenever
+
+51
+00:02:18,984 --> 00:02:21,546
+a user asks a question, we're going to feed that question
+
+52
+00:02:21,687 --> 00:02:24,628
+into our semantic search side of the equation, which
+
+53
+00:02:24,669 --> 00:02:27,171
+is generating those embeddings and using the vector
+
+54
+00:02:27,192 --> 00:02:29,813
+database. But then in parallel, at the same
+
+55
+00:02:29,913 --> 00:02:33,197
+time, we're also going to implement a separate lexical
+
+56
+00:02:33,396 --> 00:02:35,939
+search system. Now, lexical search is more
+
+57
+00:02:36,000 --> 00:02:38,602
+like classic text search, where we are going to break down
+
+58
+00:02:38,622 --> 00:02:41,163
+the user's question into individual words and then trying
+
+59
+00:02:41,204 --> 00:02:44,026
+to find chunks of text that seem to include
+
+60
+00:02:44,067 --> 00:02:46,751
+those words. Once we go through the search
+
+61
+00:02:46,770 --> 00:02:49,376
+process in both different systems, we'll get two
+
+62
+00:02:49,436 --> 00:02:52,081
+sets results and then we will merge the results together.
+
+63
+00:02:52,102 --> 00:02:54,627
+And the hope here is that we'll get a little
+
+64
+00:02:54,646 --> 00:02:57,231
+bit better balance of search results where we
+
+65
+00:02:57,271 --> 00:02:59,918
+get both the kind of semantic aspect and the plain
+
+66
+00:03:00,237 --> 00:03:02,903
+text search aspect included in one result
+
+67
+00:03:02,963 --> 00:03:05,549
+set. So hopefully we will eventually get a result that
+
+68
+00:03:05,568 --> 00:03:08,521
+looks like this over here. Now
+
+69
+00:03:08,581 --> 00:03:11,086
+to implement this lexical search, there are
+
+70
+00:03:11,167 --> 00:03:13,771
+a tremendous number of methods for implementing a text
+
+71
+00:03:13,792 --> 00:03:16,316
+search, but a very common method that you're going to see
+
+72
+00:03:16,576 --> 00:03:19,401
+used in RAG pipelines, like the one we are building right now, is
+
+73
+00:03:19,442 --> 00:03:22,026
+a technique referred to as BM25. Now
+
+74
+00:03:22,707 --> 00:03:25,673
+this is short for Best Match 25.
+
+75
+00:03:26,092 --> 00:03:28,816
+In the rest of this video, I'm going to give you a high-level overview
+
+76
+00:03:29,015 --> 00:03:31,599
+of how this algorithm works, and I'm going to take a look at
+
+77
+00:03:31,639 --> 00:03:34,163
+a notebook that actually implements BM25, so
+
+78
+00:03:34,564 --> 00:03:37,229
+we'll be able to play around with it directly and see what kind of search
+
+79
+00:03:37,288 --> 00:03:40,032
+results we get. So here's the general idea behind
+
+80
+00:03:40,073 --> 00:03:42,616
+the BM25 algorithm. Now, again, I'm going
+
+81
+00:03:42,637 --> 00:03:45,420
+to give you a high-level overview, and I'm going to leave out a couple
+
+82
+00:03:45,520 --> 00:03:48,104
+of smaller steps just to simplify things and make it
+
+83
+00:03:48,185 --> 00:03:50,748
+easier to understand. Everything is going to begin with
+
+84
+00:03:50,909 --> 00:03:53,433
+us receiving a user's query. And let's imagine this
+
+85
+00:03:53,473 --> 00:03:56,278
+case, they put in a search string like this right here, just
+
+86
+00:03:56,840 --> 00:03:59,806
+A, so the word A, and then incident 2023Q4011.
+
+87
+00:04:01,609 --> 00:04:04,193
+In step one, we're going to tokenize the user's query.
+
+88
+00:04:04,433 --> 00:04:07,218
+And that means we're going to break it up into separate chunks.
+
+89
+00:04:07,199 --> 00:04:09,764
+There are different ways in which we can tokenize a user's
+
+90
+00:04:09,824 --> 00:04:12,649
+query, but right now we're going to use a very simple method,
+
+91
+00:04:12,709 --> 00:04:15,393
+which is to just remove punctuation and break
+
+92
+00:04:15,574 --> 00:04:18,418
+up the return all terms based upon spaces. So
+
+93
+00:04:18,439 --> 00:04:20,963
+in this case, I would end up with separate search query
+
+94
+00:04:21,043 --> 00:04:24,870
+terms of A and an incident 2023.
+
+95
+00:04:24,850 --> 00:04:27,473
+Next, we're going to see how often each of these different search
+
+96
+00:04:27,514 --> 00:04:30,319
+terms occurs across all of our different documents, or
+
+97
+00:04:30,358 --> 00:04:33,004
+in our case, really text chunks. So let's
+
+98
+00:04:33,043 --> 00:04:36,269
+imagine that we only have two text chunks in this scenario. So
+
+99
+00:04:36,309 --> 00:04:38,834
+we're going to see how often the word A, and the word
+
+100
+00:04:38,853 --> 00:04:41,458
+incident, blah, blah, blah, occurs across each
+
+101
+00:04:41,478 --> 00:04:44,182
+of these chunks. And it looks like this first chunk right here has
+
+102
+00:04:44,202 --> 00:04:46,807
+A right there, A right there, and
+
+103
+00:04:46,826 --> 00:04:49,591
+then the second one has A, A, A.
+
+104
+00:04:49,572 --> 00:04:52,281
+So in total, I would count all those up and I would have five
+
+105
+00:04:52,321 --> 00:04:55,512
+A's. And then I would see how often I have incident
+
+106
+00:04:55,531 --> 00:04:58,461
+2023. It looks like there's only one
+
+107
+00:04:58,622 --> 00:05:01,351
+right here. So I'd end up with a frequency of
+
+108
+00:05:01,531 --> 00:05:04,470
+one. Next up, we're going to assign a relative
+
+109
+00:05:04,589 --> 00:05:07,192
+importance to each term based upon its usage
+
+110
+00:05:07,333 --> 00:05:09,956
+frequency. So in the case of the word A, it
+
+111
+00:05:09,995 --> 00:05:12,759
+was used five times. And because it was used rather
+
+112
+00:05:12,939 --> 00:05:15,523
+often, we're going to say this term is not super
+
+113
+00:05:15,543 --> 00:05:18,206
+important because it is used all the place across all
+
+114
+00:05:18,286 --> 00:05:20,850
+of our different documents, or again, our case, our text
+
+115
+00:05:20,889 --> 00:05:23,793
+chunks. But incident 2023, that
+
+116
+00:05:23,834 --> 00:05:26,437
+was used very infrequently, which means it is
+
+117
+00:05:26,557 --> 00:05:29,079
+probably going to be of greater search importance.
+
+118
+00:05:30,004 --> 00:05:32,569
+Then finally, in the last step, we're going to find the text chunk
+
+119
+00:05:32,730 --> 00:05:35,394
+that uses the higher weighted terms more often.
+
+120
+00:05:36,074 --> 00:05:38,600
+So in this case, the first text chunk
+
+121
+00:05:38,620 --> 00:05:41,384
+right here, it only has two A's, whereas the second
+
+122
+00:05:41,403 --> 00:05:44,088
+one has three A's, but A's are not
+
+123
+00:05:44,129 --> 00:05:46,692
+super important because they're used rather frequently across
+
+124
+00:05:46,793 --> 00:05:49,478
+all over different chunks. However, Text Chunk 1
+
+125
+00:05:49,718 --> 00:05:52,461
+uses Incident 2023 one time,
+
+126
+00:05:52,622 --> 00:05:55,226
+and that is a highly weighted term. It's a really important
+
+127
+00:05:55,266 --> 00:05:58,011
+term. So in this case, we would say this is probably
+
+128
+00:05:58,031 --> 00:06:00,675
+our best text chunk, and we would want to return this
+
+129
+00:06:00,855 --> 00:06:03,418
+as a prime search result. Now again, to see
+
+130
+00:06:03,499 --> 00:06:06,963
+all this in action, let's take a look at a quick Jupyter Notebook.
+
+131
+00:06:07,045 --> 00:06:09,591
+So back inside of my editor, I'm going to
+
+132
+00:06:09,612 --> 00:06:12,540
+find a new notebook. This one is called 004
+
+133
+00:06:12,701 --> 00:06:15,309
+underscore BM25. Again, at
+
+134
+00:06:15,329 --> 00:06:18,237
+the top, I've got some code relating to a chunking by section.
+
+135
+00:06:19,432 --> 00:06:22,336
+I've then got a basic implementation of BM25
+
+136
+00:06:22,576 --> 00:06:25,341
+in the form of this class called BM25index.
+
+137
+00:06:26,423 --> 00:06:29,889
+So I'm going to collapse that cell, make sure I run it. I'm
+
+138
+00:06:30,009 --> 00:06:32,593
+going to read the contents of our report file. And
+
+139
+00:06:32,612 --> 00:06:35,338
+then we're going to go through three separate steps here. We're going to first
+
+140
+00:06:35,577 --> 00:06:39,004
+chunk the text by section. We're going to create a BM25 index
+
+141
+00:06:39,043 --> 00:06:41,788
+store. And we're going to add each text chunk to it. And
+
+142
+00:06:41,807 --> 00:06:44,673
+then we're going to attempt to search the store. And once
+
+143
+00:06:44,733 --> 00:06:47,237
+again, our hope here is that we're going to maybe get
+
+144
+00:06:47,437 --> 00:06:50,223
+some search results that look a little bit closer
+
+145
+00:06:50,302 --> 00:06:53,007
+to this. Maybe not exactly these results, but
+
+146
+00:06:53,067 --> 00:06:56,132
+I definitely want to see the sections that use Incident
+
+147
+00:06:56,153 --> 00:06:58,697
+2023 before I ever see some
+
+148
+00:06:58,757 --> 00:07:01,281
+results that don't include that search term at all.
+
+149
+00:07:01,581 --> 00:07:04,279
+So let's see how we do. Okay, let's
+
+150
+00:07:04,379 --> 00:07:07,043
+take care of step one here. We need to chunk the text
+
+151
+00:07:07,103 --> 00:07:09,766
+by section. So we've gone over this a couple times
+
+152
+00:07:09,826 --> 00:07:12,389
+now. We'll say chunks is chunk by
+
+153
+00:07:12,608 --> 00:07:15,331
+section with text. Next up, I'm
+
+154
+00:07:15,372 --> 00:07:19,817
+going to create a store. And
+
+155
+00:07:19,836 --> 00:07:22,360
+I'm going to loop over all my chunks and add them in
+
+156
+00:07:22,500 --> 00:07:25,043
+as documents to the store. So I'll say for chunk
+
+157
+00:07:25,283 --> 00:07:28,185
+in chunks store add
+
+158
+00:07:28,346 --> 00:07:30,891
+document. And I'll pass in
+
+159
+00:07:30,951 --> 00:07:34,197
+a dictionary with a content of chunk. I'm
+
+160
+00:07:34,216 --> 00:07:37,000
+gonna run that. And I'll finally, I'm going to search
+
+161
+00:07:37,180 --> 00:07:39,824
+over the store. I'll say store
+
+162
+00:07:40,125 --> 00:07:42,668
+search. And I'll use that same term that I used in
+
+163
+00:07:42,709 --> 00:07:45,612
+the previous notebook that did not give us the very good result. So
+
+164
+00:07:45,673 --> 00:07:48,557
+I'll ask what happened with incident
+
+165
+00:07:48,577 --> 00:07:53,865
+2023 Q4011. And
+
+166
+00:07:53,884 --> 00:07:56,449
+I'm going to ask for the first three search results.
+
+167
+00:07:57,204 --> 00:07:59,970
+And then I'm going to print up the results very nicely just so we can interpret
+
+168
+00:07:59,990 --> 00:08:03,615
+them really well. We'll say for doc, distance
+
+169
+00:08:03,757 --> 00:08:06,601
+in results. And I'll print out the distance,
+
+170
+00:08:08,305 --> 00:08:10,829
+a new line, doc with
+
+171
+00:08:10,928 --> 00:08:13,853
+content. And again, I'm only going to print out the first 200 lines.
+
+172
+00:08:14,815 --> 00:08:17,480
+And then how about a new line, a couple of separators
+
+173
+00:08:17,600 --> 00:08:20,125
+in another new line. I'm going to run this and
+
+174
+00:08:20,165 --> 00:08:22,690
+we'll see what we get. All right, so that's a
+
+175
+00:08:22,850 --> 00:08:25,637
+much better search result than what we had before. Now
+
+176
+00:08:25,656 --> 00:08:28,702
+I'm going to see software engineering first and then cybersecurity
+
+177
+00:08:28,862 --> 00:08:31,588
+after that and then methodology down here. So
+
+178
+00:08:31,629 --> 00:08:34,514
+now I am actually prioritizing the sections that use the most
+
+179
+00:08:34,534 --> 00:08:37,159
+important search term inside my query, which was the
+
+180
+00:08:37,299 --> 00:08:39,884
+incident 2023. And you'll notice that
+
+181
+00:08:40,046 --> 00:08:42,690
+I don't really have quite as much importance around the other terms
+
+182
+00:08:42,730 --> 00:08:45,315
+like what happened with. Those aren't quite as
+
+183
+00:08:45,375 --> 00:08:48,039
+important terms, and they might be used several times inside
+
+184
+00:08:48,080 --> 00:08:50,924
+of the original report, so I would not weigh those as heavily
+
+185
+00:08:50,946 --> 00:08:53,649
+in the output results. But this incident 2023,
+
+186
+00:08:53,951 --> 00:08:56,596
+that's a very rare term inside
+
+187
+00:08:56,635 --> 00:08:59,221
+of a report, so it should definitely have a much higher weighting.
+
+188
+00:08:59,561 --> 00:09:02,166
+And we can see that reflected very clearly inside of our search
+
+189
+00:09:02,206 --> 00:09:04,719
+results. All right, so now,
+
+190
+00:09:05,000 --> 00:09:07,667
+at this point in time, we have two separate search
+
+191
+00:09:07,707 --> 00:09:10,455
+systems. We have semantic search put together, and
+
+192
+00:09:10,475 --> 00:09:13,403
+we have this kind of more lexical, a little bit more classic
+
+193
+00:09:13,543 --> 00:09:16,312
+text search system. And you might notice that
+
+194
+00:09:16,513 --> 00:09:19,794
+in the implementation of these two stores, Back
+
+195
+00:09:19,855 --> 00:09:22,360
+up here in the cell right here, I put them together with
+
+196
+00:09:22,419 --> 00:09:25,065
+a rather similar API. They both have
+
+197
+00:09:25,125 --> 00:09:28,091
+a add document function and they both have a search
+
+198
+00:09:28,611 --> 00:09:31,135
+function down here as well. So now
+
+199
+00:09:31,176 --> 00:09:33,701
+that we have these two separate search systems, one
+
+200
+00:09:33,721 --> 00:09:36,426
+which implements semantic search and one which implements
+
+201
+00:09:36,746 --> 00:09:39,451
+lexical search, we're going to come back in the next video and
+
+202
+00:09:39,471 --> 00:09:42,356
+we're going to merge these two search systems together.
+
+203
+00:09:42,336 --> 00:09:44,962
+Whenever a user submits a query, we're going to forward it off
+
+204
+00:09:45,003 --> 00:09:47,548
+to both of these different search systems. We're going
+
+205
+00:09:47,568 --> 00:09:50,153
+to get back a set of results from both and we're going
+
+206
+00:09:50,173 --> 00:09:52,700
+to merge those results together. And hopefully we'll
+
+207
+00:09:52,740 --> 00:09:55,927
+have all the best outcomes of semantic search along
+
+208
+00:09:55,966 --> 00:09:58,833
+with some of the more classic results of lexical
+
+209
+00:09:58,894 --> 00:09:59,855
+search as well.

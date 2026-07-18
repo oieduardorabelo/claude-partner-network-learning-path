@@ -1,0 +1,935 @@
+1
+00:00:00,976 --> 00:00:03,924
+In this video, we're going to take a look at combining together tool
+
+2
+00:00:03,944 --> 00:00:06,451
+use with streaming. You'll recall that we discussed
+
+3
+00:00:06,472 --> 00:00:09,240
+streaming from the API earlier. Streaming allows
+
+4
+00:00:09,320 --> 00:00:12,369
+us to give users a better idea of what's going on in our app.
+
+5
+00:00:12,551 --> 00:00:15,217
+So whenever we have streaming enabled and we make a request off
+
+6
+00:00:15,237 --> 00:00:17,742
+to Claude, we're going to get back some initial response,
+
+7
+00:00:18,003 --> 00:00:20,748
+and then we'll receive a series of different events. And each event
+
+8
+00:00:20,827 --> 00:00:23,474
+will have some additional piece of text that we might want
+
+9
+00:00:23,513 --> 00:00:26,018
+to display to the user. You might recall that there
+
+10
+00:00:26,039 --> 00:00:28,664
+are many different types of events that we might need to handle inside
+
+11
+00:00:28,684 --> 00:00:31,410
+of our application, and a very common one that we need to be
+
+12
+00:00:31,449 --> 00:00:34,155
+on the lookout for is Content Block Delta.
+
+13
+00:00:34,134 --> 00:00:36,718
+To make use of tools with streaming, we're
+
+14
+00:00:36,758 --> 00:00:39,320
+going to add in an additional type of event that we
+
+15
+00:00:39,359 --> 00:00:41,862
+need to handle. And it's called the input JSON
+
+16
+00:00:41,942 --> 00:00:44,524
+event. So now, if we turn on streaming and
+
+17
+00:00:44,564 --> 00:00:47,228
+try to make use of tools, Claude might send back a
+
+18
+00:00:47,268 --> 00:00:49,890
+new type of event to us called the input JSON
+
+19
+00:00:49,970 --> 00:00:52,552
+event. This object is going to have two
+
+20
+00:00:52,692 --> 00:00:55,216
+important properties on it. First, there's going to be
+
+21
+00:00:55,235 --> 00:00:57,777
+a partial JSON, which is going to be a piece
+
+22
+00:00:57,878 --> 00:01:00,561
+of JSON that represents a part of an argument
+
+23
+00:01:00,942 --> 00:01:03,484
+that Claude wants to send into our tool.
+
+24
+00:01:03,463 --> 00:01:06,046
+We're also going to get something called a snapshot, which is
+
+25
+00:01:06,066 --> 00:01:08,650
+a cumulative sum of all the different partial
+
+26
+00:01:08,709 --> 00:01:11,453
+JSON pieces that we have received so far. To
+
+27
+00:01:11,492 --> 00:01:14,137
+give you a better idea of how this works, I put together a new
+
+28
+00:01:14,177 --> 00:01:16,819
+notebook called 003 tool streaming. It's
+
+29
+00:01:16,859 --> 00:01:19,483
+attached to this lecture. This notebook contains a modified
+
+30
+00:01:19,522 --> 00:01:22,186
+run conversation function. It's going to use a new
+
+31
+00:01:22,225 --> 00:01:25,069
+function called chat stream to open up a response
+
+32
+00:01:25,088 --> 00:01:27,653
+stream from the Anthropic API. Then for
+
+33
+00:01:27,733 --> 00:01:30,399
+every chunk in that stream, we're going to process each
+
+34
+00:01:30,680 --> 00:01:33,325
+one depending upon the type of chunk it is. In the case
+
+35
+00:01:33,406 --> 00:01:36,251
+of receiving an input JSON chunk, all
+
+36
+00:01:36,272 --> 00:01:38,858
+we're going to do right now is print it out. So I'm going
+
+37
+00:01:38,878 --> 00:01:41,804
+to go down to the bottom where I've already put together a prompt along
+
+38
+00:01:41,864 --> 00:01:44,811
+with a new tool called save article schema.
+
+39
+00:01:44,790 --> 00:01:47,415
+I'm going to run this notebook and let's just see what happens.
+
+40
+00:01:47,715 --> 00:01:50,459
+Pretty quickly, we'll see each chunk of the response come in, including
+
+41
+00:01:50,498 --> 00:01:53,343
+the arguments for the tool call. You'll notice that this notebook
+
+42
+00:01:53,522 --> 00:01:56,046
+is also generating a scholarly article, just with
+
+43
+00:01:56,167 --> 00:01:59,350
+a few different properties compared to what we had previously. Now,
+
+44
+00:01:59,510 --> 00:02:02,155
+to be honest, there isn't really a lot more to tool streaming
+
+45
+00:02:02,194 --> 00:02:04,757
+beyond this. We really just need to make sure that we handle that
+
+46
+00:02:04,879 --> 00:02:07,423
+additional type of event. Having said that,
+
+47
+00:02:07,462 --> 00:02:09,967
+there is one other aspect of tool streaming that I
+
+48
+00:02:09,987 --> 00:02:12,513
+would like to tell you about, but it's around a very,
+
+49
+00:02:12,834 --> 00:02:15,580
+very particular feature that you might not ever need
+
+50
+00:02:15,599 --> 00:02:18,445
+to make use of. So let me give you a very quick overview,
+
+51
+00:02:18,626 --> 00:02:21,252
+and then you can decide if you want to hear about this very specialized
+
+52
+00:02:21,292 --> 00:02:24,057
+feature or not. If I rerun this notebook,
+
+53
+00:02:24,318 --> 00:02:27,025
+you might notice that it appears that we are getting streaming
+
+54
+00:02:27,064 --> 00:02:29,570
+behavior. Text is appearing chunk by chunk.
+
+55
+00:02:30,173 --> 00:02:33,060
+But for our tool call arguments in particular, you'll
+
+56
+00:02:33,080 --> 00:02:35,645
+notice that we have to sit around and wait for a few seconds.
+
+57
+00:02:35,967 --> 00:02:39,435
+And then all of a sudden, a giant chunk of text appears.
+
+58
+00:02:39,414 --> 00:02:42,019
+The fact that there's this really big delay and then we get a giant
+
+59
+00:02:42,079 --> 00:02:44,801
+chunk of text might not be a big deal to you at
+
+60
+00:02:44,861 --> 00:02:47,566
+all. However, you might be working on an application
+
+61
+00:02:47,605 --> 00:02:50,189
+where it's really important to show very precise
+
+62
+00:02:50,349 --> 00:02:52,993
+content updates to your users as soon as possible.
+
+63
+00:02:53,634 --> 00:02:56,157
+Or perhaps you want to receive portions of a tool call
+
+64
+00:02:56,298 --> 00:02:59,021
+as quickly as possible so you can start doing some processing work
+
+65
+00:02:59,222 --> 00:03:01,806
+as fast as you possibly can. So in the
+
+66
+00:03:01,847 --> 00:03:04,455
+remainder of this video, I'm going to help you understand why
+
+67
+00:03:04,495 --> 00:03:07,223
+there is that big delay and then a giant chunk of text
+
+68
+00:03:07,243 --> 00:03:10,032
+appears. And I'm going to show you a feature in the Anthropic
+
+69
+00:03:10,133 --> 00:03:12,700
+API to get rid of that delay. So let's get
+
+70
+00:03:12,741 --> 00:03:15,407
+to it. The first thing I would like to do is
+
+71
+00:03:15,508 --> 00:03:18,009
+clarify the tool that I have added into this notebook.
+
+72
+00:03:18,450 --> 00:03:21,092
+So I've slightly adjusted the tool that we had previously
+
+73
+00:03:21,112 --> 00:03:24,115
+that was generating a scholarly article. We're still generating
+
+74
+00:03:24,156 --> 00:03:26,937
+an article, but now it has a slightly different input structure
+
+75
+00:03:26,957 --> 00:03:29,599
+to it. I've got an example of the expected input
+
+76
+00:03:29,699 --> 00:03:32,302
+on the bottom left hand side. So we expect to receive a key
+
+77
+00:03:32,342 --> 00:03:35,044
+of abstract that's kind of like a summary of a scholarly
+
+78
+00:03:35,085 --> 00:03:37,727
+paper and a meta object. And the meta object
+
+79
+00:03:37,747 --> 00:03:40,509
+is going to have a word count and a review. And the review in
+
+80
+00:03:40,689 --> 00:03:43,451
+the theories can be some long review of the particular paper
+
+81
+00:03:43,491 --> 00:03:46,036
+that's been generated. Now, out of
+
+82
+00:03:46,056 --> 00:03:48,680
+this example input right here, there's something that I really just
+
+83
+00:03:48,740 --> 00:03:51,364
+want to examine really quickly or just kind of point out.
+
+84
+00:03:52,044 --> 00:03:54,969
+In this big object that we get, we're going to have two top
+
+85
+00:03:55,030 --> 00:03:57,814
+level keys. In other words, the top level keys inside
+
+86
+00:03:57,854 --> 00:04:00,598
+the entire big object. There's abstract
+
+87
+00:04:00,800 --> 00:04:04,164
+and there's meta. So we would refer to those as top level keys.
+
+88
+00:04:04,145 --> 00:04:06,868
+Meta is going to point to an object that has some additional
+
+89
+00:04:06,929 --> 00:04:09,472
+key value pairs inside of it, but again, the top level
+
+90
+00:04:09,512 --> 00:04:12,034
+keys are abstract and meta. So just keep then
+
+91
+00:04:12,094 --> 00:04:14,618
+your head for a little bit. So now I want to help you
+
+92
+00:04:14,658 --> 00:04:17,382
+understand what goes on behind the scenes inside the Anthropic
+
+93
+00:04:17,442 --> 00:04:20,485
+API whenever we generate some arguments for
+
+94
+00:04:20,505 --> 00:04:23,129
+a tool call in streaming mode. So it
+
+95
+00:04:23,149 --> 00:04:26,016
+doesn't quite behave as you might expect. In
+
+96
+00:04:26,036 --> 00:04:28,641
+this diagram on the top left-hand side, I've got our call being
+
+97
+00:04:28,680 --> 00:04:31,223
+sent off to the Anthropic API. Once it receives
+
+98
+00:04:31,264 --> 00:04:33,848
+our request, Claude will start to generate some JSON, which will
+
+99
+00:04:33,887 --> 00:04:36,531
+be the input to our tool call. The JSON isn't
+
+100
+00:04:36,630 --> 00:04:39,175
+generated all at once. Instead, it is created chunk
+
+101
+00:04:39,214 --> 00:04:42,057
+by chunk. Now, something kind of surprising
+
+102
+00:04:42,158 --> 00:04:44,961
+happens at this point. The Anthropic API
+
+103
+00:04:45,161 --> 00:04:47,745
+doesn't immediately take these chunks and send them right
+
+104
+00:04:47,805 --> 00:04:50,348
+back to our server immediately. Instead, it's
+
+105
+00:04:50,369 --> 00:04:53,153
+going to hang on to them for a little bit of time.
+
+106
+00:04:53,132 --> 00:04:56,137
+The reason for hanging onto these chunks is that Claude can sometimes
+
+107
+00:04:56,237 --> 00:04:58,742
+generate invalid JSON. So rather
+
+108
+00:04:58,781 --> 00:05:01,565
+than immediately sending each chunk to us, the API
+
+109
+00:05:01,586 --> 00:05:04,129
+is going to attempt to do a validation step, where
+
+110
+00:05:04,149 --> 00:05:06,714
+it makes sure that it is sending us valid JSON.
+
+111
+00:05:07,375 --> 00:05:10,180
+Let me show you how the validation step works. First,
+
+112
+00:05:10,319 --> 00:05:12,884
+as a reminder, we have two top-level keys for
+
+113
+00:05:12,903 --> 00:05:15,855
+our tool call, abstract and meta. So
+
+114
+00:05:15,894 --> 00:05:18,579
+the API isn't going to wait for the entire object to
+
+115
+00:05:18,619 --> 00:05:21,202
+be generated to do the validation. Instead, it
+
+116
+00:05:21,242 --> 00:05:23,766
+will wait for a single top-level key
+
+117
+00:05:23,786 --> 00:05:26,310
+value pair to be generated. So in the case of the
+
+118
+00:05:26,511 --> 00:05:29,014
+abstract key, the Anthropic API will
+
+119
+00:05:29,093 --> 00:05:32,158
+wait until it sees a closing quote for the abstract
+
+120
+00:05:32,278 --> 00:05:34,862
+value string. As soon as it sees that closing
+
+121
+00:05:34,923 --> 00:05:37,927
+quote on the very far right-hand side on chunk number four, then
+
+122
+00:05:37,947 --> 00:05:40,670
+the API knows that it has at least one key
+
+123
+00:05:40,711 --> 00:05:43,355
+value pair generated. In this case, the abstract
+
+124
+00:05:43,574 --> 00:05:46,079
+key value pair. The API will then attempt
+
+125
+00:05:46,119 --> 00:05:48,884
+to validate just that key value pair in isolation.
+
+126
+00:05:49,404 --> 00:05:52,009
+It's going to compare it against the JSON schema that we provided and make
+
+127
+00:05:52,050 --> 00:05:54,954
+sure that valid JSON has been produced. If
+
+128
+00:05:55,014 --> 00:05:57,598
+it is valid, then each of the original chunks that
+
+129
+00:05:57,639 --> 00:06:00,483
+were produced will be sent back down to our server.
+
+130
+00:06:00,463 --> 00:06:02,968
+Note that we do get each individual chunk, not
+
+131
+00:06:03,009 --> 00:06:05,774
+the entire key value pair as one single chunk. If
+
+132
+00:06:05,814 --> 00:06:08,399
+you're to log out all the different chunks that we receive inside
+
+133
+00:06:08,420 --> 00:06:11,245
+of our notebook, you will see that we do in fact receive a ton
+
+134
+00:06:11,326 --> 00:06:14,130
+of different individual chunks. They just all happen to arrive
+
+135
+00:06:14,151 --> 00:06:16,817
+at our server at just about the same time, because
+
+136
+00:06:16,857 --> 00:06:19,622
+the chunks have been buffered on the API
+
+137
+00:06:19,802 --> 00:06:22,879
+so that it can go through this validation step. Then
+
+138
+00:06:22,899 --> 00:06:25,622
+this generation process is going to continue with the meta
+
+139
+00:06:25,742 --> 00:06:28,305
+top level key. So once again, the API will wait
+
+140
+00:06:28,444 --> 00:06:30,968
+until the entire meta top level key value pair is
+
+141
+00:06:31,048 --> 00:06:33,630
+generated. It's then going to validate it and then
+
+142
+00:06:33,711 --> 00:06:36,254
+send us each of the individual chunks back down to
+
+143
+00:06:36,293 --> 00:06:38,956
+our server. So this is why, even with streaming
+
+144
+00:06:38,997 --> 00:06:41,680
+enabled, we end up getting these really big pauses
+
+145
+00:06:42,100 --> 00:06:44,783
+as the chunks are buffered on the API. And then all of a sudden,
+
+146
+00:06:44,882 --> 00:06:47,425
+we see a big group of chunks appear or
+
+147
+00:06:47,446 --> 00:06:50,028
+big chunk of text appear all at once, all of a sudden.
+
+148
+00:06:50,278 --> 00:06:52,802
+Now, again, this behavior might be okay for
+
+149
+00:06:52,862 --> 00:06:55,867
+you. You might not mind this buffering and validation step.
+
+150
+00:06:55,887 --> 00:06:58,630
+But if you are building a UI where you want to show users updates
+
+151
+00:06:58,771 --> 00:07:01,396
+as soon as possible, or if you want to do some tool
+
+152
+00:07:01,435 --> 00:07:04,120
+processing as soon as possible, then this big pause
+
+153
+00:07:04,360 --> 00:07:06,863
+might be a little irritating. Now, if that's the case,
+
+154
+00:07:07,144 --> 00:07:09,668
+I do have good news. There is a feature in the
+
+155
+00:07:09,747 --> 00:07:12,252
+API called Fine-Grained Tool Calling.
+
+156
+00:07:12,913 --> 00:07:15,596
+At its core, Fine-Grained Tool Calling does really just
+
+157
+00:07:15,716 --> 00:07:18,281
+one thing. It disables the JSON validation
+
+158
+00:07:18,321 --> 00:07:21,226
+step. So if you enable fine-grained tool calling, the
+
+159
+00:07:21,326 --> 00:07:24,172
+API will wait for Claude to generate a couple of chunk chunks.
+
+160
+00:07:24,752 --> 00:07:27,418
+It's going to join them together and then send that
+
+161
+00:07:27,538 --> 00:07:30,182
+big chunk down to your server. So this feature,
+
+162
+00:07:30,504 --> 00:07:33,269
+you will see a more traditional streaming output when
+
+163
+00:07:33,329 --> 00:07:35,872
+generating tool inputs. I do want to repeat
+
+164
+00:07:36,192 --> 00:07:38,735
+with fine-grained tool calling JSON validation on the
+
+165
+00:07:38,776 --> 00:07:41,358
+API is disabled. So your code running
+
+166
+00:07:41,458 --> 00:07:44,180
+on your server now really should assume
+
+167
+00:07:44,221 --> 00:07:46,822
+that you might be given invalid JSON and you should
+
+168
+00:07:46,862 --> 00:07:49,946
+implement some appropriate error handling. The
+
+169
+00:07:49,985 --> 00:07:52,749
+notebook that we were working on is set up for fine-grained tool calling.
+
+170
+00:07:52,949 --> 00:07:55,471
+So let's see what happens to our response when we turn it on.
+
+171
+00:07:56,091 --> 00:07:59,014
+I'm going to go down to the run conversation call right here and
+
+172
+00:07:59,055 --> 00:08:01,898
+I'm going to add in a fine-grained tool like
+
+173
+00:08:01,937 --> 00:08:05,492
+so. I'm going to run this. And
+
+174
+00:08:05,552 --> 00:08:08,055
+now we're going to see that when we eventually get down to the tool call, we're
+
+175
+00:08:08,076 --> 00:08:10,579
+going to get a lot more kind of classic streaming
+
+176
+00:08:10,699 --> 00:08:13,401
+experience here, where we get chunked by chunk just a little bit of text
+
+177
+00:08:13,521 --> 00:08:16,043
+at a time. So again, this would allow
+
+178
+00:08:16,103 --> 00:08:18,646
+us to process some part of the tool call much more quickly.
+
+179
+00:08:19,168 --> 00:08:21,810
+Let's say, for example, that the word count value right here
+
+180
+00:08:21,911 --> 00:08:24,572
+was really important to us. Without fine-grained
+
+181
+00:08:24,593 --> 00:08:27,096
+tool calling, we would have to wait for all this text
+
+182
+00:08:27,136 --> 00:08:29,778
+right here to be generated before we ever got
+
+183
+00:08:29,939 --> 00:08:32,523
+access to the word count. But if I run this again
+
+184
+00:08:32,743 --> 00:08:35,628
+with fine-grained tool calling, we'll see that now we can get that word
+
+185
+00:08:35,687 --> 00:08:38,332
+count value much more quickly. We don't have to wait for all
+
+186
+00:08:38,374 --> 00:08:40,918
+this additional text to be generated. Now,
+
+187
+00:08:40,998 --> 00:08:44,024
+you might be kind of curious what does happen exactly when
+
+188
+00:08:44,063 --> 00:08:46,649
+we get some invalid JSON generated. Well,
+
+189
+00:08:46,749 --> 00:08:49,254
+I put together a prompt that's going to
+
+190
+00:08:49,815 --> 00:08:52,700
+just about guarantee that we will get some invalid JSON
+
+191
+00:08:52,860 --> 00:08:56,232
+generated. I'm going to copy paste it in here really quickly. And
+
+192
+00:08:56,253 --> 00:08:59,261
+then I'm also going to add in an additional argument to the run conversation
+
+193
+00:08:59,481 --> 00:09:02,169
+function. Just make sure that we
+
+194
+00:09:02,210 --> 00:09:04,977
+do, in fact, get that invalid JSON generated.
+
+195
+00:09:05,025 --> 00:09:07,710
+So the extra argument I added on here is just a force tool
+
+196
+00:09:07,730 --> 00:09:10,674
+call. I'm forcing the model to always call the save article
+
+197
+00:09:10,735 --> 00:09:13,919
+model that we've put together. So I'm going to run this. And
+
+198
+00:09:13,960 --> 00:09:16,684
+we'll see that initially everything is going to go fine, but
+
+199
+00:09:16,705 --> 00:09:19,349
+then very quickly we're going to end up getting an error. So
+
+200
+00:09:19,369 --> 00:09:21,893
+the reason we're getting an error and what this prompt right here really
+
+201
+00:09:21,972 --> 00:09:24,616
+does, we just saw that word count value. So
+
+202
+00:09:24,657 --> 00:09:27,160
+word count is supposed to be a number. This prompt is
+
+203
+00:09:27,181 --> 00:09:30,746
+going to force a word count value of undefined.
+
+204
+00:09:30,726 --> 00:09:33,551
+And just so you know, undefined is not a valid value
+
+205
+00:09:33,750 --> 00:09:36,294
+in JSON. The equivalent JSON value would be
+
+206
+00:09:36,355 --> 00:09:39,198
+null. So if we ever get a value in JSON of undefined,
+
+207
+00:09:39,318 --> 00:09:42,062
+that would be invalid JSON. And we'd cause a parsing
+
+208
+00:09:42,102 --> 00:09:44,667
+error. And so that's exactly what we see down here. If
+
+209
+00:09:44,706 --> 00:09:47,711
+I scroll down a little bit more, I'll see an error something around. Yeah,
+
+210
+00:09:47,731 --> 00:09:50,456
+we've got some invalid JSON. And specifically is because
+
+211
+00:09:50,475 --> 00:09:53,077
+we got a word count of undefined. And
+
+212
+00:09:53,097 --> 00:09:55,701
+it might be kind of curious what would happen here if we were not
+
+213
+00:09:55,782 --> 00:09:58,426
+using fine-grained tool calling. You just might be a little bit curious.
+
+214
+00:09:58,785 --> 00:10:01,909
+So if I comment that out and I run this again. So
+
+215
+00:10:01,950 --> 00:10:04,854
+now the validation step is going to occur. So let's see how
+
+216
+00:10:04,874 --> 00:10:07,518
+this gets treated. So what the API
+
+217
+00:10:07,557 --> 00:10:10,261
+ends up doing here is it's still going to put in that
+
+218
+00:10:10,442 --> 00:10:12,985
+meta object. But instead of actually being an object,
+
+219
+00:10:13,145 --> 00:10:16,029
+it's going to wrap the entire thing in a string. So
+
+220
+00:10:16,070 --> 00:10:18,714
+now technically, we're really not following the JSON
+
+221
+00:10:18,754 --> 00:10:21,476
+spec in the response here. Our JSON schema,
+
+222
+00:10:21,496 --> 00:10:24,220
+the one we provided, said meta must be an object that
+
+223
+00:10:24,259 --> 00:10:26,984
+had a word count that's a number and a review that's a string. So
+
+224
+00:10:27,024 --> 00:10:29,947
+now meta is a string instead of an object. All
+
+225
+00:10:29,966 --> 00:10:32,629
+right, so let's wrap things up. Once again, tool streaming
+
+226
+00:10:32,669 --> 00:10:35,472
+by itself, not too crazy. We can easily add
+
+227
+00:10:35,493 --> 00:10:38,056
+it into any kind of streaming pipeline you might have already
+
+228
+00:10:38,096 --> 00:10:40,698
+put together. With default tool streaming, if you're
+
+229
+00:10:40,739 --> 00:10:43,542
+generating a large top-level key-value pair, there
+
+230
+00:10:43,621 --> 00:10:46,405
+will be a delay in that generation because the API
+
+231
+00:10:46,446 --> 00:10:49,014
+does some validation step. And if that's a big deal to you,
+
+232
+00:10:49,135 --> 00:10:51,812
+you can always turn on fine-grained tool streaming, which
+
+233
+00:10:51,874 --> 00:10:54,429
+is going to give you a little bit more classic streaming experience,
+
+234
+00:10:54,832 --> 00:10:56,725
+but at the cost of that validation step.

@@ -1,0 +1,63 @@
+1
+00:00:00,031 --> 00:00:02,573
+In this module, we're going to take a look at two applications
+
+2
+00:00:02,593 --> 00:00:05,096
+that have been built and deployed by Anthropic. They
+
+3
+00:00:05,155 --> 00:00:07,698
+are Claude code and computer use. Claude
+
+4
+00:00:07,738 --> 00:00:10,320
+code is a terminal-based coding assistant. I'm going to help
+
+5
+00:00:10,361 --> 00:00:12,903
+you go through the setup process and then we're going to use Claude code
+
+6
+00:00:13,003 --> 00:00:15,544
+on a very small sample project to understand exactly
+
+7
+00:00:15,585 --> 00:00:18,367
+how it works. After that, we're going to take a look at computer
+
+8
+00:00:18,388 --> 00:00:21,390
+use. Computer use is a set of tools that dramatically
+
+9
+00:00:21,451 --> 00:00:24,013
+expands Claude's capabilities. Both Claude code
+
+10
+00:00:24,152 --> 00:00:27,015
+and computer use are extremely useful in their own right, but
+
+11
+00:00:27,036 --> 00:00:29,579
+there's another reason that we're going to discuss them. You see,
+
+12
+00:00:29,739 --> 00:00:32,774
+Claude code and computer use are perfect examples of agents.
+
+13
+00:00:33,176 --> 00:00:36,030
+And once we understand how they work, we'll be much better prepared
+
+14
+00:00:36,091 --> 00:00:38,944
+to understand what agents are and how to build an effective
+
+15
+00:00:38,984 --> 00:00:41,496
+agent. So let's go through the setup process
+
+16
+00:00:41,597 --> 00:00:43,284
+of Claude code in the next video.

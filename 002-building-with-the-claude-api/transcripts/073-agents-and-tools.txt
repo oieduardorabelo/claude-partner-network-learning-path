@@ -1,0 +1,431 @@
+1
+00:00:00,031 --> 00:00:02,616
+Now that we have taken a look at several different workflows, we are going
+
+2
+00:00:02,656 --> 00:00:05,461
+to pivot and start to discuss agents. Understanding
+
+3
+00:00:05,561 --> 00:00:08,827
+agents is easiest if you think back to workflows, specifically
+
+4
+00:00:08,867 --> 00:00:11,451
+when we would actually use them. Workflows were most
+
+5
+00:00:11,492 --> 00:00:14,096
+effective when we knew the precise series of steps required
+
+6
+00:00:14,137 --> 00:00:16,721
+to complete a given task. Agents, on the other
+
+7
+00:00:16,760 --> 00:00:19,443
+hand, are more effective when we don't really know exactly
+
+8
+00:00:19,484 --> 00:00:22,045
+what steps are required. So in these scenarios,
+
+9
+00:00:22,225 --> 00:00:24,809
+we give Claude a task and a set of tools. And
+
+10
+00:00:24,829 --> 00:00:27,431
+then we rely upon Claude to create a plan to
+
+11
+00:00:27,530 --> 00:00:30,653
+complete the task using the given tools. This
+
+12
+00:00:30,695 --> 00:00:33,457
+flexibility around agents is what makes them really attractive
+
+13
+00:00:33,476 --> 00:00:36,240
+for building. The thought process is that you can make an agent, make
+
+14
+00:00:36,259 --> 00:00:38,982
+sure it works reasonably well, and then the agent can solve
+
+15
+00:00:39,023 --> 00:00:41,545
+a wide variety of different tasks. However, there
+
+16
+00:00:41,585 --> 00:00:44,268
+are some major drawbacks to this approach, which we will discuss
+
+17
+00:00:44,387 --> 00:00:47,030
+in a little bit. A key aspect of agents
+
+18
+00:00:47,191 --> 00:00:49,755
+is their ability to make use of tools in different combinations.
+
+19
+00:00:50,215 --> 00:00:52,899
+So to help you understand this, I want to think back to an earlier example
+
+20
+00:00:52,939 --> 00:00:55,521
+that we went through earlier on inside this course, where we put
+
+21
+00:00:55,561 --> 00:00:58,085
+together three different tools. We created tools like
+
+22
+00:00:58,305 --> 00:01:00,868
+Get Current Date Time, Add duration to Date Time, and
+
+23
+00:01:00,929 --> 00:01:03,753
+Set Reminder. Each of these tools were rather simple
+
+24
+00:01:03,813 --> 00:01:06,617
+in nature, but Claude was able to combine them in different,
+
+25
+00:01:06,757 --> 00:01:09,319
+kind of surprising ways to achieve a wide variety of
+
+26
+00:01:09,359 --> 00:01:11,924
+different tasks that we might not really have planned out ahead
+
+27
+00:01:11,944 --> 00:01:14,486
+of time. Let me show you some examples.
+
+28
+00:01:14,466 --> 00:01:16,989
+So on the left hand side of this diagram, I've got some example
+
+29
+00:01:17,030 --> 00:01:19,713
+tasks that we could feed into Claude along with those three
+
+30
+00:01:19,733 --> 00:01:22,557
+different tools. And then on the right hand portion is
+
+31
+00:01:22,637 --> 00:01:25,501
+a series of different tool calls that Claude might make to
+
+32
+00:01:25,820 --> 00:01:28,465
+complete the given task. So for example, if we ask
+
+33
+00:01:28,504 --> 00:01:31,087
+Claude what's the given time, easy enough, Claude can
+
+34
+00:01:31,128 --> 00:01:33,771
+just call the get current date time tool by itself and
+
+35
+00:01:33,911 --> 00:01:36,433
+answer the question. If we ask Claude what day
+
+36
+00:01:36,453 --> 00:01:39,298
+of the week is in 11 days, it could first call get
+
+37
+00:01:39,358 --> 00:01:42,481
+current date time and then add duration to date time.
+
+38
+00:01:42,462 --> 00:01:45,027
+If we ask Claude to say, set a reminder to go
+
+39
+00:01:45,087 --> 00:01:47,652
+to the gym next Wednesday, Claude could first figure
+
+40
+00:01:47,671 --> 00:01:50,236
+out the current day of the week, add a duration onto it,
+
+41
+00:01:50,718 --> 00:01:53,423
+and then set a reminder for that particular day. Finally,
+
+42
+00:01:53,602 --> 00:01:56,268
+Claude can also figure out when it needs some extra information in
+
+43
+00:01:56,347 --> 00:01:59,114
+order to successfully call a tool. So if a user
+
+44
+00:01:59,233 --> 00:02:02,000
+asks, when does my 90-day warranty expire? Well,
+
+45
+00:02:02,120 --> 00:02:05,006
+there's really no guarantee that the user got the warranty today.
+
+46
+00:02:05,546 --> 00:02:08,051
+So Claude might first ask the user for a bit of extra
+
+47
+00:02:08,072 --> 00:02:10,617
+information, particularly when they actually obtain the
+
+48
+00:02:10,638 --> 00:02:13,463
+warranty. Once the user gives them that information, then
+
+49
+00:02:13,524 --> 00:02:16,229
+Claude can call add duration to date time and figure out when
+
+50
+00:02:16,248 --> 00:02:18,973
+the warranty will expire. These are all examples
+
+51
+00:02:19,133 --> 00:02:21,697
+of ways in which Claude can take a set of tools and
+
+52
+00:02:21,757 --> 00:02:24,520
+combine them together in an interesting fashion in order to solve
+
+53
+00:02:24,539 --> 00:02:27,122
+a given task. And this is going to lead us into our first
+
+54
+00:02:27,163 --> 00:02:30,106
+big lesson or understanding around agents. And
+
+55
+00:02:30,127 --> 00:02:32,628
+that is that the set of tools we provide to an agent
+
+56
+00:02:32,990 --> 00:02:35,733
+need to be a reasonably abstract. And a great
+
+57
+00:02:35,853 --> 00:02:38,376
+example of this and to help you understand what I really mean hereby
+
+58
+00:02:38,415 --> 00:02:41,079
+abstract is to go back and look at Claude code and
+
+59
+00:02:41,118 --> 00:02:44,042
+specifically some of the tools that are provided to it.
+
+60
+00:02:44,021 --> 00:02:46,746
+Claude Code gets access to a very small set of
+
+61
+00:02:47,127 --> 00:02:49,631
+abstract tools. And when I say abstract, I
+
+62
+00:02:49,691 --> 00:02:52,314
+mean generic or general or kind of vague in
+
+63
+00:02:52,375 --> 00:02:55,019
+purpose. They are not hyper specialized in any
+
+64
+00:02:55,058 --> 00:02:57,802
+way. So Claude Code gets access to tools like
+
+65
+00:02:57,984 --> 00:03:00,728
+Bash in order to run commands, web fetch to
+
+66
+00:03:00,768 --> 00:03:03,331
+fetch URL, write to create a file, and so
+
+67
+00:03:03,431 --> 00:03:06,195
+on. And Claude Code can figure out how to modify
+
+68
+00:03:06,216 --> 00:03:08,919
+and add features to an existing codebase in
+
+69
+00:03:09,060 --> 00:03:11,844
+really amazing ways by combining together these different tools.
+
+70
+00:03:12,324 --> 00:03:15,150
+Claude Code does not have access to hyper-specialized
+
+71
+00:03:15,189 --> 00:03:17,712
+tools that just fulfill one very specific
+
+72
+00:03:17,772 --> 00:03:20,638
+task in one specific scenario. So for example,
+
+73
+00:03:20,717 --> 00:03:23,222
+on the right-hand side of this diagram, these are all tools that Claude
+
+74
+00:03:23,282 --> 00:03:26,646
+Code notably does not have. So there is no refactor
+
+75
+00:03:26,706 --> 00:03:29,570
+tool that will just magically refactor a file.
+
+76
+00:03:29,550 --> 00:03:32,092
+Instead, Claude Code should figure out how to make use of
+
+77
+00:03:32,133 --> 00:03:34,955
+the tools on the left-hand side in order to refactor something.
+
+78
+00:03:35,676 --> 00:03:38,819
+Likewise, there is no install dependencies tool. Instead,
+
+79
+00:03:39,039 --> 00:03:42,122
+Claude Code needs to read files to understand the project configuration
+
+80
+00:03:42,503 --> 00:03:45,325
+and then run the bash tool to run the appropriate command to install
+
+81
+00:03:45,346 --> 00:03:47,868
+the dependencies. The lesson that we can take from this
+
+82
+00:03:48,028 --> 00:03:50,572
+is that whenever we create an agent, we want to make sure that
+
+83
+00:03:50,592 --> 00:03:53,234
+we provide reasonably abstract tools that
+
+84
+00:03:53,274 --> 00:03:55,817
+Claude can somehow figure out how to piece together in order
+
+85
+00:03:55,877 --> 00:03:58,487
+to achieve some goal. So for example,
+
+86
+00:03:58,668 --> 00:04:01,433
+if we go back to our example of building some kind of social media
+
+87
+00:04:01,574 --> 00:04:04,099
+video creation agent, we might provide
+
+88
+00:04:04,139 --> 00:04:07,066
+it for different tools. One might be Bash,
+
+89
+00:04:07,086 --> 00:04:09,671
+which would give it access to FFmpeg. That's
+
+90
+00:04:09,893 --> 00:04:12,758
+a commonly used CLI tool that you can use to generate videos,
+
+91
+00:04:13,120 --> 00:04:15,645
+given some input images or videos or text or
+
+92
+00:04:15,664 --> 00:04:18,189
+audio and so on. We might also give it a generate
+
+93
+00:04:18,290 --> 00:04:21,014
+image tool, a text to speech tool, just to augment
+
+94
+00:04:21,033 --> 00:04:23,858
+the video generation process, and then finally, a post
+
+95
+00:04:24,019 --> 00:04:26,642
+media tool so that it can take the generated
+
+96
+00:04:26,702 --> 00:04:29,206
+content, whatever it made, and post that content
+
+97
+00:04:29,226 --> 00:04:31,831
+to a social media account. Claude can use
+
+98
+00:04:31,850 --> 00:04:34,795
+that set of tools in rather unexpected ways. So
+
+99
+00:04:34,875 --> 00:04:37,639
+for example, it would enable a flow like what you see on the left-hand
+
+100
+00:04:37,660 --> 00:04:40,303
+side, where a user might chat with our agent and
+
+101
+00:04:40,384 --> 00:04:43,028
+ask it to create and post a video on Python programming.
+
+102
+00:04:43,007 --> 00:04:45,711
+But this set of tools might also allow for more dynamic
+
+103
+00:04:45,791 --> 00:04:48,415
+interactions with the user. For example, on the right-hand side,
+
+104
+00:04:48,776 --> 00:04:51,661
+a user might ask for a video, but first ask the agent
+
+105
+00:04:51,740 --> 00:04:54,264
+to generate a sample cover image to use in the
+
+106
+00:04:54,285 --> 00:04:56,809
+video. Then our agent could first generate an
+
+107
+00:04:56,889 --> 00:04:59,572
+image, show it to the user, get the user's approval, and
+
+108
+00:04:59,632 --> 00:05:02,096
+then go into the video generation process.

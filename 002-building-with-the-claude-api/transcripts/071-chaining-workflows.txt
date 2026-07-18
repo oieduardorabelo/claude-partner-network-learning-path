@@ -1,0 +1,399 @@
+1
+00:00:00,031 --> 00:00:02,754
+The next workflow that we're going to take a look at is going to seem
+
+2
+00:00:02,774 --> 00:00:05,317
+a little bit obvious and simple, but trust me,
+
+3
+00:00:05,397 --> 00:00:08,242
+this actually ends up being one of the most useful workflows around,
+
+4
+00:00:08,461 --> 00:00:10,965
+specifically in one particular situation that you're going to
+
+5
+00:00:10,986 --> 00:00:13,890
+run into very often. So let's get to it. Let's
+
+6
+00:00:13,910 --> 00:00:16,432
+change up our application a little bit once again. We'll
+
+7
+00:00:16,513 --> 00:00:19,637
+imagine that we are building a social media marketing tool. Users
+
+8
+00:00:19,678 --> 00:00:22,240
+will be asked to enter a topic for when their social
+
+9
+00:00:22,280 --> 00:00:25,245
+media accounts, kind of what the focus of their account is.
+
+10
+00:00:25,225 --> 00:00:27,908
+Then the goal of our application is to generate
+
+11
+00:00:27,948 --> 00:00:30,530
+and post some videos to their account. So
+
+12
+00:00:30,710 --> 00:00:33,334
+here's how we might actually implement this. We
+
+13
+00:00:33,374 --> 00:00:36,076
+don't really need a fancy agent with a ton of fancy
+
+14
+00:00:36,118 --> 00:00:38,881
+tools to implement this. We can build out a workflow
+
+15
+00:00:39,161 --> 00:00:41,904
+that will just go through a series of predefined steps one
+
+16
+00:00:41,944 --> 00:00:44,767
+by one. So in step one, we might take whatever
+
+17
+00:00:44,868 --> 00:00:47,530
+topic the user entered into that form and do a search
+
+18
+00:00:47,591 --> 00:00:50,118
+for trending topics on Twitter. We
+
+19
+00:00:50,158 --> 00:00:52,783
+could then take the list of topics and feed them all into
+
+20
+00:00:52,823 --> 00:00:55,707
+Claude and ask Claude to select the most interesting topic.
+
+21
+00:00:56,628 --> 00:00:59,533
+Then we could do a follow-up request to Claude asking to do some web
+
+22
+00:00:59,694 --> 00:01:02,219
+research on the topic. Then once the research is
+
+23
+00:01:02,279 --> 00:01:04,903
+complete, we could ask Claude to write a script for a short
+
+24
+00:01:04,983 --> 00:01:07,688
+format video. Once we have the script, we could then use
+
+25
+00:01:07,707 --> 00:01:10,552
+an AI avatar and some text-to-speech program
+
+26
+00:01:10,772 --> 00:01:13,317
+to create an actual video and finally post that video
+
+27
+00:01:13,418 --> 00:01:15,981
+off to social media. This is an example of a
+
+28
+00:01:16,141 --> 00:01:18,786
+chaining workflow. In a chaining workflow, we take
+
+29
+00:01:18,885 --> 00:01:21,769
+one large task, which was initially to generate
+
+30
+00:01:21,810 --> 00:01:24,433
+some videos and post them to social media, and we break it up
+
+31
+00:01:24,534 --> 00:01:27,257
+into a series of distinct steps. In our case,
+
+32
+00:01:27,457 --> 00:01:29,981
+the subtasks were the individual calls that we sent off to
+
+33
+00:01:30,022 --> 00:01:32,626
+Claude. We could have attempted to accomplish all three of these
+
+34
+00:01:32,686 --> 00:01:35,269
+tasks inside of a single call off to Claude. So
+
+35
+00:01:35,290 --> 00:01:38,093
+we could have just fed in a list of topics to Claude, asked
+
+36
+00:01:38,134 --> 00:01:40,817
+it to select the most interesting topic, and research
+
+37
+00:01:40,858 --> 00:01:43,781
+the topic, and write a script inside of a single prompt.
+
+38
+00:01:43,762 --> 00:01:46,325
+But by breaking this up into three separate calls,
+
+39
+00:01:46,566 --> 00:01:49,150
+we allow Claude to focus on just one individual task
+
+40
+00:01:49,269 --> 00:01:51,995
+at a time. Now, like I said, this probably
+
+41
+00:01:52,034 --> 00:01:54,718
+seems like a kind of simple and obvious workflow,
+
+42
+00:01:55,039 --> 00:01:57,804
+maybe not even worth discussing because it might be something you've already
+
+43
+00:01:57,903 --> 00:02:00,548
+implemented in the past. But there's one very
+
+44
+00:02:00,608 --> 00:02:03,132
+particular reason that I point out this workflow in particular
+
+45
+00:02:03,432 --> 00:02:06,156
+because it actually ends up being on the most important
+
+46
+00:02:06,176 --> 00:02:08,719
+workflow to understand to get quality outputs out
+
+47
+00:02:08,759 --> 00:02:11,484
+of Claude consistently when using rather large
+
+48
+00:02:11,625 --> 00:02:14,269
+prompts. So let me walk you through a little scenario.
+
+49
+00:02:14,669 --> 00:02:17,213
+You might not have encountered this before, but I
+
+50
+00:02:17,253 --> 00:02:20,198
+can almost guarantee that you will at some point in time. Let's
+
+51
+00:02:20,239 --> 00:02:22,842
+imagine that you are making use of Claude to write an article on
+
+52
+00:02:22,902 --> 00:02:25,507
+some given topic. You might initially just send
+
+53
+00:02:25,586 --> 00:02:28,372
+in a very simple prompt to Claude and ask it to write an article,
+
+54
+00:02:28,711 --> 00:02:31,516
+and then you might get back some results, and although it might be okay,
+
+55
+00:02:31,676 --> 00:02:34,221
+there might be some aspects to it that you don't like.
+
+56
+00:02:34,200 --> 00:02:36,764
+So you might initially find that Claude might be mentioning the
+
+57
+00:02:36,805 --> 00:02:39,449
+fact that it is an AI authoring the article, which you
+
+58
+00:02:39,550 --> 00:02:42,114
+probably don't want. It might make excessive use of
+
+59
+00:02:42,174 --> 00:02:44,798
+emojis, which you might not want. And it might use a little
+
+60
+00:02:44,818 --> 00:02:47,362
+bit cliched language all over the place, which, again,
+
+61
+00:02:47,402 --> 00:02:49,907
+you might not want. And so over time, as you
+
+62
+00:02:49,926 --> 00:02:52,450
+start to develop this prompt, you might eventually set
+
+63
+00:02:52,510 --> 00:02:55,195
+up a big long list of things that you tell Claude
+
+64
+00:02:55,235 --> 00:02:57,938
+to just not do it all. But inevitably, Claude
+
+65
+00:02:57,979 --> 00:03:01,163
+might eventually, no matter how many times you repeat these items, Claude
+
+66
+00:03:01,223 --> 00:03:03,906
+might give you back a response that seems to somehow always
+
+67
+00:03:03,985 --> 00:03:06,487
+use emojis, mention the fact that it
+
+68
+00:03:06,528 --> 00:03:09,151
+has been written by an AI, and just generally have
+
+69
+00:03:09,211 --> 00:03:11,774
+kind of a cringey, non-professional tone to it.
+
+70
+00:03:12,155 --> 00:03:14,776
+And Claude might persist in writing an article like this, no
+
+71
+00:03:14,796 --> 00:03:17,460
+matter how many times you repeat these constraints or things
+
+72
+00:03:17,500 --> 00:03:20,022
+that Claude should not do. So to address this
+
+73
+00:03:20,062 --> 00:03:23,066
+problem, you can use a very simple prompt-chaining workflow.
+
+74
+00:03:23,486 --> 00:03:26,210
+Here's what you might do. You might feed in that initial long
+
+75
+00:03:26,250 --> 00:03:28,813
+prompt that has all these constraints in it, and then just
+
+76
+00:03:28,954 --> 00:03:32,098
+accept that you are going to get back some initial article that doesn't
+
+77
+00:03:32,158 --> 00:03:34,741
+really fit the bill of what you're looking for. Claude might
+
+78
+00:03:34,782 --> 00:03:37,325
+inevitably decide to violate some of the different constraints you
+
+79
+00:03:37,346 --> 00:03:39,889
+laid out. To fix those issues, you could
+
+80
+00:03:39,909 --> 00:03:42,993
+then make a follow-up request back to Claude, providing
+
+81
+00:03:43,033 --> 00:03:46,018
+the article that Claude just wrote. And underneath
+
+82
+00:03:46,038 --> 00:03:48,581
+the article, you could ask Claude to rewrite the article in some
+
+83
+00:03:48,622 --> 00:03:51,467
+particular way. So you could say, find any location
+
+84
+00:03:51,627 --> 00:03:54,290
+where the author identifies as an AI and remove
+
+85
+00:03:54,330 --> 00:03:57,155
+that mention, find and remove all emojis, and
+
+86
+00:03:57,194 --> 00:03:59,799
+then write the text in a way that a professional technical
+
+87
+00:03:59,838 --> 00:04:02,582
+writer would do it. By using this chaining workflow and breaking
+
+88
+00:04:02,623 --> 00:04:05,127
+the task up into multiple steps, you allow Claude
+
+89
+00:04:05,167 --> 00:04:07,811
+to focus much more on each individual task
+
+90
+00:04:07,912 --> 00:04:10,695
+presented to it. So even though it might not really
+
+91
+00:04:10,756 --> 00:04:13,439
+satisfy all the requirements you put into the long prompt
+
+92
+00:04:13,479 --> 00:04:16,083
+originally, the follow-up prompt allows Claude to focus
+
+93
+00:04:16,223 --> 00:04:18,747
+on just the restrictions that you really care about, and
+
+94
+00:04:18,786 --> 00:04:21,329
+will hopefully rewrite the article in a style that you are
+
+95
+00:04:21,370 --> 00:04:24,012
+really looking for. So once again, even though prompt
+
+96
+00:04:24,033 --> 00:04:26,916
+chaining seems like something kind of obvious and simple, this
+
+97
+00:04:27,057 --> 00:04:29,579
+does end up being something that you're going to use rather often,
+
+98
+00:04:29,980 --> 00:04:32,483
+anytime that you have a task for Claude with many constraints,
+
+99
+00:04:32,783 --> 00:04:35,387
+and Claude doesn't seem to be always following those constraints as
+
+100
+00:04:35,468 --> 00:04:36,649
+much as you might expect.

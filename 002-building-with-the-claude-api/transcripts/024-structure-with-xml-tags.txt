@@ -1,0 +1,335 @@
+1
+00:00:00,031 --> 00:00:02,694
+The next topic we are going to examine is the idea of
+
+2
+00:00:02,734 --> 00:00:05,658
+providing structure in your prompt by using XML tags.
+
+3
+00:00:06,379 --> 00:00:09,464
+Now, let me give you a little bit of backstory on this. Very
+
+4
+00:00:09,564 --> 00:00:12,307
+often, whenever we write out a prompt, we're going to interpolate some
+
+5
+00:00:12,407 --> 00:00:15,471
+amount of content into it. And we've been doing that already. Inside
+
+6
+00:00:15,492 --> 00:00:18,315
+of our example, we have been interpolating some heights, weight, goal,
+
+7
+00:00:18,376 --> 00:00:21,021
+and restrictions. Now each of these values are rather
+
+8
+00:00:21,060 --> 00:00:23,606
+small, but it's entirely possible that we might
+
+9
+00:00:23,646 --> 00:00:26,150
+eventually write a prompt where we need to put in a lot of
+
+10
+00:00:26,251 --> 00:00:28,977
+content into a prompt. For example, examine
+
+11
+00:00:28,996 --> 00:00:31,582
+the prompt on the right-hand side. We might decide to paste
+
+12
+00:00:31,702 --> 00:00:34,487
+in 20 pages of sales records and
+
+13
+00:00:34,548 --> 00:00:37,192
+try to get Claude to analyze them in some way.
+
+14
+00:00:37,173 --> 00:00:39,896
+Whenever we dump a lot of content into a prompt, it
+
+15
+00:00:39,996 --> 00:00:42,841
+can be a little bit challenging for Claude to figure out exactly
+
+16
+00:00:42,881 --> 00:00:45,404
+what text really means what or
+
+17
+00:00:45,463 --> 00:00:48,067
+how text is actually grouped together. One way that
+
+18
+00:00:48,088 --> 00:00:50,792
+we can make the structure of our prompt a little bit more obvious is
+
+19
+00:00:50,851 --> 00:00:53,896
+by wrapping different pieces of content in XML
+
+20
+00:00:53,936 --> 00:00:56,700
+tags. So for example, I might provide a little
+
+21
+00:00:56,719 --> 00:00:59,564
+bit more structure to this prompt on the right by wrapping
+
+22
+00:00:59,603 --> 00:01:02,628
+the sales records right here with an XML
+
+23
+00:01:02,667 --> 00:01:06,754
+tag of sales records. Like
+
+24
+00:01:06,793 --> 00:01:09,396
+so. Now, there is no
+
+25
+00:01:09,596 --> 00:01:12,319
+official XML tag called specifically sales
+
+26
+00:01:12,400 --> 00:01:15,082
+records. This is a name of a tag that I just
+
+27
+00:01:15,123 --> 00:01:18,085
+made up that will probably give Claude a little bit of insight
+
+28
+00:01:18,225 --> 00:01:20,769
+into the nature of the content that exists inside these
+
+29
+00:01:20,828 --> 00:01:24,192
+tags. I could have just as well called this records,
+
+30
+00:01:25,034 --> 00:01:27,677
+or perhaps even data. But of course,
+
+31
+00:01:27,697 --> 00:01:30,280
+being a little bit more specific here is definitely
+
+32
+00:01:30,319 --> 00:01:33,123
+better. So providing a tag of something like sales records
+
+33
+00:01:33,362 --> 00:01:35,965
+would probably get us the best output. Now
+
+34
+00:01:35,986 --> 00:01:38,510
+I want to make sure it's really clear why XML tags like
+
+35
+00:01:38,551 --> 00:01:41,495
+this are necessary. So let me show you a little exaggerated
+
+36
+00:01:41,536 --> 00:01:44,140
+example. In the prompt on the left hand side, I have
+
+37
+00:01:44,280 --> 00:01:47,064
+a leading line of debug my code below using
+
+38
+00:01:47,105 --> 00:01:50,030
+the provided documentation. So this kind of implies
+
+39
+00:01:50,069 --> 00:01:52,614
+two things. It implies that underneath this
+
+40
+00:01:52,814 --> 00:01:55,379
+header statement right here, I have some amount of code that
+
+41
+00:01:55,399 --> 00:01:58,003
+was written by me, that is buggy, and some amount
+
+42
+00:01:58,043 --> 00:02:00,567
+of documentation as well. And if you
+
+43
+00:02:00,608 --> 00:02:03,371
+just look at the code that's listed out here, it's absolutely
+
+44
+00:02:03,492 --> 00:02:06,236
+not very clear what content is the code and
+
+45
+00:02:06,275 --> 00:02:08,799
+what content is the actual documentation. One way that
+
+46
+00:02:08,818 --> 00:02:11,643
+we could clarify this to Claude would be to wrap each
+
+47
+00:02:11,723 --> 00:02:14,888
+chunk of code with appropriate XML tags. For
+
+48
+00:02:14,948 --> 00:02:17,510
+example, on the right-hand side, I might wrap my code with
+
+49
+00:02:17,550 --> 00:02:20,134
+some XML tags that simply say my code
+
+50
+00:02:20,275 --> 00:02:23,019
+being very direct and obvious, and then the code
+
+51
+00:02:23,058 --> 00:02:26,223
+that represents some amount of documentation in a docstag,
+
+52
+00:02:26,484 --> 00:02:29,046
+again, being very clear and obvious. Now
+
+53
+00:02:29,187 --> 00:02:31,850
+it is much easier for Claude to understand what code
+
+54
+00:02:31,890 --> 00:02:34,675
+it is trying to debug and which code provides some
+
+55
+00:02:34,735 --> 00:02:37,520
+source of documentation. Let's take this idea
+
+56
+00:02:37,659 --> 00:02:40,424
+of providing structure via XML tags and try
+
+57
+00:02:40,443 --> 00:02:42,986
+to use it to improve our prompt that we are working on back inside of
+
+58
+00:02:43,027 --> 00:02:45,812
+our notebook. Now, unfortunately in this particular
+
+59
+00:02:45,852 --> 00:02:48,414
+scenario, we don't really have a big blob
+
+60
+00:02:48,596 --> 00:02:51,719
+of content that we really need to delineate in any way.
+
+61
+00:02:51,699 --> 00:02:54,262
+All of our interpolated content like the height, weight,
+
+62
+00:02:54,282 --> 00:02:56,784
+goal, and restrictions are sufficiently short that Claude
+
+63
+00:02:56,824 --> 00:03:00,207
+is probably not going to be confused by them in any way. Regardless,
+
+64
+00:03:00,467 --> 00:03:03,090
+we can still use some XML tags to make it really clear that
+
+65
+00:03:03,110 --> 00:03:05,693
+this is some kind of external input or maybe
+
+66
+00:03:05,733 --> 00:03:08,354
+some information about the athlete that should be considered
+
+67
+00:03:08,395 --> 00:03:10,896
+when generating the meal plan. So we might decide
+
+68
+00:03:10,917 --> 00:03:13,520
+to wrap this entire block right here with some XML tags
+
+69
+00:03:13,560 --> 00:03:16,122
+that just make it really clear that this is information
+
+70
+00:03:16,461 --> 00:03:19,044
+about the athlete. So I might put in tags like
+
+71
+00:03:19,724 --> 00:03:22,328
+athlete information. and
+
+72
+00:03:22,348 --> 00:03:25,010
+then a closing tag on the other side. Now
+
+73
+00:03:25,072 --> 00:03:27,794
+let's try to measure and see whether or not this has any kind of impact
+
+74
+00:03:27,974 --> 00:03:30,538
+on the quality of output. So I'm going to rerun the
+
+75
+00:03:30,579 --> 00:03:33,902
+cell, I'll go down to my eval cell and
+
+76
+00:03:33,983 --> 00:03:36,687
+run this one. And then you might recall that before adding
+
+77
+00:03:36,706 --> 00:03:39,390
+in those XML tags, I had a score of 7.3.
+
+78
+00:03:40,472 --> 00:03:43,027
+So let's see if we go up or down. And I
+
+79
+00:03:43,087 --> 00:03:46,375
+end up going up quite a bit. Now, you
+
+80
+00:03:46,435 --> 00:03:49,140
+probably not going to see an improvement quite this large. As
+
+81
+00:03:49,181 --> 00:03:51,787
+a reminder, I'm using a little bit more simple and basic
+
+82
+00:03:51,926 --> 00:03:54,532
+model just so I get some exaggerated returns
+
+83
+00:03:54,652 --> 00:03:57,338
+in these improvements to the prompt. So if you do not see
+
+84
+00:03:57,438 --> 00:04:00,485
+quite a big a jump in quality, that is totally fine.

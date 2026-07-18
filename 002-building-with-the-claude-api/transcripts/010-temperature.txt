@@ -1,0 +1,511 @@
+1
+00:00:00,031 --> 00:00:02,774
+Earlier on inside this course, we spoke very briefly
+
+2
+00:00:02,874 --> 00:00:05,536
+about how Claude actually generates text. Remember,
+
+3
+00:00:05,657 --> 00:00:08,240
+we feed some amount of text into Claude, like the
+
+4
+00:00:08,279 --> 00:00:11,462
+words, what do you think. Claude is then going to tokenize
+
+5
+00:00:11,483 --> 00:00:14,746
+this text or break it up into smaller chunks. Claude
+
+6
+00:00:14,787 --> 00:00:17,410
+is then going to go through a prediction phase where it decides
+
+7
+00:00:17,750 --> 00:00:20,413
+what possible words could come next and assign
+
+8
+00:00:20,432 --> 00:00:23,135
+a probability to each of those different options.
+
+9
+00:00:23,115 --> 00:00:25,617
+Finally, in the sampling phase, a token is
+
+10
+00:00:25,899 --> 00:00:29,001
+actually chosen based upon these probabilities. So
+
+11
+00:00:29,041 --> 00:00:31,623
+in this diagram I have on the screen, given inputs of
+
+12
+00:00:31,864 --> 00:00:34,426
+what do you think possible next tokens
+
+13
+00:00:34,767 --> 00:00:37,588
+might be about, wood, and
+
+14
+00:00:37,668 --> 00:00:40,591
+so on. Everything you see here on the right-hand side. Each
+
+15
+00:00:40,631 --> 00:00:43,334
+of these gets assigned a probability. And then maybe
+
+16
+00:00:43,414 --> 00:00:46,057
+in this case, Claude settles on about as
+
+17
+00:00:46,097 --> 00:00:48,658
+being the best possible next token. So
+
+18
+00:00:48,698 --> 00:00:51,942
+we would end up with a phrase, what do you think about?
+
+19
+00:00:52,207 --> 00:00:55,225
+This entire process is then repeated to complete
+
+20
+00:00:55,265 --> 00:00:58,292
+the sentence or complete the entire message. Now
+
+21
+00:00:58,332 --> 00:01:00,874
+just to make sure things are really clear, the numbers I'm
+
+22
+00:01:00,914 --> 00:01:03,457
+showing here are probabilities, the percentage
+
+23
+00:01:03,557 --> 00:01:06,659
+chance of each token being selected. And
+
+24
+00:01:06,679 --> 00:01:09,581
+just to make things a little bit more clear with these probabilities, I'm
+
+25
+00:01:09,602 --> 00:01:12,164
+going to display them in a chart for the rest of this
+
+26
+00:01:12,224 --> 00:01:14,766
+video. So still the same probability is just in a
+
+27
+00:01:14,867 --> 00:01:17,489
+format that's easier for us to understand. You
+
+28
+00:01:17,509 --> 00:01:20,370
+also notice I've kind of sorted them from left to right. There's
+
+29
+00:01:20,391 --> 00:01:23,274
+no actual internal sorting going on. I'm just sorting
+
+30
+00:01:23,313 --> 00:01:25,876
+them greatest to these probability just
+
+31
+00:01:25,896 --> 00:01:29,000
+to make this chart a little bit easier to understand. So
+
+32
+00:01:29,040 --> 00:01:31,847
+now that we have a reminder on how Claude generates text,
+
+33
+00:01:32,228 --> 00:01:35,057
+I want to show you one way that we can directly influence
+
+34
+00:01:35,137 --> 00:01:37,683
+these probabilities and control which
+
+35
+00:01:37,724 --> 00:01:40,591
+token Claude might actually decide to select.
+
+36
+00:01:41,111 --> 00:01:44,036
+So we can control these probabilities using a parameter
+
+37
+00:01:44,135 --> 00:01:47,379
+called temperature. Temperature is a decimal
+
+38
+00:01:47,439 --> 00:01:50,043
+value between 0 and 1 that we provide
+
+39
+00:01:50,084 --> 00:01:52,647
+when we make our model call. So whenever we call
+
+40
+00:01:52,686 --> 00:01:55,311
+that converse function, temperature is going
+
+41
+00:01:55,350 --> 00:01:58,394
+to influence the exact distribution of probabilities.
+
+42
+00:01:59,156 --> 00:02:01,959
+This is a little bit tricky to understand. So you can look at the plot
+
+43
+00:02:02,019 --> 00:02:04,543
+or these charts I've got right here. Or alternatively, I put
+
+44
+00:02:04,582 --> 00:02:07,305
+together a quick little demo with plot itself just
+
+45
+00:02:07,346 --> 00:02:10,090
+to give you a better idea of what's going on. So let me show you that demo.
+
+46
+00:02:10,728 --> 00:02:13,473
+Okay, so this is the same chart we were just looking at in that diagram
+
+47
+00:02:13,592 --> 00:02:16,457
+a moment ago. Whenever we provide a temperature
+
+48
+00:02:16,518 --> 00:02:19,043
+value going down to zero, as you'll see, I got
+
+49
+00:02:19,103 --> 00:02:21,888
+temperature right here, the highest probability
+
+50
+00:02:21,927 --> 00:02:24,573
+becomes more likely to occur. So
+
+51
+00:02:24,712 --> 00:02:27,298
+our highest probability was about, and it's going
+
+52
+00:02:27,318 --> 00:02:30,022
+to increase all the way up to 100%. So
+
+53
+00:02:30,122 --> 00:02:33,590
+at temperatures of zero, we start to get what we call a deterministic
+
+54
+00:02:33,750 --> 00:02:36,615
+output, where we always select the token that has the highest
+
+55
+00:02:36,715 --> 00:02:39,300
+initial probability. Then, as we start to increase
+
+56
+00:02:39,340 --> 00:02:42,045
+our temperature, it increases the chances of us selecting
+
+57
+00:02:42,126 --> 00:02:45,391
+a token that has a lower initial probability.
+
+58
+00:02:45,372 --> 00:02:47,914
+So we go from maybe having a 0% chance of
+
+59
+00:02:47,955 --> 00:02:50,557
+selecting we as the next token,
+
+60
+00:02:50,877 --> 00:02:53,681
+although it to say 9%. So this is the theory
+
+61
+00:02:53,762 --> 00:02:56,465
+behind temperature, but what does this actually mean in the real
+
+62
+00:02:56,504 --> 00:02:59,427
+world? Well, we start to use different values of temperature,
+
+63
+00:02:59,729 --> 00:03:02,532
+given the actual task that we're trying to complete. These
+
+64
+00:03:02,632 --> 00:03:05,275
+are some example ranges and tasks that might fit
+
+65
+00:03:05,395 --> 00:03:08,038
+into each sample range. For something like, say,
+
+66
+00:03:08,299 --> 00:03:11,223
+data extraction, we really don't want a lot of randomness
+
+67
+00:03:11,324 --> 00:03:14,088
+or creativity. If we give Claude a big chunk
+
+68
+00:03:14,128 --> 00:03:16,913
+of text and ask it to extract very specific pieces
+
+69
+00:03:16,973 --> 00:03:19,878
+of information, no real creativity required
+
+70
+00:03:19,899 --> 00:03:22,483
+there whatsoever. We just want Claude to look at the exact
+
+71
+00:03:22,522 --> 00:03:25,908
+text we provided and pull out the most relevant information.
+
+72
+00:03:25,889 --> 00:03:28,491
+And then on the higher temperature side, this is where we start to get more
+
+73
+00:03:28,651 --> 00:03:31,294
+creative. And we start to see less common
+
+74
+00:03:31,336 --> 00:03:33,838
+tokens being used. We probably are
+
+75
+00:03:33,878 --> 00:03:36,562
+going to want to use higher temperatures anytime we are doing any
+
+76
+00:03:36,581 --> 00:03:39,985
+kind of really creative focus task, such as brainstorming,
+
+77
+00:03:40,366 --> 00:03:42,989
+writing, maybe doing some really creative marketing, or
+
+78
+00:03:43,028 --> 00:03:45,733
+something like a joke where a lot of jokes really depend
+
+79
+00:03:45,793 --> 00:03:48,496
+upon using words in ways that are not
+
+80
+00:03:48,575 --> 00:03:51,438
+always quite expected. Now that we understand what temperature
+
+81
+00:03:51,498 --> 00:03:54,062
+is all about, let's go back over to our notebook and understand how we can
+
+82
+00:03:54,102 --> 00:03:56,743
+adjust temperature on the fly. I would like to update our
+
+83
+00:03:56,804 --> 00:03:59,426
+chat function so that it takes in a temperature argument
+
+84
+00:03:59,546 --> 00:04:02,310
+that we're going to pass through to our create function call. So
+
+85
+00:04:02,349 --> 00:04:04,951
+inside of the list of arguments, I'm going to add in temperature
+
+86
+00:04:04,991 --> 00:04:07,735
+and I'm going to default my temperature to be 1.0. So
+
+87
+00:04:08,175 --> 00:04:11,117
+I want to fall on the more creative side of things. Then
+
+88
+00:04:11,138 --> 00:04:13,661
+I'm going to take in that argument and add it into the Params
+
+89
+00:04:13,800 --> 00:04:17,593
+object as temperature. And
+
+90
+00:04:17,632 --> 00:04:20,136
+that's all we have to do to add in support for adjusting
+
+91
+00:04:20,156 --> 00:04:22,838
+the temperature inside of our application. So now to
+
+92
+00:04:22,877 --> 00:04:25,620
+test this out, I'm going to rerun this cell. I'm
+
+93
+00:04:25,661 --> 00:04:28,264
+then going to go down to the next cell, and I'm going to ask
+
+94
+00:04:28,324 --> 00:04:31,466
+Claude to generate a one sentence
+
+95
+00:04:31,666 --> 00:04:34,370
+movie idea. And initially, I'm
+
+96
+00:04:34,389 --> 00:04:36,992
+going to provide a temperature of 0.0.
+
+97
+00:04:37,673 --> 00:04:40,495
+So now in theory, I should be getting back movie ideas
+
+98
+00:04:40,536 --> 00:04:43,218
+that always tend to be a little bit similar in nature.
+
+99
+00:04:44,100 --> 00:04:46,738
+So I'm going to run this. And
+
+100
+00:04:46,778 --> 00:04:49,985
+the first time, I'm going to get back a time-traveling archeologist.
+
+101
+00:04:50,386 --> 00:04:53,031
+You're going to see that this is a very common pattern, at
+
+102
+00:04:53,050 --> 00:04:55,735
+least for me. I very often, when I have a temperature of zero, get
+
+103
+00:04:55,776 --> 00:04:58,439
+movie ideas that are about a time-traveling something.
+
+104
+00:04:59,040 --> 00:05:01,646
+So if I run this again, I'm probably going to see another time-traveling
+
+105
+00:05:01,685 --> 00:05:04,350
+thing. Yep, same thing. Maybe one more time.
+
+106
+00:05:04,391 --> 00:05:07,235
+And yeah, same kind of idea, a jaded
+
+107
+00:05:07,276 --> 00:05:10,125
+time-traveling historian. Let's now try adjusting
+
+108
+00:05:10,185 --> 00:05:12,836
+our temperature a little bit to hopefully encourage Claude to give us some more
+
+109
+00:05:12,855 --> 00:05:15,745
+original or creative ideas. I'm going to try adjusting
+
+110
+00:05:15,766 --> 00:05:18,314
+my temperature up to 1.0. Now
+
+111
+00:05:18,355 --> 00:05:21,139
+if I run this again, I hopefully will not get an idea
+
+112
+00:05:21,240 --> 00:05:24,144
+about a jaded time traveler or something like that. And
+
+113
+00:05:24,185 --> 00:05:26,730
+almost immediately you can see that I do. So this is something
+
+114
+00:05:26,769 --> 00:05:29,334
+to be aware of. Just because you dial up the temperature
+
+115
+00:05:29,375 --> 00:05:31,939
+doesn't mean you're always going to get dramatically different ideas.
+
+116
+00:05:32,279 --> 00:05:35,225
+It just increases the chances of getting a different one. So
+
+117
+00:05:35,264 --> 00:05:38,029
+if I run this again, I might end up seeing out more creative idea.
+
+118
+00:05:38,490 --> 00:05:40,995
+Okay, that's definitely more creative. Nothing about time travel this
+
+119
+00:05:41,035 --> 00:05:44,093
+time and be one more test year. And
+
+120
+00:05:44,314 --> 00:05:46,918
+there we go, again, not about a time traveler or
+
+121
+00:05:46,999 --> 00:05:49,584
+anything like that. All right, so that is temperature.
+
+122
+00:05:49,884 --> 00:05:52,408
+Now remember, there's some general guidance here. Whenever
+
+123
+00:05:52,449 --> 00:05:55,213
+we are doing tasks that require less creativity, or whenever
+
+124
+00:05:55,235 --> 00:05:57,838
+we want to have a very deterministic output, we want to use
+
+125
+00:05:57,879 --> 00:06:00,444
+that lower temperature value. And whenever we have a
+
+126
+00:06:00,504 --> 00:06:03,028
+task that requires a little bit more creativity, that's when
+
+127
+00:06:03,048 --> 00:06:05,875
+we want to start to think about dialing up the temperature
+
+128
+00:06:05,894 --> 00:06:06,576
+a little bit.

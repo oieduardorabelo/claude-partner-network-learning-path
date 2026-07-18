@@ -1,0 +1,947 @@
+1
+00:00:01,127 --> 00:00:03,833
+In this video, we're going to take a look at two features offered through
+
+2
+00:00:03,854 --> 00:00:06,618
+the Anthropic API. And these two features are going to seem
+
+3
+00:00:06,639 --> 00:00:09,304
+a little bit different, just a little bit separate, but it turns
+
+4
+00:00:09,345 --> 00:00:11,849
+out they can be combined together in really interesting
+
+5
+00:00:11,910 --> 00:00:14,714
+ways. So let's get to it. We're going to first begin by understanding
+
+6
+00:00:14,736 --> 00:00:17,800
+what the files API is all about. Earlier
+
+7
+00:00:17,920 --> 00:00:20,443
+on inside this course, we discussed how you can pass images
+
+8
+00:00:20,463 --> 00:00:23,025
+into Claude and ask Claude to interpret the image
+
+9
+00:00:23,085 --> 00:00:25,870
+itself. And I showed you how we can include an image block,
+
+10
+00:00:26,210 --> 00:00:28,972
+which can include the actual raw image data, and
+
+11
+00:00:28,992 --> 00:00:31,515
+coded in base64. We also saw
+
+12
+00:00:31,556 --> 00:00:34,298
+a very similar process being used for uploading of PDF
+
+13
+00:00:34,338 --> 00:00:37,162
+documents as well. The file's API allows
+
+14
+00:00:37,203 --> 00:00:40,146
+for a little bit of a twist on this whole system.
+
+15
+00:00:40,125 --> 00:00:42,750
+With a file API, we can make an individual
+
+16
+00:00:42,810 --> 00:00:45,793
+request ahead of time to upload a particular document,
+
+17
+00:00:45,975 --> 00:00:48,859
+be it a PDF or an image or a text file or whatever
+
+18
+00:00:48,939 --> 00:00:51,662
+else. So we might make an initial request off to Claude
+
+19
+00:00:51,703 --> 00:00:54,207
+to upload that file. We'll then get back something called
+
+20
+00:00:54,226 --> 00:00:57,091
+a file metadata object. This file metadata
+
+21
+00:00:57,191 --> 00:01:00,216
+object contains some different information, but the most interesting
+
+22
+00:01:00,316 --> 00:01:03,060
+or important property to us is the file ID.
+
+23
+00:01:03,761 --> 00:01:06,405
+This ID allows us to refer back to that uploaded file
+
+24
+00:01:06,564 --> 00:01:09,149
+at some point in time in the future. So then later
+
+25
+00:01:09,289 --> 00:01:11,852
+on, at some point in the future, a user can submit
+
+26
+00:01:11,893 --> 00:01:14,798
+a message like what do you see inside this image. And
+
+27
+00:01:14,858 --> 00:01:17,382
+inside of our image block right here, rather
+
+28
+00:01:17,421 --> 00:01:19,965
+than including the raw file data
+
+29
+00:01:20,587 --> 00:01:23,210
+from the image itself, we can include just the
+
+30
+00:01:23,290 --> 00:01:25,974
+file ID. So we can put in the file ID right there.
+
+31
+00:01:26,516 --> 00:01:29,019
+And that's going to get Claude to go and find that image that we
+
+32
+00:01:29,079 --> 00:01:31,743
+had uploaded ahead of time. Claude is then going
+
+33
+00:01:31,763 --> 00:01:34,567
+to try to interpret the image as best as it can.
+
+34
+00:01:34,548 --> 00:01:37,355
+So the file API allows us to upload a file
+
+35
+00:01:37,456 --> 00:01:40,384
+ahead of time and then make a request later on and
+
+36
+00:01:40,463 --> 00:01:43,251
+include some data about the original file inside the request
+
+37
+00:01:43,290 --> 00:01:46,138
+to Claude. So you can really just think of this as being another
+
+38
+00:01:46,198 --> 00:01:49,468
+way that we can provide an image or PDF to Claude.
+
+39
+00:01:49,634 --> 00:01:52,558
+Now that we understand the basics behind this file API,
+
+40
+00:01:52,638 --> 00:01:55,302
+just the idea that allows us to submit a file and
+
+41
+00:01:55,343 --> 00:01:57,865
+then refer back to it at a future point in time, we are
+
+42
+00:01:57,906 --> 00:02:00,730
+going to switch gears and discuss the other focus of this video,
+
+43
+00:02:00,790 --> 00:02:03,575
+which is code execution. Code execution
+
+44
+00:02:03,594 --> 00:02:06,259
+is a server-based tool. So we do not have to provide
+
+45
+00:02:06,299 --> 00:02:09,324
+an actual implementation for this tool. All we have to do is provide
+
+46
+00:02:09,343 --> 00:02:11,888
+a predefined tool schema. Inside
+
+47
+00:02:11,927 --> 00:02:14,612
+of a initial request we make off to Claude, we will include
+
+48
+00:02:14,673 --> 00:02:17,236
+this especially defined tool schema, along with
+
+49
+00:02:17,277 --> 00:02:20,402
+whatever user-submitted message we want to include. Then
+
+50
+00:02:20,462 --> 00:02:23,068
+behind the scenes, Claude can optionally decide
+
+51
+00:02:23,108 --> 00:02:25,633
+to execute some amount of Python code inside of
+
+52
+00:02:25,673 --> 00:02:28,337
+an isolated Docker container. Claude
+
+53
+00:02:28,358 --> 00:02:31,040
+can run code inside this container multiple different times.
+
+54
+00:02:31,662 --> 00:02:34,406
+Whatever Claude prints up from these code executions
+
+55
+00:02:34,705 --> 00:02:37,449
+will be sent back to Claude and the Claude can interpret the results
+
+56
+00:02:37,729 --> 00:02:40,234
+and write a final response to us. These Docker
+
+57
+00:02:40,274 --> 00:02:42,917
+containers do not have any network access. That means
+
+58
+00:02:42,956 --> 00:02:45,841
+that Claude cannot write out any code that will make a network
+
+59
+00:02:45,860 --> 00:02:49,205
+request or attempt to access any kind of outside API.
+
+60
+00:02:49,186 --> 00:02:52,033
+Instead, to get information into the Docker container
+
+61
+00:02:52,234 --> 00:02:55,143
+and to get information out of it, we rely upon mixing
+
+62
+00:02:55,203 --> 00:02:58,010
+together that file API that we just discussed, along
+
+63
+00:02:58,031 --> 00:03:00,638
+with this code execution tool. So let me show
+
+64
+00:03:00,657 --> 00:03:03,242
+you how this works in total. Let's imagine that
+
+65
+00:03:03,263 --> 00:03:06,926
+we have a CSV file called maybemydata.csv,
+
+66
+00:03:07,206 --> 00:03:09,710
+and it contains a lot of tabular information that we want to
+
+67
+00:03:09,729 --> 00:03:12,391
+get analyzed by Claude. Rather than going through
+
+68
+00:03:12,431 --> 00:03:14,995
+some really complicated code setup where we ask
+
+69
+00:03:15,034 --> 00:03:18,138
+Claude to write out some code and then we manually execute that ourselves,
+
+70
+00:03:18,157 --> 00:03:20,800
+we can instead make use of this file API and
+
+71
+00:03:20,820 --> 00:03:23,364
+the code execution tool together to get Claude
+
+72
+00:03:23,383 --> 00:03:26,167
+to automatically analyze the file and produce some results
+
+73
+00:03:26,206 --> 00:03:29,002
+for us. So to do so, we will first
+
+74
+00:03:29,203 --> 00:03:32,050
+use the file API to upload our CSV
+
+75
+00:03:32,110 --> 00:03:34,657
+file. So we'll initially up here, upload
+
+76
+00:03:34,717 --> 00:03:37,245
+our CSV file with some amount of data inside of it. And that's
+
+77
+00:03:37,264 --> 00:03:40,034
+going to give us back a file ID. We
+
+78
+00:03:40,074 --> 00:03:42,778
+will then include that file ID inside of a follow-up
+
+79
+00:03:42,799 --> 00:03:45,342
+request to Claude. So we will add in something
+
+80
+00:03:45,362 --> 00:03:48,066
+called a container upload block. A container upload
+
+81
+00:03:48,105 --> 00:03:50,909
+block just means that we want to take a file that we previously
+
+82
+00:03:51,009 --> 00:03:53,774
+uploaded to Claude and somehow inject it or place
+
+83
+00:03:53,834 --> 00:03:56,358
+it inside of the container. So we're going to add
+
+84
+00:03:56,397 --> 00:03:58,961
+in this very specially crafted block with a type of container
+
+85
+00:03:59,021 --> 00:04:01,724
+upload and a file ID property of whatever ID
+
+86
+00:04:01,764 --> 00:04:05,110
+we got back from when we had uploaded our original file.
+
+87
+00:04:05,224 --> 00:04:07,828
+Then inside of a separate text block, we'll ask Claude
+
+88
+00:04:07,867 --> 00:04:10,871
+to do some analysis, maybe something as simple as analyze
+
+89
+00:04:10,911 --> 00:04:13,633
+the data inside this file. Then behind the scenes,
+
+90
+00:04:13,854 --> 00:04:16,497
+Claude is going to make use of the code execution tool.
+
+91
+00:04:16,958 --> 00:04:19,600
+Claude is going to have access to that uploaded file inside the Docker
+
+92
+00:04:19,641 --> 00:04:22,262
+container. So Claude can write out some code to
+
+93
+00:04:22,324 --> 00:04:24,906
+analyze the file, process the results, and then give
+
+94
+00:04:24,966 --> 00:04:27,629
+us a full report of all the data inside
+
+95
+00:04:27,668 --> 00:04:30,495
+that file. Let's now take a look at an example
+
+96
+00:04:30,595 --> 00:04:33,259
+of this entire flow. So I've put together a notebook
+
+97
+00:04:33,379 --> 00:04:36,004
+at a time called 005 code execution.
+
+98
+00:04:36,665 --> 00:04:39,430
+I've also created a separate CSV file called
+
+99
+00:04:39,591 --> 00:04:42,095
+streaming.csv. Inside of here is
+
+100
+00:04:42,156 --> 00:04:44,660
+a bunch of fake data from a video streaming
+
+101
+00:04:44,800 --> 00:04:47,444
+service. This file contains information about
+
+102
+00:04:47,504 --> 00:04:50,048
+particular users, what subscription tier they
+
+103
+00:04:50,129 --> 00:04:52,812
+are included in, so what level of access they have,
+
+104
+00:04:53,333 --> 00:04:55,916
+and then a lot of statistics about this particular user. So
+
+105
+00:04:56,016 --> 00:04:58,600
+in total number of hours they have viewed, top genre,
+
+106
+00:04:59,021 --> 00:05:01,805
+et cetera, et cetera, and then at the very end, the very last
+
+107
+00:05:01,865 --> 00:05:04,550
+column is called churned. Churned is
+
+108
+00:05:04,589 --> 00:05:07,093
+an indication of whether or not the user has canceled
+
+109
+00:05:07,113 --> 00:05:09,718
+their subscription. So as euro means they
+
+110
+00:05:09,757 --> 00:05:12,300
+have not canceled their subscription, and one means they
+
+111
+00:05:12,382 --> 00:05:15,033
+have canceled their subscription. Now
+
+112
+00:05:15,235 --> 00:05:17,778
+I could write out a lot of code to analyze the data inside
+
+113
+00:05:17,798 --> 00:05:20,403
+this file and figure out whether or not there is some correlation
+
+114
+00:05:20,523 --> 00:05:23,267
+between these different features and whether or not a user
+
+115
+00:05:23,327 --> 00:05:25,851
+has canceled their subscription. But instead of doing
+
+116
+00:05:25,891 --> 00:05:28,456
+all this myself, I might decide to just hand the entire
+
+117
+00:05:28,495 --> 00:05:31,120
+task off to Claude. I could first upload this
+
+118
+00:05:31,160 --> 00:05:33,723
+stringing.csv file and then ask Claude
+
+119
+00:05:33,744 --> 00:05:36,247
+to make use of its code execution tool to do an
+
+120
+00:05:36,288 --> 00:05:38,853
+analysis of all the data inside of here. So let me show
+
+121
+00:05:38,892 --> 00:05:41,483
+you how we would do that. First, back inside
+
+122
+00:05:41,504 --> 00:05:44,108
+the notebook, I want you to take a look at the helper function
+
+123
+00:05:44,168 --> 00:05:46,673
+cell. If you scroll down a little bit, you'll notice that
+
+124
+00:05:46,694 --> 00:05:49,379
+I added in a couple of different functions. I added
+
+125
+00:05:49,480 --> 00:05:52,004
+in a upload function, which will automatically upload a
+
+126
+00:05:52,064 --> 00:05:54,663
+particular file given a file path. I have
+
+127
+00:05:54,783 --> 00:05:57,310
+added in a list files function, which will list out
+
+128
+00:05:57,389 --> 00:06:00,257
+all the different files we have uploaded to Claude. We
+
+129
+00:06:00,278 --> 00:06:02,923
+can delete a file, we can download a file, and
+
+130
+00:06:02,963 --> 00:06:06,031
+we get information about a particular file as well. We're
+
+131
+00:06:06,052 --> 00:06:08,577
+going to make use of these functions very shortly. So I'm going
+
+132
+00:06:08,598 --> 00:06:11,384
+to collapse that cell, and of course, make sure that I run it as well.
+
+133
+00:06:12,512 --> 00:06:16,040
+Then in the next cell down, I'm going to attempt to upload the streaming.csv
+
+134
+00:06:16,081 --> 00:06:18,586
+file. So I'm going to run that cell right away. And we'll
+
+135
+00:06:18,625 --> 00:06:21,172
+get back our file metadata object. And inside of here,
+
+136
+00:06:21,572 --> 00:06:24,759
+there's our ID. So that is the unique ID that identifies
+
+137
+00:06:24,779 --> 00:06:27,305
+this file to Claude. And if we ever want to include it inside of a
+
+138
+00:06:27,386 --> 00:06:30,232
+conversation in the future, we're referred to that particular
+
+139
+00:06:30,391 --> 00:06:33,086
+ID. Then inside the next cell down,
+
+140
+00:06:33,146 --> 00:06:35,771
+I've got a short prompt that is asking Claude
+
+141
+00:06:35,812 --> 00:06:38,317
+to run a detailed analysis and figure out
+
+142
+00:06:38,497 --> 00:06:41,343
+why customers are canceling their subscription. I'm
+
+143
+00:06:41,442 --> 00:06:44,208
+also asking Claude to print out a plot that
+
+144
+00:06:44,288 --> 00:06:46,973
+summarizes all of its findings. Then after
+
+145
+00:06:47,014 --> 00:06:49,658
+that, I've got the Container Upload block, which is going
+
+146
+00:06:49,678 --> 00:06:52,964
+to actually include that uploaded file inside of our request.
+
+147
+00:06:52,944 --> 00:06:55,528
+So now I want to run the cell and just be aware
+
+148
+00:06:55,648 --> 00:06:58,331
+that whenever you make use of code execution, it sometimes
+
+149
+00:06:58,370 --> 00:07:01,213
+actually takes a little bit of time to complete. The
+
+150
+00:07:01,254 --> 00:07:03,877
+response we get back is going to contain a tremendous amount
+
+151
+00:07:03,937 --> 00:07:06,699
+of text. Inside this message is going to be all the code
+
+152
+00:07:06,819 --> 00:07:09,583
+that Claude decided to write, along with all the print statements
+
+153
+00:07:09,642 --> 00:07:12,406
+and output that it got, along with some final analysis
+
+154
+00:07:12,545 --> 00:07:15,449
+as well. Claude can decide to run code multiple
+
+155
+00:07:15,509 --> 00:07:18,492
+times inside the container, so we might actually see multiple
+
+156
+00:07:18,572 --> 00:07:21,095
+code blocks and multiple execution results inside
+
+157
+00:07:21,134 --> 00:07:23,718
+this message. Now to help you understand what's going on inside
+
+158
+00:07:23,759 --> 00:07:26,283
+the message, I took all that content and I format
+
+159
+00:07:26,343 --> 00:07:29,488
+it just a little bit more nicely so we can understand what's happening.
+
+160
+00:07:29,509 --> 00:07:32,014
+So here's that message. I got my content list with a
+
+161
+00:07:32,033 --> 00:07:34,639
+variety of different blocks inside of it. The first block
+
+162
+00:07:34,738 --> 00:07:37,363
+is a text block, which is going to contain some
+
+163
+00:07:37,463 --> 00:07:40,889
+amount of text that just has Claude framing the initial problem.
+
+164
+00:07:40,870 --> 00:07:43,454
+Claude is then going to provide a server tool use
+
+165
+00:07:43,495 --> 00:07:46,180
+block. This is going to contain some amount of code that Claude
+
+166
+00:07:46,220 --> 00:07:48,904
+wants to run inside the container. And then here is our
+
+167
+00:07:49,125 --> 00:07:51,730
+code execution tool result. It's going
+
+168
+00:07:51,750 --> 00:07:54,596
+to contain some information about the actual execution
+
+169
+00:07:54,696 --> 00:07:57,281
+of that code. So data from standard out,
+
+170
+00:07:57,321 --> 00:08:00,005
+standard error, return code in case there's any error
+
+171
+00:08:00,065 --> 00:08:02,571
+handling required, and so on. And then it looks like
+
+172
+00:08:02,591 --> 00:08:05,117
+in this case, Claude decided to run some more code
+
+173
+00:08:05,257 --> 00:08:07,762
+after that. So it did some further analysis right here,
+
+174
+00:08:08,283 --> 00:08:10,889
+got back some more results, and it did some more
+
+175
+00:08:10,908 --> 00:08:13,615
+analysis, and so on. So in this case, Claude
+
+176
+00:08:13,774 --> 00:08:16,540
+ran some code several times in row to do some thorough
+
+177
+00:08:16,661 --> 00:08:19,269
+analysis. Now, whether or not you decide
+
+178
+00:08:19,309 --> 00:08:21,812
+to show all this content to your users is
+
+179
+00:08:21,853 --> 00:08:24,516
+totally up to you and the particular application that you are working
+
+180
+00:08:24,596 --> 00:08:27,401
+on. If you want to, you could build up a really nice
+
+181
+00:08:27,440 --> 00:08:30,004
+looking report, maybe something like this. So
+
+182
+00:08:30,045 --> 00:08:32,568
+I took all that information that we were just looking at, and I used
+
+183
+00:08:32,629 --> 00:08:35,133
+Claude to just format it very nicely. So now I
+
+184
+00:08:35,173 --> 00:08:37,878
+can see the initial response right there. So that's the exact
+
+185
+00:08:37,957 --> 00:08:41,302
+information from the initial text block that we got back.
+
+186
+00:08:41,283 --> 00:08:43,910
+Then here's my code execution tool. There's
+
+187
+00:08:43,931 --> 00:08:46,860
+the code that Claude decided to run, along with the output
+
+188
+00:08:47,201 --> 00:08:50,048
+from executing it. And we could see this is repeated several
+
+189
+00:08:50,089 --> 00:08:53,018
+times in a row. So now I've got some more text
+
+190
+00:08:53,077 --> 00:08:55,625
+right here, another code execution, and so
+
+191
+00:08:55,706 --> 00:08:58,225
+on. Finally, I want to show you one of
+
+192
+00:08:58,245 --> 00:09:01,009
+the most interesting aspects of code execution.
+
+193
+00:09:01,549 --> 00:09:04,192
+So you may recall that back inside this prompt that
+
+194
+00:09:04,232 --> 00:09:06,956
+I sent off, I asked Claude to include one
+
+195
+00:09:07,037 --> 00:09:10,201
+detailed plot summarizing its findings. Claude
+
+196
+00:09:10,240 --> 00:09:12,903
+behind the scenes did generate a plot inside of
+
+197
+00:09:12,964 --> 00:09:15,648
+a image file, and that is stored inside of our Docker
+
+198
+00:09:15,687 --> 00:09:18,230
+container. We can use the file API
+
+199
+00:09:18,370 --> 00:09:21,274
+to download that generated plot inside of the Docker container.
+
+200
+00:09:21,715 --> 00:09:24,558
+Let me show you how. First, I'm going to go and take a close
+
+201
+00:09:24,740 --> 00:09:27,464
+look at the message that I formatted over here. So
+
+202
+00:09:27,484 --> 00:09:30,087
+if I scroll through, I might eventually see a text
+
+203
+00:09:30,128 --> 00:09:32,751
+block that has an extra nested content
+
+204
+00:09:32,792 --> 00:09:35,635
+property. And inside that, I might see a type of code
+
+205
+00:09:35,775 --> 00:09:38,620
+execution output. So here's mine right here. If
+
+206
+00:09:38,640 --> 00:09:41,424
+you don't see it inside of your response, try searching for code
+
+207
+00:09:41,544 --> 00:09:44,048
+execution output. Right underneath that is
+
+208
+00:09:44,109 --> 00:09:46,712
+a file ID. So I can use this file
+
+209
+00:09:46,773 --> 00:09:49,356
+ID to download the file. I'm going
+
+210
+00:09:49,376 --> 00:09:52,052
+to copy it, go back over to my notebook, I'm
+
+211
+00:09:52,072 --> 00:09:54,769
+going to go down to the very bottom and add in a new
+
+212
+00:09:54,830 --> 00:09:57,947
+cell. Here we go. I'm
+
+213
+00:09:57,967 --> 00:10:00,711
+going to call download file, which was one of those predefined
+
+214
+00:10:00,770 --> 00:10:03,835
+functions that we took a look at at the start of this video. And
+
+215
+00:10:03,875 --> 00:10:06,518
+I'm going to paste in the file ID that I just found inside
+
+216
+00:10:06,538 --> 00:10:10,101
+the response. I'm going to run this. It's
+
+217
+00:10:10,121 --> 00:10:12,684
+going to run successfully. And now if I take a look at the same
+
+218
+00:10:12,725 --> 00:10:15,288
+directory that my notebook is in, I'm going to find maybe
+
+219
+00:10:15,388 --> 00:10:18,091
+a PNG or a JPEG file inside there. Their
+
+220
+00:10:18,130 --> 00:10:20,693
+name is going to be random. It's not truly random per
+
+221
+00:10:20,714 --> 00:10:23,336
+se. It's going to be whatever Claude decided to name it. If
+
+222
+00:10:23,376 --> 00:10:25,879
+I then open up that file, if I then open up that
+
+223
+00:10:25,960 --> 00:10:28,964
+file, I'll see a bunch of information that Claude extracted
+
+224
+00:10:29,004 --> 00:10:31,847
+from that CSV file. So this is a great
+
+225
+00:10:31,908 --> 00:10:34,671
+visualization that tells me everything I need to know. So
+
+226
+00:10:34,770 --> 00:10:37,514
+churn right by viewing hours, by monthly cost ranges,
+
+227
+00:10:37,615 --> 00:10:40,418
+and so on, Claude did a very thorough analysis
+
+228
+00:10:40,438 --> 00:10:43,601
+here to help me understand the contents of this file. So
+
+229
+00:10:43,643 --> 00:10:46,225
+as you can see, based upon this demo, combining together the
+
+230
+00:10:46,446 --> 00:10:49,109
+file API and the code execution tool
+
+231
+00:10:49,409 --> 00:10:52,072
+allows us to delegate rather complex tasks off
+
+232
+00:10:52,092 --> 00:10:54,610
+to Claude. Of course, you are not limited
+
+233
+00:10:54,690 --> 00:10:57,657
+to just doing data analysis. You can use the combination
+
+234
+00:10:57,857 --> 00:11:00,524
+of code execution along with the files API to
+
+235
+00:11:00,563 --> 00:11:03,410
+execute a wide variety of different tasks. And
+
+236
+00:11:03,431 --> 00:11:05,937
+it's really up to you to decide how to integrate this into
+
+237
+00:11:05,976 --> 00:11:07,120
+your application.

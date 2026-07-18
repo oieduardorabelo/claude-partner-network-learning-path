@@ -1,0 +1,319 @@
+1
+00:00:00,031 --> 00:00:02,579
+Thank you. Let's take a look at another workflow. We're
+
+2
+00:00:02,599 --> 00:00:05,100
+going to change up our application a little bit this time around.
+
+3
+00:00:05,381 --> 00:00:07,924
+We're still going to ask the user to drag and drop an image of
+
+4
+00:00:07,944 --> 00:00:10,605
+a part onto the screen. But this time, we're going to give
+
+5
+00:00:10,646 --> 00:00:13,147
+the user back an analysis, a report that's
+
+6
+00:00:13,188 --> 00:00:15,871
+going to tell the user the best material to build their
+
+7
+00:00:15,910 --> 00:00:18,553
+part out of, depending upon some various criteria.
+
+8
+00:00:18,974 --> 00:00:21,515
+To implement this feature, we might take the user's supplied
+
+9
+00:00:21,556 --> 00:00:24,138
+image and send it off to Claude along with a short prompt.
+
+10
+00:00:24,539 --> 00:00:27,060
+And in the prompt, we might ask Claude to decide whether it would
+
+11
+00:00:27,080 --> 00:00:29,702
+be best to make this part out of metal, polymer ceramic,
+
+12
+00:00:29,783 --> 00:00:32,567
+and so on. Now, this would probably work, but
+
+13
+00:00:32,628 --> 00:00:35,231
+we are really asking a lot out of Claude in this very
+
+14
+00:00:35,292 --> 00:00:38,156
+simple prompt. For example, we haven't really told Claude
+
+15
+00:00:38,197 --> 00:00:40,862
+any of the real considerations that it should take into account
+
+16
+00:00:41,161 --> 00:00:43,726
+when deciding which material to use. So, even
+
+17
+00:00:43,767 --> 00:00:46,811
+though this might work, we might not get the best results.
+
+18
+00:00:46,792 --> 00:00:49,475
+So a natural improvement here would be probably to go
+
+19
+00:00:49,515 --> 00:00:52,219
+back to this prompt and add in a lot more detail. Maybe
+
+20
+00:00:52,259 --> 00:00:55,005
+tell Claude some of the different scenarios in which it should recommend
+
+21
+00:00:55,045 --> 00:00:57,609
+metal or polymer and so on. So we might
+
+22
+00:00:57,668 --> 00:01:00,213
+end up with a really, really large prompt like
+
+23
+00:01:00,253 --> 00:01:02,856
+this. We might give some criteria for deciding when
+
+24
+00:01:02,877 --> 00:01:05,400
+to use metal and then some criteria for deciding when
+
+25
+00:01:05,421 --> 00:01:08,364
+to use polymer and then repeat with ceramic composite
+
+26
+00:01:08,484 --> 00:01:11,069
+last mere wood and so on. We would end up with a
+
+27
+00:01:11,109 --> 00:01:13,614
+really, really large prompt that might end
+
+28
+00:01:13,655 --> 00:01:16,180
+up being a little bit confusing to Claude because it has to do
+
+29
+00:01:16,260 --> 00:01:18,805
+a lot of analysis and a lot of work inside of one
+
+30
+00:01:18,865 --> 00:01:21,691
+single step. So this might not lead to the best
+
+31
+00:01:21,751 --> 00:01:24,817
+results. Let me show you a better way to approach implementing
+
+32
+00:01:24,858 --> 00:01:27,722
+this feature. We could decide to make a series
+
+33
+00:01:27,763 --> 00:01:30,507
+of different requests in parallel off to Claude whenever a user
+
+34
+00:01:30,587 --> 00:01:33,512
+initially submits an image. Each individual request
+
+35
+00:01:33,691 --> 00:01:36,456
+could then include a specialized prompt asking Claude
+
+36
+00:01:36,656 --> 00:01:39,501
+if making this given part would be a good idea using
+
+37
+00:01:39,540 --> 00:01:42,486
+metal or polymer or ceramic or composite
+
+38
+00:01:42,605 --> 00:01:45,471
+and so on. So in each separate request, we are asking
+
+39
+00:01:45,531 --> 00:01:48,034
+Claude for the suitability of building this part in one
+
+40
+00:01:48,155 --> 00:01:50,658
+individual material. With this approach, we
+
+41
+00:01:50,697 --> 00:01:53,522
+could specialize each individual prompt for the given material.
+
+42
+00:01:54,043 --> 00:01:56,766
+And now, Claude doesn't have to worry about all these different materials.
+
+43
+00:01:56,906 --> 00:01:59,769
+It's really just focused on one individual material at a time.
+
+44
+00:02:00,710 --> 00:02:03,414
+Now, when we eventually get some responses back from Claude, I'm
+
+45
+00:02:03,433 --> 00:02:06,058
+going to change the structure of this diagram just a little bit so I can fit everything
+
+46
+00:02:06,078 --> 00:02:08,781
+on one screen. So we're going to get back these individual
+
+47
+00:02:08,901 --> 00:02:11,504
+analysis results from Claude. Each one is going to tell
+
+48
+00:02:11,544 --> 00:02:14,207
+us the suitability of building out the given part in, say, metal,
+
+49
+00:02:14,508 --> 00:02:17,312
+polymer, ceramic, composite, and so on.
+
+50
+00:02:17,292 --> 00:02:20,056
+We can then take each of these analysis results and
+
+51
+00:02:20,075 --> 00:02:23,060
+then feed them back into Claude in a follow request and
+
+52
+00:02:23,099 --> 00:02:25,703
+ask Claude to consider each of the different analysis results
+
+53
+00:02:25,924 --> 00:02:28,888
+and decide upon a final material to use. Now,
+
+54
+00:02:28,948 --> 00:02:31,531
+Claude doesn't really have to worry about comparing all these
+
+55
+00:02:31,550 --> 00:02:34,134
+different materials up front. Instead, it can just take a look at
+
+56
+00:02:34,155 --> 00:02:36,897
+the analysis results that seem to be the most promising.
+
+57
+00:02:37,299 --> 00:02:39,961
+This is an example of a parallelization workflow.
+
+58
+00:02:40,383 --> 00:02:42,906
+The idea behind a parallelization workflow is that we're going to
+
+59
+00:02:42,945 --> 00:02:46,371
+take one task and break it up into multiple different subtasks.
+
+60
+00:02:46,350 --> 00:02:49,074
+Each of these subtasks can be ran in parallel, so at
+
+61
+00:02:49,116 --> 00:02:51,840
+the same time. We will then take the results from all
+
+62
+00:02:51,860 --> 00:02:54,484
+those different subtasks and then join them all together in
+
+63
+00:02:54,524 --> 00:02:57,169
+a final aggregator step. In our case,
+
+64
+00:02:57,229 --> 00:02:59,812
+the aggregator was this final step with Claude right
+
+65
+00:02:59,853 --> 00:03:02,758
+here. So we fed the results of each parallel
+
+66
+00:03:02,818 --> 00:03:05,663
+task into the aggregator and Claude gave us this final
+
+67
+00:03:05,723 --> 00:03:08,526
+recommendation. There are several benefits to this workflow.
+
+68
+00:03:08,867 --> 00:03:11,391
+First, it allows Claude to focus on one task at a
+
+69
+00:03:11,451 --> 00:03:13,955
+time. So remember just a moment ago when I told you that we
+
+70
+00:03:14,036 --> 00:03:16,639
+could feed the original image part into Claude with a
+
+71
+00:03:16,679 --> 00:03:19,201
+really large prompt that listed out some criteria for
+
+72
+00:03:19,282 --> 00:03:22,026
+many different material types. In this scenario, Claude
+
+73
+00:03:22,045 --> 00:03:24,729
+might get a little bit confused or distracted as it tried to consider
+
+74
+00:03:24,769 --> 00:03:28,193
+all the different pros and cons of each material simultaneously.
+
+75
+00:03:28,633 --> 00:03:31,277
+The second benefit is that we can very easily improve and
+
+76
+00:03:31,318 --> 00:03:34,801
+evaluate the prompts that are being used inside of each subtask.
+
+77
+00:03:34,782 --> 00:03:37,461
+Finally, this flow can generally scale very well.
+
+78
+00:03:37,804 --> 00:03:40,383
+We can add in additional subtasks at any point if we want
+
+79
+00:03:40,402 --> 00:03:42,961
+to without really subtracting from the other subtasks
+
+80
+00:03:42,981 --> 00:03:44,050
+that are being executed.

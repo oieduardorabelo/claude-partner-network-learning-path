@@ -1,0 +1,499 @@
+1
+00:00:00,031 --> 00:00:02,573
+stop sequences, and assistant message prefilling
+
+2
+00:00:02,593 --> 00:00:05,097
+can be combined together in a really powerful way.
+
+3
+00:00:05,477 --> 00:00:08,560
+Something that you're probably going to end up doing rather frequently, anytime
+
+4
+00:00:08,580 --> 00:00:11,083
+you need to generate some kind of structured data. So
+
+5
+00:00:11,243 --> 00:00:13,805
+to help you understand how these things work together, we'll me walk
+
+6
+00:00:13,826 --> 00:00:16,329
+you through a really quick example. Let's imagine that
+
+7
+00:00:16,368 --> 00:00:19,492
+we are building a web app like the one you see on the screen. This
+
+8
+00:00:19,573 --> 00:00:22,275
+is a web app that's going to generate event bridge
+
+9
+00:00:22,396 --> 00:00:24,919
+rules based upon some user input. If you're
+
+10
+00:00:24,958 --> 00:00:27,582
+not familiar with them, event bridge rules are used in AWS,
+
+11
+00:00:27,783 --> 00:00:30,367
+they're essentially little JSON snippets. So, user
+
+12
+00:00:30,388 --> 00:00:32,951
+is going to enter in some prompt like this and then click on generate.
+
+13
+00:00:33,593 --> 00:00:36,798
+In chances are, the user is going to want to see some generated
+
+14
+00:00:36,878 --> 00:00:39,601
+rule just up here that they can very easily
+
+15
+00:00:39,642 --> 00:00:42,305
+select right away or click on this little copy button
+
+16
+00:00:42,587 --> 00:00:45,250
+and go use somewhere else. The point there is
+
+17
+00:00:45,290 --> 00:00:47,875
+that part of the critical user experience here
+
+18
+00:00:47,914 --> 00:00:50,579
+is that we want to show just the JSON for the generated rule
+
+19
+00:00:50,899 --> 00:00:53,743
+and nothing else. So if we instead displayed
+
+20
+00:00:53,762 --> 00:00:56,267
+a response that looks like this, it would definitely not
+
+21
+00:00:56,307 --> 00:00:58,869
+be as helpful for our users. We're still generating
+
+22
+00:00:58,929 --> 00:01:01,753
+the rule, but now it also has this header up top and
+
+23
+00:01:01,793 --> 00:01:04,337
+this commentary footer down at the bottom. So now
+
+24
+00:01:04,358 --> 00:01:06,962
+a user can't really use this copy all button.
+
+25
+00:01:07,201 --> 00:01:09,906
+They would have to go in and manually select that JSON right
+
+26
+00:01:09,926 --> 00:01:12,674
+there. So this is an example where we really
+
+27
+00:01:12,715 --> 00:01:15,484
+don't want Claude to be that helpful and explains
+
+28
+00:01:15,525 --> 00:01:18,034
+work. We want just some very particular
+
+29
+00:01:18,096 --> 00:01:20,820
+data and nothing else. Now to be clear, this
+
+30
+00:01:20,921 --> 00:01:23,563
+is not a problem that is just limited to generating
+
+31
+00:01:23,623 --> 00:01:26,188
+JSON. It turns out that any time you are using Claude to
+
+32
+00:01:26,227 --> 00:01:29,150
+generate any kind of structured data. So it could be JSON,
+
+33
+00:01:29,512 --> 00:01:32,254
+or it could be Python, or even just a bulleted list
+
+34
+00:01:32,355 --> 00:01:35,097
+of text items. Claude is very often
+
+35
+00:01:35,158 --> 00:01:37,781
+going to try to insert a header or a footer or some
+
+36
+00:01:37,941 --> 00:01:40,765
+additional kind of commentary. And in many of these scenarios,
+
+37
+00:01:40,885 --> 00:01:43,427
+you don't want that additional commentary. You just want
+
+38
+00:01:43,447 --> 00:01:46,531
+the raw content that you asked Claude to create.
+
+39
+00:01:46,512 --> 00:01:49,114
+So to help keep Claude on track here and only give
+
+40
+00:01:49,176 --> 00:01:51,959
+us the raw content we're asking for and no additional
+
+41
+00:01:52,019 --> 00:01:54,703
+header or footer or commentary or anything like that,
+
+42
+00:01:55,164 --> 00:01:57,927
+we can use our stop sequence in combination
+
+43
+00:01:58,188 --> 00:02:00,751
+with a pre-filled assistant message. Let me show
+
+44
+00:02:00,771 --> 00:02:03,534
+you how. I'm going to go back over to my notebook.
+
+45
+00:02:04,615 --> 00:02:07,781
+I'm going to continue on by making a new cell down here. I'm
+
+46
+00:02:07,801 --> 00:02:10,925
+going to again make a list of messages. I'll
+
+47
+00:02:11,004 --> 00:02:14,010
+add in a user message. I'll
+
+48
+00:02:14,031 --> 00:02:16,824
+say something like generate a
+
+49
+00:02:16,924 --> 00:02:19,616
+very short event ridge rule
+
+50
+00:02:19,837 --> 00:02:22,445
+as Jason. I'll then pass that off
+
+51
+00:02:23,287 --> 00:02:25,991
+like so, and then let's just see what we get with this kind
+
+52
+00:02:26,031 --> 00:02:28,554
+of initial take. So right away, we can see that
+
+53
+00:02:28,593 --> 00:02:31,397
+we do get back some JSON, but it has unfortunately
+
+54
+00:02:31,418 --> 00:02:33,920
+that little back tick, back tick, back tick,
+
+55
+00:02:33,941 --> 00:02:36,664
+JSON right there, and then a matching closing one over
+
+56
+00:02:36,705 --> 00:02:39,508
+there. And just to make sure it's super clear, these
+
+57
+00:02:39,609 --> 00:02:42,372
+back ticks are in place to format this all as markdown.
+
+58
+00:02:42,532 --> 00:02:45,256
+So it gets formatted very nicely if you were to render it as
+
+59
+00:02:45,436 --> 00:02:48,180
+markdown text. But in our case, we don't want
+
+60
+00:02:48,360 --> 00:02:51,145
+any of those additional characters. We want just the raw JSON
+
+61
+00:02:51,264 --> 00:02:53,968
+by itself. So to do so, we
+
+62
+00:02:54,008 --> 00:02:56,532
+can do two things. We're going to use both an assistant message and
+
+63
+00:02:56,552 --> 00:02:59,056
+a stop sequence. For right now, we're just going to write out
+
+64
+00:02:59,076 --> 00:03:01,881
+the code to do so. And then I'll show you a diagram that explains how
+
+65
+00:03:01,961 --> 00:03:04,465
+it all works. First, I'm going to pre-fill an
+
+66
+00:03:04,564 --> 00:03:07,528
+assistant message. So let's say add assistant message.
+
+67
+00:03:09,331 --> 00:03:11,975
+And my pre-fill message will be backtick, backtick,
+
+68
+00:03:12,096 --> 00:03:14,879
+backtick, JSON. And then on
+
+69
+00:03:14,939 --> 00:03:17,925
+my chat call, I'll add in stop sequences.
+
+70
+00:03:19,649 --> 00:03:22,274
+And anytime we see a back
+
+71
+00:03:22,294 --> 00:03:24,897
+tick, back tick, back tick, I want to immediately stop
+
+72
+00:03:24,979 --> 00:03:27,502
+generation. So let's now run the cell
+
+73
+00:03:27,582 --> 00:03:30,106
+and see what we get back. Okay,
+
+74
+00:03:30,127 --> 00:03:32,751
+so now we get just the JSON by itself. You will
+
+75
+00:03:32,790 --> 00:03:35,694
+notice that there are some new line characters in here, but that's totally
+
+76
+00:03:35,754 --> 00:03:38,478
+fine. We can very easily remove those extra
+
+77
+00:03:38,557 --> 00:03:41,421
+new lines by just parsing the response as JSON
+
+78
+00:03:41,801 --> 00:03:44,645
+or by doing a strip call. So I could say
+
+79
+00:03:44,806 --> 00:03:47,969
+text is chat. I'll print out text and
+
+80
+00:03:48,009 --> 00:03:50,794
+then on the next cell down, I might import JSON
+
+81
+00:03:52,795 --> 00:03:55,659
+and do a JSON loads with
+
+82
+00:03:55,759 --> 00:03:58,263
+text and strip on
+
+83
+00:03:58,323 --> 00:04:01,526
+text as well. And if I run that, yes,
+
+84
+00:04:01,546 --> 00:04:04,192
+we definitely get back some very well-formatted JSON
+
+85
+00:04:04,231 --> 00:04:07,478
+here that we can access in any way that we expect. All
+
+86
+00:04:07,497 --> 00:04:10,163
+right, so what exactly is going on with the assistant message
+
+87
+00:04:10,323 --> 00:04:12,967
+and the stop sequence? Well, let me show you diagram just to break
+
+88
+00:04:13,008 --> 00:04:16,211
+it all down and make sure it is super clear. So
+
+89
+00:04:16,271 --> 00:04:18,814
+once again, we are doing our user message. We're providing
+
+90
+00:04:18,855 --> 00:04:21,517
+a pre-filled assistant and a stop sequence.
+
+91
+00:04:22,358 --> 00:04:25,002
+Claude is going to take a look at all the different parts of this request.
+
+92
+00:04:25,362 --> 00:04:27,906
+It's going to initially take a look at that user message content and say,
+
+93
+00:04:27,946 --> 00:04:30,468
+all right, it's very clear that I need to write a
+
+94
+00:04:30,608 --> 00:04:33,151
+full rule. And I should probably also describe it.
+
+95
+00:04:33,331 --> 00:04:36,055
+So maybe put on a header and a footer because that's kind
+
+96
+00:04:36,074 --> 00:04:38,898
+of what Claude naturally wants to do. It wants to explain
+
+97
+00:04:38,918 --> 00:04:41,622
+the work that is doing. But then it's going to encounter
+
+98
+00:04:41,641 --> 00:04:44,425
+that assistant message. And just as we learned in the last video,
+
+99
+00:04:44,786 --> 00:04:47,411
+Claude is going to assume that it already wrote that out in
+
+100
+00:04:47,451 --> 00:04:50,235
+its response. So it's going to say, oh, I've already
+
+101
+00:04:50,295 --> 00:04:52,939
+started the JSON part. So now all I have to do
+
+102
+00:04:52,978 --> 00:04:55,483
+is write out the actual JSON. It's
+
+103
+00:04:55,523 --> 00:04:58,408
+then going to write out all of this JSON
+
+104
+00:04:58,588 --> 00:05:01,211
+in the response. And then as it gets to the very
+
+105
+00:05:01,391 --> 00:05:03,956
+end, it's going to naturally want to close off
+
+106
+00:05:04,136 --> 00:05:06,639
+that markdown code block that it thought it created
+
+107
+00:05:06,680 --> 00:05:09,785
+earlier. So Claude is going to want to put in a closing
+
+108
+00:05:10,004 --> 00:05:12,509
+backtick, backtick, backtick. As soon as it does so,
+
+109
+00:05:12,528 --> 00:05:15,093
+however, it's going to encounter the stop sequence, which
+
+110
+00:05:15,132 --> 00:05:17,817
+stops the generation entirely and immediately sends us back
+
+111
+00:05:17,916 --> 00:05:20,502
+the response. So you can really imagine that what's
+
+112
+00:05:20,521 --> 00:05:23,567
+really going on here is we're kind of saying, start with this
+
+113
+00:05:23,588 --> 00:05:26,512
+and with that and just give us everything
+
+114
+00:05:26,552 --> 00:05:29,057
+in between. And that results in us just getting
+
+115
+00:05:29,098 --> 00:05:31,742
+back the part we really care about, just the JSON by
+
+116
+00:05:31,802 --> 00:05:34,454
+itself. And like I mentioned, this is a really
+
+117
+00:05:34,514 --> 00:05:37,218
+powerful technique that we're going to use very often. Anytime
+
+118
+00:05:37,259 --> 00:05:39,802
+we want to generate some kind of structured data and
+
+119
+00:05:39,843 --> 00:05:42,466
+get just that data with nothing else besides it.
+
+120
+00:05:43,127 --> 00:05:45,932
+And remember, this technique can be used for any kind of structured data.
+
+121
+00:05:46,112 --> 00:05:48,675
+It is not limited just being used on JSON.
+
+122
+00:05:48,937 --> 00:05:51,721
+So anytime we have any kind of very specific content we want to generate
+
+123
+00:05:51,800 --> 00:05:54,404
+and get just that content with no additional commentary
+
+124
+00:05:54,464 --> 00:05:57,189
+on it, we're going to take a look at using assistant message
+
+125
+00:05:57,209 --> 00:05:59,353
+prefilling along with stop sequences.

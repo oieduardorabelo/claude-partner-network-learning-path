@@ -1,0 +1,191 @@
+1
+00:00:00,031 --> 00:00:02,859
+Hello and welcome to your guide on getting started with Claude.
+
+2
+00:00:03,339 --> 00:00:06,006
+My name is Stephen Grider and I am a member of Technical Staff
+
+3
+00:00:06,147 --> 00:00:08,835
+at Anthropic. In this video, I'm going to give you a quick
+
+4
+00:00:08,935 --> 00:00:11,522
+introduction of the course. I'll help you understand what topics
+
+5
+00:00:11,541 --> 00:00:14,148
+we'll be covering, requirements to get through the course, and I'll
+
+6
+00:00:14,169 --> 00:00:16,695
+give you some tips on how to succeed. We are going
+
+7
+00:00:16,734 --> 00:00:19,417
+to cover a wide variety of topics throughout the course.
+
+8
+00:00:19,437 --> 00:00:21,960
+We'll first begin with some background on models offered by
+
+9
+00:00:22,019 --> 00:00:24,562
+Anthropic, then quickly move into understanding how to
+
+10
+00:00:24,702 --> 00:00:27,704
+access them through the official Anthropic API. From
+
+11
+00:00:27,745 --> 00:00:30,448
+there, we'll focus on prompting, first with evaluations,
+
+12
+00:00:30,788 --> 00:00:33,310
+then engineering techniques. Next up, we'll be a
+
+13
+00:00:33,390 --> 00:00:36,213
+deep dive on expanding Claude's capabilities through tool
+
+14
+00:00:36,232 --> 00:00:38,795
+use. We will understand how to get task-specific
+
+15
+00:00:38,935 --> 00:00:41,677
+context into Claude with retrieval augmented generation,
+
+16
+00:00:42,078 --> 00:00:44,600
+then focus on connecting Claude to new services with
+
+17
+00:00:44,640 --> 00:00:47,264
+model context protocol. We'll walk through
+
+18
+00:00:47,283 --> 00:00:50,009
+two agents created by Anthropic, named Claude Code
+
+19
+00:00:50,170 --> 00:00:52,774
+and Computer Use, and understand how to apply them to solve
+
+20
+00:00:52,814 --> 00:00:55,399
+interesting problems. Finally, we'll spend some time
+
+21
+00:00:55,460 --> 00:00:58,545
+to learn how to handle more complex tasks with workflows
+
+22
+00:00:58,646 --> 00:01:01,351
+and agents. There's a lot of content to cover here,
+
+23
+00:01:01,671 --> 00:01:04,216
+so there are a couple of expectations on your side
+
+24
+00:01:04,257 --> 00:01:06,862
+to make sure that we can get through everything. First,
+
+25
+00:01:07,003 --> 00:01:09,509
+you need to have a basic understanding of Python, along
+
+26
+00:01:09,528 --> 00:01:12,254
+with a Python environment that can run notebooks. The
+
+27
+00:01:12,295 --> 00:01:15,001
+vast majority of code in this course will be written into and
+
+28
+00:01:15,162 --> 00:01:17,748
+executed from notebooks. You will also
+
+29
+00:01:17,787 --> 00:01:20,594
+need access to the Anthropic API, which will require
+
+30
+00:01:20,715 --> 00:01:23,802
+either an Anthropic account or an API key.
+
+31
+00:01:23,781 --> 00:01:26,426
+I will provide directions later on to help you get an
+
+32
+00:01:26,525 --> 00:01:29,129
+API key. Lastly, given the speed at which
+
+33
+00:01:29,189 --> 00:01:31,694
+we'll cover different topics, I do have some tips to
+
+34
+00:01:31,733 --> 00:01:34,237
+help you find success. First, I highly
+
+35
+00:01:34,278 --> 00:01:36,861
+recommend you write code alongside me. Watching
+
+36
+00:01:36,900 --> 00:01:39,424
+someone else author code isn't really enough to absorb it.
+
+37
+00:01:40,286 --> 00:01:42,890
+Second, consider speeding up the video playback speed in
+
+38
+00:01:42,909 --> 00:01:45,513
+the video player that you are using. This will help you get through
+
+39
+00:01:45,534 --> 00:01:48,058
+the content at a faster pace and make it easier
+
+40
+00:01:48,097 --> 00:01:51,442
+to review specific videos that you might find challenging.
+
+41
+00:01:51,793 --> 00:01:54,376
+Third, you've got to apply some of the techniques that you learn
+
+42
+00:01:54,438 --> 00:01:57,260
+throughout the course. Consider expanding or altering
+
+43
+00:01:57,301 --> 00:01:59,965
+the different notebooks that we author. Fourth,
+
+44
+00:02:00,165 --> 00:02:02,709
+if you get stuck at any point in time, ask Claude for
+
+45
+00:02:02,769 --> 00:02:05,832
+help. Claude can get you unstuck from just about any situation
+
+46
+00:02:06,093 --> 00:02:09,377
+or clarify points that you might find confusing. Well,
+
+47
+00:02:09,538 --> 00:02:12,181
+that's enough of an introduction for now, so let's start learning about
+
+48
+00:02:12,241 --> 00:02:13,582
+Claude in the next video.

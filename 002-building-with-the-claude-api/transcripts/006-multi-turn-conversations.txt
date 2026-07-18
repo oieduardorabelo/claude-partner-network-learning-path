@@ -1,0 +1,751 @@
+1
+00:00:00,959 --> 00:00:03,460
+The code we've written out so far simulates a very simple
+
+2
+00:00:03,500 --> 00:00:06,323
+exchange with our model. And we can kind of visualize this conversation
+
+3
+00:00:06,344 --> 00:00:08,946
+inside of a chat box like this. We sent in
+
+4
+00:00:08,967 --> 00:00:11,628
+a request asking something like what's quantum computing,
+
+5
+00:00:11,929 --> 00:00:14,752
+answer in one sentence. And we got a very simple
+
+6
+00:00:14,973 --> 00:00:17,535
+single sentence reply. Naturally, we might want
+
+7
+00:00:17,574 --> 00:00:20,638
+to continue this conversation at some point in time. So
+
+8
+00:00:20,658 --> 00:00:23,381
+we might want to be able to send in a follow up asking something
+
+9
+00:00:23,440 --> 00:00:25,963
+like write another sentence. And we
+
+10
+00:00:25,983 --> 00:00:28,565
+would then expect to get back a response that expands on
+
+11
+00:00:28,646 --> 00:00:32,170
+quantum computing in some way. To have a multi-message
+
+12
+00:00:32,270 --> 00:00:34,874
+conversation like this, there's something really critical that you
+
+13
+00:00:34,893 --> 00:00:37,578
+need to understand around the Anthropic API and Claude
+
+14
+00:00:37,677 --> 00:00:40,642
+itself. And that is that the Anthropic API
+
+15
+00:00:40,823 --> 00:00:43,405
+and Claude do not store any messages that you
+
+16
+00:00:43,445 --> 00:00:45,990
+send to it. None of the messages you send get
+
+17
+00:00:46,049 --> 00:00:48,594
+stored in any way, and none of the responses
+
+18
+00:00:48,634 --> 00:00:51,216
+that you get back are stored in any way. So if you
+
+19
+00:00:51,317 --> 00:00:53,841
+ever want to have some kind of conversation going on, where
+
+20
+00:00:53,881 --> 00:00:56,664
+you have multiple messages that kind of maintain a context
+
+21
+00:00:56,825 --> 00:00:59,389
+or flow, then there are two things that you need to
+
+22
+00:00:59,448 --> 00:01:01,954
+do. You need to manually, inside of your
+
+23
+00:01:01,993 --> 00:01:04,698
+code, maintain a list of all the messages that you are
+
+24
+00:01:04,718 --> 00:01:07,325
+exchanging. And second, you need to make sure that
+
+25
+00:01:07,344 --> 00:01:10,150
+you provide that entire list of messages with every follow-up
+
+26
+00:01:10,170 --> 00:01:12,756
+request that you make. So let's go into some detail
+
+27
+00:01:12,816 --> 00:01:15,400
+on this entire idea, just make sure it's really clear and
+
+28
+00:01:15,441 --> 00:01:17,986
+you understand what's going on here. The first thing I want to
+
+29
+00:01:18,025 --> 00:01:20,569
+do is write out a little bit of sample code just to prove to you
+
+30
+00:01:20,609 --> 00:01:23,254
+that Claude doesn't store any messages or anything
+
+31
+00:01:23,293 --> 00:01:25,978
+like that. And I can prove this by trying to simulate this
+
+32
+00:01:26,039 --> 00:01:28,703
+kind of conversation where I first ask what quantum computing
+
+33
+00:01:28,802 --> 00:01:31,447
+is and then ask right another sentence.
+
+34
+00:01:31,466 --> 00:01:34,111
+So back inside of my notebook, I'm going to go to the cell where I initially
+
+35
+00:01:34,131 --> 00:01:36,736
+asked what is quantum computing. And I want to paste
+
+36
+00:01:36,835 --> 00:01:39,379
+in a second request to Claude that
+
+37
+00:01:39,459 --> 00:01:42,084
+I wrote out ahead of time. So in this second request,
+
+38
+00:01:42,263 --> 00:01:45,027
+I'm asking Claude to write another sentence, and
+
+39
+00:01:45,066 --> 00:01:47,670
+I'm going to print out the text inside of that follow-up
+
+40
+00:01:47,730 --> 00:01:50,614
+request. So now we've kind of got a simulation
+
+41
+00:01:50,754 --> 00:01:53,518
+of what's going on right here, where we ask that first question and
+
+42
+00:01:53,537 --> 00:01:56,200
+then send in a follow-up. And we're going to see that we don't get
+
+43
+00:01:56,561 --> 00:01:59,105
+back any kind of legible or any usable
+
+44
+00:01:59,265 --> 00:02:01,888
+text here. So I'm going to run this and we'll see what happens.
+
+45
+00:02:02,796 --> 00:02:05,382
+So back over here, I'm going to run that cell now and we're going to see that
+
+46
+00:02:05,403 --> 00:02:08,250
+we get back something that has absolutely nothing to do with
+
+47
+00:02:08,349 --> 00:02:10,975
+quantum computing at all. So again, to make sure
+
+48
+00:02:11,016 --> 00:02:13,763
+that it's really clear why we are seeing this result and
+
+49
+00:02:13,862 --> 00:02:16,389
+not seeing something about quantum computing, let's go over
+
+50
+00:02:16,408 --> 00:02:18,973
+a couple of diagrams. All right, so in
+
+51
+00:02:18,992 --> 00:02:21,638
+this diagram, I'm going to first show you exactly what's going on with
+
+52
+00:02:21,657 --> 00:02:24,302
+the query code that I've written out, where we are getting back a response
+
+53
+00:02:24,342 --> 00:02:27,007
+that has nothing to do with quantum computing. So
+
+54
+00:02:27,068 --> 00:02:29,651
+initially, I make a similar quest to Claude, where I have
+
+55
+00:02:29,692 --> 00:02:32,477
+one user message, and I'm asking Claude to define quantum
+
+56
+00:02:32,516 --> 00:02:35,081
+computing in one sentence. I then get back a response
+
+57
+00:02:35,122 --> 00:02:37,626
+that is exactly what I would expect. Claude
+
+58
+00:02:37,667 --> 00:02:40,752
+gives me back a one-sense definition of quantum computing.
+
+59
+00:02:41,120 --> 00:02:43,862
+Then I make a second request where I have only
+
+60
+00:02:43,883 --> 00:02:46,426
+one message inside the body. And the only message is
+
+61
+00:02:46,526 --> 00:02:49,150
+asking Claude to write another sentence. When
+
+62
+00:02:49,169 --> 00:02:52,213
+I send this in, Claude has no memory of any past conversation
+
+63
+00:02:52,253 --> 00:02:55,157
+or any previous messages that I exchanged with it. So
+
+64
+00:02:55,198 --> 00:02:58,141
+Claude is just going to do the best it can to fulfill
+
+65
+00:02:58,282 --> 00:03:00,805
+my request. It's going to write out some sentence, but
+
+66
+00:03:00,884 --> 00:03:03,487
+it definitely is probably not going to be about quantum
+
+67
+00:03:03,527 --> 00:03:06,111
+computing. So now let me show you what
+
+68
+00:03:06,151 --> 00:03:08,735
+we need to do to fix this problem. Here's how we're
+
+69
+00:03:08,754 --> 00:03:11,304
+going to solve the issue. First, we're going to
+
+70
+00:03:11,324 --> 00:03:14,171
+once again make that initial request with just one user
+
+71
+00:03:14,211 --> 00:03:16,979
+message. Then we're going to take that assistant message
+
+72
+00:03:16,998 --> 00:03:19,846
+that we get back and append it into a list
+
+73
+00:03:19,986 --> 00:03:22,532
+of messages. So we're going to take the assistant right there and we can
+
+74
+00:03:22,574 --> 00:03:25,199
+imagine we're going to add it into our list on the left-hand
+
+75
+00:03:25,240 --> 00:03:27,913
+side. Then, when we want to follow
+
+76
+00:03:27,973 --> 00:03:30,799
+up on this conversation or continue it in some way, we're
+
+77
+00:03:30,818 --> 00:03:33,324
+going to append on a user message at the bottom.
+
+78
+00:03:33,824 --> 00:03:36,409
+So now we can read this as like a real conversation. I
+
+79
+00:03:36,530 --> 00:03:39,436
+asked to find quantum computing, I got back a response,
+
+80
+00:03:39,796 --> 00:03:42,361
+and now I'm adding in another question or another
+
+81
+00:03:42,461 --> 00:03:45,228
+query that I want to ask Claude. In this case, write
+
+82
+00:03:45,247 --> 00:03:47,794
+another sentence. Now when I send
+
+83
+00:03:47,854 --> 00:03:50,758
+in this list of messages to Claude, it will have the entire
+
+84
+00:03:50,837 --> 00:03:53,782
+context and history of the whole conversation. It's
+
+85
+00:03:53,801 --> 00:03:56,366
+seen all the previous messages that we've exchanged around
+
+86
+00:03:56,385 --> 00:03:58,990
+this line of questioning. And hopefully, Claude
+
+87
+00:03:59,009 --> 00:04:01,993
+will be able to give us back a more reasonable answer, hopefully
+
+88
+00:04:02,114 --> 00:04:04,897
+a one sentence follow up that's going to extend its previous
+
+89
+00:04:04,997 --> 00:04:07,502
+answer a little bit more. To see this entire flow
+
+90
+00:04:07,562 --> 00:04:10,105
+in action, I'm going to go back over to my notebook and we're going to try to write
+
+91
+00:04:10,126 --> 00:04:12,830
+out some code that will allow us to maintain the full
+
+92
+00:04:12,870 --> 00:04:15,920
+context for a conversation. Back
+
+93
+00:04:15,961 --> 00:04:18,745
+inside of my notebook, I'm going to get started by making three
+
+94
+00:04:18,824 --> 00:04:21,327
+different helper functions that are going to aid us in
+
+95
+00:04:21,367 --> 00:04:23,870
+maintaining the history or context of a conversation.
+
+96
+00:04:24,391 --> 00:04:26,894
+We're going to end up using these helper functions quite a bit throughout the
+
+97
+00:04:26,935 --> 00:04:29,437
+remainder of this course. So in this cell right
+
+98
+00:04:29,478 --> 00:04:32,382
+here, I'm going to give myself a little bit of space at the top and
+
+99
+00:04:32,401 --> 00:04:35,004
+then define our first helper function that will aid
+
+100
+00:04:35,064 --> 00:04:37,668
+us in maintaining this history. I'm going to name this
+
+101
+00:04:37,709 --> 00:04:40,411
+function add user message. It's
+
+102
+00:04:40,432 --> 00:04:43,415
+going to take in a list of messages and some text.
+
+103
+00:04:43,970 --> 00:04:46,833
+I'm then going to make a variable of user message. That's
+
+104
+00:04:46,853 --> 00:04:50,076
+going to have a role of user and
+
+105
+00:04:50,096 --> 00:04:53,098
+some content of whatever text we pass in. And
+
+106
+00:04:53,117 --> 00:04:55,701
+then I'm going to append this new user message into the
+
+107
+00:04:55,901 --> 00:05:00,745
+list of messages. Next,
+
+108
+00:05:00,845 --> 00:05:03,528
+I'm going to add in a second helper function that's going to specialize
+
+109
+00:05:03,588 --> 00:05:06,170
+in adding in assistant messages to a history.
+
+110
+00:05:06,911 --> 00:05:09,552
+So I'm going to copy this function right here just to save a little bit of time.
+
+111
+00:05:10,274 --> 00:05:13,757
+I'll rename it to add assistant message.
+
+112
+00:05:13,906 --> 00:05:16,427
+And I'll go through and wherever I see the word user, I'm
+
+113
+00:05:16,447 --> 00:05:19,791
+gonna change it out to assistant. So right there, right
+
+114
+00:05:19,812 --> 00:05:23,774
+there, and right there. Okay,
+
+115
+00:05:23,875 --> 00:05:26,437
+now onto our third helper function. I'm
+
+116
+00:05:26,458 --> 00:05:28,959
+going to take our messages.create function call
+
+117
+00:05:28,980 --> 00:05:31,742
+down here. And I'm going to rename it to chat.
+
+118
+00:05:32,463 --> 00:05:35,125
+Whenever I call chat, I'm gonna pass in a list of messages.
+
+119
+00:05:35,386 --> 00:05:38,668
+So this is gonna be like my message history. Then
+
+120
+00:05:38,709 --> 00:05:41,432
+I'm going to indent our call right here.
+
+121
+00:05:41,750 --> 00:05:44,754
+I'm going to replace messages with the Messages argument,
+
+122
+00:05:45,915 --> 00:05:48,639
+and then return from this function is going to be message
+
+123
+00:05:49,161 --> 00:05:52,966
+content at zero dot text. All
+
+124
+00:05:52,985 --> 00:05:55,509
+right, so here are the three helper functions. And
+
+125
+00:05:55,550 --> 00:05:58,334
+again, we're going to use these quite a bit throughout the remainder of this entire
+
+126
+00:05:58,394 --> 00:06:01,358
+course. These helper functions are going to make it significantly
+
+127
+00:06:01,458 --> 00:06:04,021
+easier for us to have a conversation that maintains some
+
+128
+00:06:04,122 --> 00:06:06,725
+history or context over time. So now let
+
+129
+00:06:06,745 --> 00:06:09,850
+me give you a demonstration of how we're going to put them to use.
+
+130
+00:06:10,285 --> 00:06:12,887
+All right, so down here in the next cell down, I'm gonna write in a
+
+131
+00:06:12,968 --> 00:06:15,511
+couple of comments that she's gonna guide us through the process of
+
+132
+00:06:15,651 --> 00:06:18,254
+maintaining a conversation that has some history tied
+
+133
+00:06:18,293 --> 00:06:20,877
+to it. I'll first begin by making an empty
+
+134
+00:06:21,036 --> 00:06:23,680
+list of messages. So this message is variable
+
+135
+00:06:23,740 --> 00:06:26,543
+right here, we can imagine is storing our entire conversation
+
+136
+00:06:26,584 --> 00:06:29,247
+history. Over time, we're gonna add in a collection
+
+137
+00:06:29,326 --> 00:06:31,990
+of different user and assistant messages to it.
+
+138
+00:06:32,509 --> 00:06:35,074
+Next, I'm going to add in my initial user message.
+
+139
+00:06:35,434 --> 00:06:38,117
+So I will call the add user message function.
+
+140
+00:06:38,619 --> 00:06:41,382
+I'll pass in the list of messages that I'm appending messages
+
+141
+00:06:41,442 --> 00:06:43,966
+to, and then my user text is
+
+142
+00:06:44,005 --> 00:06:46,971
+going to be define quantum computing in one sentence. Now,
+
+143
+00:06:46,990 --> 00:06:49,533
+just to make sure we're going down the right path here, I'm going to print
+
+144
+00:06:49,613 --> 00:06:52,137
+out the list of messages and run the cell.
+
+145
+00:06:52,404 --> 00:06:55,170
+And we can see right away that we have a correct structure
+
+146
+00:06:55,250 --> 00:06:57,915
+of messages. So I have a list. It has a dictionary
+
+147
+00:06:57,935 --> 00:07:00,499
+inside of it with a role of user and a content that
+
+148
+00:07:00,538 --> 00:07:03,605
+contains something that I want to feed into Claude. So
+
+149
+00:07:03,665 --> 00:07:06,370
+now we can easily call Claude by making use of that chat
+
+150
+00:07:06,410 --> 00:07:09,055
+function that we just put together. I'm going to call chat and
+
+151
+00:07:09,134 --> 00:07:11,860
+pass in my list of messages. And then out of that, we'll
+
+152
+00:07:11,879 --> 00:07:14,463
+get back some kind of answer. I'm going to print out
+
+153
+00:07:14,483 --> 00:07:17,689
+the answer and run the cell again. So
+
+154
+00:07:17,728 --> 00:07:20,232
+we get the response, we should see a sentence here
+
+155
+00:07:20,351 --> 00:07:23,175
+about quantum computing. So now we are in this
+
+156
+00:07:23,235 --> 00:07:25,817
+situation. We have sent an initial message into
+
+157
+00:07:25,858 --> 00:07:28,482
+Claude and gotten an assistant message back in response.
+
+158
+00:07:29,062 --> 00:07:31,564
+Now we need to take this answer and append it into our
+
+159
+00:07:31,824 --> 00:07:34,447
+conversation history. So we need to add in or
+
+160
+00:07:34,528 --> 00:07:37,151
+append it in by making use of the add assistant message
+
+161
+00:07:37,211 --> 00:07:39,975
+function that we just defined. So back
+
+162
+00:07:40,035 --> 00:07:43,081
+over here. I'm going to call add assistant
+
+163
+00:07:43,360 --> 00:07:45,887
+message. I want to add into our list of messages
+
+164
+00:07:45,927 --> 00:07:48,533
+and I want to add in specifically the content out
+
+165
+00:07:48,572 --> 00:07:51,238
+of the answer that we just got back. So now let's
+
+166
+00:07:51,259 --> 00:07:53,764
+do another check and make sure that our list of messages is
+
+167
+00:07:53,803 --> 00:07:56,507
+looking correct. If I print out messages,
+
+168
+00:07:56,807 --> 00:07:59,730
+I should see my user message, then the followup assistant
+
+169
+00:08:00,011 --> 00:08:02,514
+with the content that we got back from Claude. Okay, so that
+
+170
+00:08:02,553 --> 00:08:05,237
+looks good. So now onto the last step. We're
+
+171
+00:08:05,257 --> 00:08:08,019
+going to append in one last user message and
+
+172
+00:08:08,100 --> 00:08:10,802
+send the entire conversation history into Claude once
+
+173
+00:08:10,843 --> 00:08:13,545
+again. So for that, I'll
+
+174
+00:08:13,564 --> 00:08:16,449
+do another add user message with
+
+175
+00:08:16,488 --> 00:08:19,071
+my list of messages. And then my followup question here or my
+
+176
+00:08:19,110 --> 00:08:21,754
+followup request is going to be write another
+
+177
+00:08:21,793 --> 00:08:24,413
+sentence. I'm then going to call
+
+178
+00:08:24,454 --> 00:08:27,137
+chat again with the updated
+
+179
+00:08:27,177 --> 00:08:29,740
+list of messages. I'll assign that to
+
+180
+00:08:29,841 --> 00:08:33,164
+answer, and then I will print answer out. So
+
+181
+00:08:33,184 --> 00:08:36,970
+let's now run this and see how we are doing. All
+
+182
+00:08:36,990 --> 00:08:39,572
+right, after a brief pause, we get what is definitely
+
+183
+00:08:39,592 --> 00:08:42,297
+a follow-up message that is definitely still
+
+184
+00:08:42,356 --> 00:08:45,220
+about quantum computing. And so it appears that we have correctly maintained
+
+185
+00:08:45,240 --> 00:08:47,889
+our entire conversation history. All
+
+186
+00:08:47,909 --> 00:08:50,934
+right, so this is looking pretty good. We now have three reusable
+
+187
+00:08:51,015 --> 00:08:53,738
+helper functions that we're going to continue to make use of throughout
+
+188
+00:08:53,758 --> 00:08:54,988
+the remainder of the course.

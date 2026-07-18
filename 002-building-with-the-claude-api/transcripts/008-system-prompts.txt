@@ -1,0 +1,539 @@
+1
+00:00:00,655 --> 00:00:03,359
+In this video, we're going to take a look at how we can customize the tone and
+
+2
+00:00:03,419 --> 00:00:06,182
+style of response that Claude generates. To
+
+3
+00:00:06,203 --> 00:00:08,987
+help you understand why this is important, I want you to imagine
+
+4
+00:00:09,106 --> 00:00:11,910
+that we are making some kind of math tutor chatbot.
+
+5
+00:00:12,371 --> 00:00:14,974
+So a user will use this chatbot to ask for help in solving
+
+6
+00:00:15,035 --> 00:00:17,658
+math problems. For example, a user might ask for help
+
+7
+00:00:17,739 --> 00:00:20,653
+in solving 5x plus 2 equals 3. Now
+
+8
+00:00:20,693 --> 00:00:23,217
+there's a couple of things that we would want our math tutor to do
+
+9
+00:00:23,437 --> 00:00:26,542
+and a couple of things that we would definitely not want it to do. So
+
+10
+00:00:26,582 --> 00:00:29,167
+for example, we might want Claude to initially only give
+
+11
+00:00:29,207 --> 00:00:31,931
+the students some hints. Maybe just give them a little tip
+
+12
+00:00:31,972 --> 00:00:34,756
+or two in how they might initially approach the problem. And
+
+13
+00:00:34,795 --> 00:00:37,359
+then if the student still doesn't quite understand how to solve the
+
+14
+00:00:37,380 --> 00:00:39,944
+problem, only then maybe walk the student through
+
+15
+00:00:40,003 --> 00:00:42,526
+a solution step by step. We might
+
+16
+00:00:42,566 --> 00:00:45,130
+also want Claude to show solutions for a similar problem to
+
+17
+00:00:45,189 --> 00:00:47,994
+give the student a little bit of inspiration on how they might approach
+
+18
+00:00:48,054 --> 00:00:50,560
+this particular problem. Likewise, there are some
+
+19
+00:00:50,579 --> 00:00:53,344
+things that we would definitely not want Claude to do. For
+
+20
+00:00:53,405 --> 00:00:56,270
+example, we would not want Claude to just immediately respond
+
+21
+00:00:56,289 --> 00:00:59,014
+with a complete answer. And we would also not want Claude
+
+22
+00:00:59,274 --> 00:01:01,899
+to tell the student to just go use a calculator to solve
+
+23
+00:01:01,920 --> 00:01:04,444
+the problem or something like that. So to solve
+
+24
+00:01:04,463 --> 00:01:07,109
+this problem, we're going to use a technique known as system
+
+25
+00:01:07,310 --> 00:01:09,894
+prompting. System prompts are used to customize
+
+26
+00:01:09,915 --> 00:01:12,680
+the style and tone that Claude will respond with.
+
+27
+00:01:12,700 --> 00:01:15,346
+We define a system prompt as a plain string and then pass
+
+28
+00:01:15,387 --> 00:01:17,912
+it into the create function call. The first
+
+29
+00:01:17,971 --> 00:01:20,558
+line of a system prompt will usually assign Claude a role,
+
+30
+00:01:20,798 --> 00:01:23,603
+so we might directly tell Claude that they are a patient math
+
+31
+00:01:23,623 --> 00:01:26,170
+tutor. This will encourage Claude to respond in the same
+
+32
+00:01:26,230 --> 00:01:28,837
+way that a real math tutor was respond. He
+
+33
+00:01:28,856 --> 00:01:31,444
+would probably end up being patient, provide a lot of explanation,
+
+34
+00:01:31,864 --> 00:01:34,671
+but probably not directly answer a student's question.
+
+35
+00:01:34,953 --> 00:01:38,034
+They'll instead guide them to a solution. Now,
+
+36
+00:01:38,256 --> 00:01:41,180
+to see some action, let's go back over to our notebook and see how Claude
+
+37
+00:01:41,301 --> 00:01:43,825
+responds to math questions with and without a
+
+38
+00:01:43,885 --> 00:01:46,509
+system prompt. So back inside of my notebook,
+
+39
+00:01:47,069 --> 00:01:49,593
+I've made a new notebook and I've carried over just our
+
+40
+00:01:49,653 --> 00:01:52,197
+initial client creation and those three helper
+
+41
+00:01:52,259 --> 00:01:54,843
+functions. You do not have to create a new notebook. I'm
+
+42
+00:01:54,862 --> 00:01:57,466
+just letting you know that I did just to organize my code.
+
+43
+00:01:58,105 --> 00:02:00,686
+Then down here inside the next cell, I'm going to ask Claude a very
+
+44
+00:02:00,727 --> 00:02:03,590
+simple question. I'm going to ask it to solve a simple math problem.
+
+45
+00:02:03,609 --> 00:02:06,132
+And we'll see how it initially responds. It will probably just give us
+
+46
+00:02:06,171 --> 00:02:08,794
+a direct answer. And then we'll go back and add in a system
+
+47
+00:02:08,854 --> 00:02:11,736
+prompt to encourage it to give us a little bit more explanation,
+
+48
+00:02:11,877 --> 00:02:14,580
+kind of a tutor approach. So let's see how Claude
+
+49
+00:02:14,620 --> 00:02:17,222
+responds to us without a system message at all. I'm going
+
+50
+00:02:17,262 --> 00:02:20,125
+to make a list of messages. I'll add in a user
+
+51
+00:02:20,485 --> 00:02:23,086
+message to my list of messages. And I'm going to ask it to
+
+52
+00:02:23,146 --> 00:02:26,289
+solve 5x plus 3 equals 2 for x.
+
+53
+00:02:26,270 --> 00:02:28,843
+I'll then get an answer by calling chat with my list
+
+54
+00:02:28,883 --> 00:02:31,685
+of messages and print out the answer. And
+
+55
+00:02:31,705 --> 00:02:34,389
+then if I run the cell, I'm probably going to see an exact
+
+56
+00:02:34,549 --> 00:02:37,293
+step-by-step solution on how to solve this. Now
+
+57
+00:02:37,332 --> 00:02:39,856
+this probably is going to be useful for a student because it's going to
+
+58
+00:02:39,877 --> 00:02:42,620
+show them a step-by-step solution, but it's not quite
+
+59
+00:02:42,659 --> 00:02:45,324
+what we are going for. We want to make a student think, and
+
+60
+00:02:45,364 --> 00:02:47,907
+we want them to arrive at the solution on their own.
+
+61
+00:02:48,127 --> 00:02:50,951
+We just want to give them small steps and kind of guide them in the right direction.
+
+62
+00:02:51,652 --> 00:02:54,236
+So we're going to customize the way in which Claude responds
+
+63
+00:02:54,537 --> 00:02:57,721
+by using a system prompt. Let me show you how we do that. Up
+
+64
+00:02:57,760 --> 00:03:01,086
+inside my chat function, I'm going to make a new variable of system.
+
+65
+00:03:01,758 --> 00:03:05,020
+I'm going to assign to it a multi-line string. And
+
+66
+00:03:05,040 --> 00:03:07,543
+inside there, I'm going to put together a system prompt that I wrote
+
+67
+00:03:07,622 --> 00:03:10,164
+ahead of time. So I'm going to tell Claude that it is
+
+68
+00:03:10,185 --> 00:03:12,848
+a patient math tutor. It should not directly
+
+69
+00:03:12,948 --> 00:03:15,810
+answer student's questions. Instead, give them a little bit of guidance
+
+70
+00:03:15,931 --> 00:03:18,453
+on how to solve the problem. I'm going to make sure that I
+
+71
+00:03:18,492 --> 00:03:21,034
+pass in the system prompt as
+
+72
+00:03:21,094 --> 00:03:24,198
+the system keyword argument to the create function. I'm
+
+73
+00:03:24,237 --> 00:03:26,740
+then going to rerun the cell. I'll
+
+74
+00:03:26,780 --> 00:03:29,622
+then go back down and let's see how Claude responds
+
+75
+00:03:29,682 --> 00:03:32,207
+now. All right, this looks
+
+76
+00:03:32,247 --> 00:03:34,951
+like a much better answer. Rather than just directly telling
+
+77
+00:03:34,972 --> 00:03:37,516
+the student how it's solved the problem, Claude is now prompting the
+
+78
+00:03:37,576 --> 00:03:40,581
+user to go through a solution step by step. Claude
+
+79
+00:03:40,622 --> 00:03:43,366
+is asking the student to first maybe isolate x
+
+80
+00:03:43,425 --> 00:03:46,070
+on one side of the equation and then ask the student how
+
+81
+00:03:46,131 --> 00:03:48,634
+we might go about that. So now we've got a much more
+
+82
+00:03:48,775 --> 00:03:51,359
+interactive experience for the student. And this will help
+
+83
+00:03:51,400 --> 00:03:53,924
+them hopefully help them learn what's going on here a little bit
+
+84
+00:03:53,963 --> 00:03:56,587
+better than just giving them a direct answer.
+
+85
+00:03:56,568 --> 00:03:59,131
+Alright, so clearly using a system prompt is
+
+86
+00:03:59,191 --> 00:04:01,713
+a powerful tool for steering Claude in a particular
+
+87
+00:04:01,774 --> 00:04:04,355
+direction on how it should answer a given user input.
+
+88
+00:04:05,076 --> 00:04:07,719
+Before we move on, I want to do a little bit of a refactor to our
+
+89
+00:04:07,759 --> 00:04:10,483
+chat function. Rather than having a hard-coded system
+
+90
+00:04:10,522 --> 00:04:13,265
+prompt inside of here, I want to be able to specify a system
+
+91
+00:04:13,286 --> 00:04:15,808
+prompt whenever we call the chat function. So
+
+92
+00:04:15,908 --> 00:04:19,192
+in other words, I want to cut this right here, put
+
+93
+00:04:19,232 --> 00:04:22,709
+it down inside the cell underneath, And
+
+94
+00:04:22,728 --> 00:04:25,557
+then I want to be able to pass in a system prompt like
+
+95
+00:04:25,598 --> 00:04:28,245
+so. So now we have a much more reusable
+
+96
+00:04:28,326 --> 00:04:30,892
+chat function that we can use on a wide variety of different problems
+
+97
+00:04:30,973 --> 00:04:33,701
+in the future without having a hard coded system prompt inside
+
+98
+00:04:33,721 --> 00:04:36,285
+of it. So now we need to make sure that we take this system
+
+99
+00:04:36,365 --> 00:04:39,471
+argument and pass it into the create function. Now,
+
+100
+00:04:39,730 --> 00:04:42,295
+doing so is going to require just a little bit more work than you might
+
+101
+00:04:42,336 --> 00:04:44,980
+think. Let me show you why. I'm going to very quickly add
+
+102
+00:04:45,060 --> 00:04:47,586
+in a system keyword argument to the chat function, and I'll
+
+103
+00:04:47,605 --> 00:04:50,211
+default it to be none. If I now run
+
+104
+00:04:50,250 --> 00:04:53,136
+the cell, and then run the cell down here, everything
+
+105
+00:04:53,196 --> 00:04:55,701
+is going to work fine, exactly as expected.
+
+106
+00:04:55,680 --> 00:04:58,528
+However, if I go down to the chat function and I decide
+
+107
+00:04:58,588 --> 00:05:01,314
+that I do not want to provide a system prompt here at all,
+
+108
+00:05:01,596 --> 00:05:04,122
+so if I delete that and then run the cell,
+
+109
+00:05:04,543 --> 00:05:07,370
+I'll end up getting an error message. So we are not allowed
+
+110
+00:05:07,391 --> 00:05:10,298
+to pass in a system prompt of none.
+
+111
+00:05:10,447 --> 00:05:13,071
+So we need to assemble our parameters. We're going to pass
+
+112
+00:05:13,091 --> 00:05:15,754
+into the create function a little bit more dynamically. And
+
+113
+00:05:15,814 --> 00:05:18,338
+if we have a system of none, we do not want
+
+114
+00:05:18,358 --> 00:05:20,980
+to include this parameter at all. So let me show you how
+
+115
+00:05:21,021 --> 00:05:23,845
+we are going to do that with a small refactor. First,
+
+116
+00:05:24,004 --> 00:05:27,149
+I'm going to make a parameter dictionary right above. I'm
+
+117
+00:05:27,290 --> 00:05:29,973
+going to cut and paste in model max
+
+118
+00:05:30,012 --> 00:05:32,656
+tokens and messages. I'm
+
+119
+00:05:32,776 --> 00:05:35,360
+going to convert this to dictionary syntax. So
+
+120
+00:05:35,380 --> 00:05:38,043
+I use double quote, double quote, colons,
+
+121
+00:05:38,264 --> 00:05:41,252
+like so. I'll
+
+122
+00:05:41,271 --> 00:05:44,074
+then check and see if a system prompt was passed in. So
+
+123
+00:05:44,154 --> 00:05:46,798
+if one was passed in, then I want to add it in
+
+124
+00:05:46,838 --> 00:05:49,620
+as the system key inside
+
+125
+00:05:49,641 --> 00:05:52,884
+of the params dictionary, like so. Then
+
+126
+00:05:52,964 --> 00:05:55,887
+I'm going to update the create call down here to
+
+127
+00:05:55,947 --> 00:05:58,451
+star star parameters. And that's
+
+128
+00:05:58,531 --> 00:06:01,733
+it. So now I'm going to rerun that cell. I'll
+
+129
+00:06:01,754 --> 00:06:04,297
+go back down to the next one. And if I call chat
+
+130
+00:06:04,377 --> 00:06:07,261
+without any system keyword argument being passed in, no
+
+131
+00:06:07,300 --> 00:06:09,869
+problem. Everything is going to work just fine. And
+
+132
+00:06:09,889 --> 00:06:12,762
+if I decide that I do want to provide a system prompt, yep,
+
+133
+00:06:12,802 --> 00:06:15,918
+that's going to work just fine as well. OK,
+
+134
+00:06:15,939 --> 00:06:18,612
+so this looks good. So we now got support for a system prompt
+
+135
+00:06:18,692 --> 00:06:20,480
+inside of our chat function.

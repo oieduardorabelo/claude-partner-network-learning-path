@@ -1,0 +1,711 @@
+1
+00:00:00,655 --> 00:00:03,198
+I want to think back to the original chat interface example that we
+
+2
+00:00:03,238 --> 00:00:05,783
+looked at earlier on inside this section. So remember, the
+
+3
+00:00:05,844 --> 00:00:08,348
+thought process here is that we've got a chat window running inside of
+
+4
+00:00:08,368 --> 00:00:11,112
+a web app or a mobile app. A user is going to enter a question.
+
+5
+00:00:11,413 --> 00:00:13,958
+That's going to be submitted to our server. We're thinking of stuff that into
+
+6
+00:00:14,038 --> 00:00:16,582
+a user message and send it off to Claude. Claude is
+
+7
+00:00:16,621 --> 00:00:19,126
+then going to send us back an assistant message. We
+
+8
+00:00:19,146 --> 00:00:21,710
+are going to extract the text from it and send it back down to our
+
+9
+00:00:21,751 --> 00:00:24,335
+mobile app or web app. And hopefully, that content
+
+10
+00:00:24,414 --> 00:00:27,039
+is going to appear on the screen. Now, this all sounds
+
+11
+00:00:27,339 --> 00:00:29,922
+pretty straightforward and easy at this point in time, but
+
+12
+00:00:29,943 --> 00:00:32,606
+there's one little issue here that we haven't really addressed
+
+13
+00:00:32,646 --> 00:00:35,371
+just yet. You see, the time between sending
+
+14
+00:00:35,390 --> 00:00:38,155
+that user message to Claude and then eventually getting an assistant
+
+15
+00:00:38,195 --> 00:00:40,819
+message back can very easily take a lot more
+
+16
+00:00:40,878 --> 00:00:43,442
+time than we expect. In some cases, it might
+
+17
+00:00:43,481 --> 00:00:46,206
+take 10 seconds or all the way up to 30 seconds
+
+18
+00:00:46,286 --> 00:00:48,990
+depending upon the size of the input user message
+
+19
+00:00:49,329 --> 00:00:52,045
+and the output assistant message. Now during
+
+20
+00:00:52,066 --> 00:00:54,911
+this entire time that the user is waiting for a response, we
+
+21
+00:00:54,951 --> 00:00:57,496
+could just show a spinner on the screen. But that's
+
+22
+00:00:57,536 --> 00:01:00,362
+not really a great user experience. Most users'
+
+23
+00:01:00,523 --> 00:01:03,067
+expectations are that whenever they enter in some kind of initial
+
+24
+00:01:03,128 --> 00:01:05,813
+message, like what is quantum computing, they
+
+25
+00:01:05,832 --> 00:01:08,399
+should almost immediately start to see some response
+
+26
+00:01:08,659 --> 00:01:11,243
+up here on the screen. To get this better user
+
+27
+00:01:11,344 --> 00:01:14,109
+experience, we are going to use a technique known as streaming.
+
+28
+00:01:14,731 --> 00:01:17,638
+So let me tell you a little bit about how streaming works. Our
+
+29
+00:01:17,697 --> 00:01:20,384
+server is still going to send an initial user message off
+
+30
+00:01:20,403 --> 00:01:23,390
+to Claude, but then Claude is going to almost immediately
+
+31
+00:01:23,409 --> 00:01:26,135
+send back an initial response to us. This
+
+32
+00:01:26,195 --> 00:01:29,201
+initial response doesn't actually contain any text content.
+
+33
+00:01:29,182 --> 00:01:31,825
+Instead, it is really just a sign to our server that Claude
+
+34
+00:01:31,844 --> 00:01:34,388
+has received our initial request and that Claude is about
+
+35
+00:01:34,408 --> 00:01:36,971
+to start to generate some amount of text. We are then going
+
+36
+00:01:37,010 --> 00:01:39,513
+to start to receive a stream of events. We're going to
+
+37
+00:01:39,554 --> 00:01:42,117
+go into a lot of detail around exactly what these events
+
+38
+00:01:42,296 --> 00:01:44,819
+are, but right now, just understand that they contain
+
+39
+00:01:44,900 --> 00:01:47,582
+pieces of the generated response that we want to send
+
+40
+00:01:47,662 --> 00:01:50,245
+back and eventually display to our users. The number
+
+41
+00:01:50,325 --> 00:01:52,929
+of events that we receive depends upon how much text we are
+
+42
+00:01:52,989 --> 00:01:55,774
+generating. Each event is going to contain just a little
+
+43
+00:01:55,813 --> 00:01:58,459
+bit of the overall message that is being generated. So
+
+44
+00:01:58,498 --> 00:02:01,243
+maybe the first event just has the text, quantum, and
+
+45
+00:02:01,284 --> 00:02:04,310
+then the second one says computing, and the third one is, and
+
+46
+00:02:04,349 --> 00:02:06,894
+so on. Now each event doesn't just contain one
+
+47
+00:02:06,954 --> 00:02:09,639
+word. It might contain many words, or even in entire
+
+48
+00:02:09,719 --> 00:02:12,264
+sentence. It really just depends upon how much time
+
+49
+00:02:12,305 --> 00:02:14,949
+it takes for Claude to generate each little bit of text.
+
+50
+00:02:14,930 --> 00:02:17,832
+Now, as I mentioned, our server is going to receive these events
+
+51
+00:02:18,312 --> 00:02:20,875
+and our server can optionally take the text out of each
+
+52
+00:02:20,914 --> 00:02:23,717
+event and immediately send it back down to our web
+
+53
+00:02:23,737 --> 00:02:26,460
+app or mobile app or whatever else where we can display
+
+54
+00:02:26,500 --> 00:02:29,242
+that little chunk of text on the screen. We can then repeat
+
+55
+00:02:29,263 --> 00:02:31,805
+this process for each additional event that we
+
+56
+00:02:31,824 --> 00:02:34,326
+receive on our server. So the net effect is that a
+
+57
+00:02:34,407 --> 00:02:36,949
+user is going to start to see some text, start to appear
+
+58
+00:02:37,370 --> 00:02:40,052
+chunk by chunk in the chat interface. Let's
+
+59
+00:02:40,073 --> 00:02:42,634
+now go back over to our notebook and we're going to write out a little bit of code
+
+60
+00:02:42,675 --> 00:02:45,457
+to better understand how streaming works. All
+
+61
+00:02:45,478 --> 00:02:48,201
+right, so back inside of my notebook, I still have these three helper
+
+62
+00:02:48,222 --> 00:02:51,086
+functions put together. Now, we are going to ignore
+
+63
+00:02:51,126 --> 00:02:53,669
+the chat function inside of this video, because
+
+64
+00:02:53,689 --> 00:02:56,334
+when we start to use streaming, it doesn't work quite so well with
+
+65
+00:02:56,354 --> 00:02:58,877
+the chat function as we have implemented it. So
+
+66
+00:02:58,918 --> 00:03:01,622
+I'm going to instead, down here, make a list of messages,
+
+67
+00:03:01,943 --> 00:03:04,566
+and then manually call the clientmessages.create
+
+68
+00:03:04,627 --> 00:03:07,264
+function. So I'm going to make an empty list
+
+69
+00:03:07,284 --> 00:03:09,926
+of messages. I'll add in a user message
+
+70
+00:03:10,627 --> 00:03:13,811
+to messages. And I'm going to ask Claude to write
+
+71
+00:03:13,911 --> 00:03:16,593
+a one sentence description of a fake
+
+72
+00:03:16,734 --> 00:03:19,257
+database. I'm then going
+
+73
+00:03:19,296 --> 00:03:21,878
+to call client messages create.
+
+74
+00:03:23,020 --> 00:03:25,823
+I will pass in the name of the model. Still
+
+75
+00:03:25,862 --> 00:03:29,347
+need to provide a max tokens. Provide
+
+76
+00:03:29,407 --> 00:03:32,367
+our list of messages. And then finally,
+
+77
+00:03:32,788 --> 00:03:35,634
+we'll put in an additional keyword argument here of stream is
+
+78
+00:03:35,814 --> 00:03:38,640
+true. And this is going to give us back not
+
+79
+00:03:38,760 --> 00:03:41,366
+a final answer, but instead we're going to get a stream
+
+80
+00:03:41,445 --> 00:03:44,070
+of different events. We can iterate through this thing
+
+81
+00:03:44,391 --> 00:03:47,137
+because it is a normal iterator. So we can say for event
+
+82
+00:03:47,557 --> 00:03:50,985
+in stream and then print out event.
+
+83
+00:03:51,606 --> 00:03:54,308
+Now, if I run this, we're going to very quickly see a stream
+
+84
+00:03:54,409 --> 00:03:57,271
+of different events up here on screen. So each
+
+85
+00:03:57,292 --> 00:03:59,834
+of these represents a different little chunk of data that is
+
+86
+00:03:59,854 --> 00:04:02,356
+being sent back to us by Claude. You'll notice that
+
+87
+00:04:02,377 --> 00:04:04,979
+we start off with a event named raw message store
+
+88
+00:04:04,998 --> 00:04:07,641
+event. We then get a raw content block
+
+89
+00:04:07,662 --> 00:04:10,223
+start, a raw content block delta.
+
+90
+00:04:10,663 --> 00:04:13,167
+We get several of those as a matter of fact. And
+
+91
+00:04:13,206 --> 00:04:16,209
+then, down towards the bottom, we eventually get a content
+
+92
+00:04:16,348 --> 00:04:18,971
+block stop event, a message delt
+
+93
+00:04:19,031 --> 00:04:21,593
+event, any message stop event. So
+
+94
+00:04:21,613 --> 00:04:24,137
+these are all events that are being sent back to us inside
+
+95
+00:04:24,177 --> 00:04:26,701
+of the context of a single request, all coming from
+
+96
+00:04:26,740 --> 00:04:29,343
+Claude. Each of these different events has some meaning
+
+97
+00:04:29,363 --> 00:04:31,947
+in the context of the overall response that we are getting back from
+
+98
+00:04:32,007 --> 00:04:34,569
+Claude. However, there is one event type
+
+99
+00:04:34,610 --> 00:04:37,334
+that we usually care about a little bit more than all the others, and
+
+100
+00:04:37,374 --> 00:04:40,177
+that is the raw, content block Delta
+
+101
+00:04:40,237 --> 00:04:42,939
+event. This event is what contains the actual
+
+102
+00:04:43,000 --> 00:04:45,624
+text that is being generated by Claude and sent back
+
+103
+00:04:45,663 --> 00:04:48,233
+to us chunk by chunk. In practice,
+
+104
+00:04:48,613 --> 00:04:51,319
+we usually end up getting the same sequence of events over
+
+105
+00:04:51,360 --> 00:04:54,125
+and over. So when we get a response back from Claude, we're almost
+
+106
+00:04:54,165 --> 00:04:56,771
+always going to start off with getting a message start, then
+
+107
+00:04:56,810 --> 00:04:59,817
+a content block start, and then we are going to get a sequence
+
+108
+00:04:59,997 --> 00:05:02,502
+of content block deltas. And again, those are
+
+109
+00:05:02,523 --> 00:05:05,129
+what contain the actual text. So we usually want to
+
+110
+00:05:05,209 --> 00:05:07,793
+collect all those different events and extract the text from them
+
+111
+00:05:08,074 --> 00:05:10,838
+and send that text back down to our web app or mobile
+
+112
+00:05:10,858 --> 00:05:13,403
+app or whatever else we are using. Now, back inside
+
+113
+00:05:13,423 --> 00:05:15,947
+of our notebook, inside this for loop right here, we could
+
+114
+00:05:16,048 --> 00:05:18,552
+add in a check to take a look and figure out what
+
+115
+00:05:18,632 --> 00:05:21,197
+kind of event we are dealing with. And then if it is one
+
+116
+00:05:21,218 --> 00:05:23,740
+of those raw content block delta events, we could
+
+117
+00:05:23,761 --> 00:05:26,324
+reach into it and get the text we actually care about. But that
+
+118
+00:05:26,345 --> 00:05:29,108
+would require a lot of extra code from us. Thankfully,
+
+119
+00:05:29,129 --> 00:05:31,752
+the Anthropic SDK exposes a different
+
+120
+00:05:31,791 --> 00:05:34,336
+way of creating a stream than what I'm showing to you right
+
+121
+00:05:34,375 --> 00:05:36,879
+here. This alternative way of creating a stream,
+
+122
+00:05:36,978 --> 00:05:39,682
+which I'm going to show you in just one moment, makes it a lot easier
+
+123
+00:05:39,702 --> 00:05:42,406
+to just get the text out of the response. And again,
+
+124
+00:05:42,447 --> 00:05:44,990
+the text is usually the part of the response that we really
+
+125
+00:05:45,031 --> 00:05:47,574
+care about. So let me show you an alternative way of
+
+126
+00:05:47,733 --> 00:05:50,317
+streaming a response. I'm going to go down
+
+127
+00:05:50,377 --> 00:05:53,382
+to the next code cell. So down here, I'm
+
+128
+00:05:53,401 --> 00:05:56,105
+going to again make a list of messages, add
+
+129
+00:05:56,305 --> 00:05:58,908
+a user message with
+
+130
+00:05:59,048 --> 00:06:01,951
+a write a one sentence description
+
+131
+00:06:01,992 --> 00:06:05,336
+of a fake database. And
+
+132
+00:06:05,355 --> 00:06:07,879
+then we're going to call a slightly different function and wrap it
+
+133
+00:06:07,939 --> 00:06:10,562
+inside of a with block. So say with
+
+134
+00:06:11,002 --> 00:06:13,725
+client messages dot stream.
+
+135
+00:06:14,706 --> 00:06:18,351
+And inside of here, we will again put in our model, our
+
+136
+00:06:18,411 --> 00:06:21,038
+max tokens, and
+
+137
+00:06:21,158 --> 00:06:23,901
+our messages. But
+
+138
+00:06:23,922 --> 00:06:26,867
+we do not need to add in the stream to true argument.
+
+139
+00:06:27,668 --> 00:06:30,411
+We'll then say as stream, colon, all
+
+140
+00:06:30,432 --> 00:06:36,901
+then indent, and inside of here, it will say for textinstream.textstream,
+
+141
+00:06:37,180 --> 00:06:39,745
+like so. So now text is gonna be
+
+142
+00:06:40,024 --> 00:06:42,588
+just the text part of those different events. So just
+
+143
+00:06:42,608 --> 00:06:45,233
+the text we actually care about, again, that's almost always the
+
+144
+00:06:45,252 --> 00:06:48,016
+thing that we actually really care about when we are streaming our response
+
+145
+00:06:48,057 --> 00:06:50,805
+from clot. Now to show you how this actually works,
+
+146
+00:06:50,985 --> 00:06:53,630
+I'm going to add in a print statement and log
+
+147
+00:06:53,711 --> 00:06:56,497
+out that text. I'm going to add in a end true
+
+148
+00:06:56,697 --> 00:06:59,302
+of empty string. And true of empty string, just make
+
+149
+00:06:59,322 --> 00:07:01,869
+sure that these print statements are not going to add in a new line
+
+150
+00:07:01,928 --> 00:07:04,694
+character to the end of the print statement. So we'll see each bit
+
+151
+00:07:04,735 --> 00:07:07,240
+of text logged out next to each other. Now
+
+152
+00:07:07,259 --> 00:07:09,785
+I'm going to run this and it's going to occur really quickly,
+
+153
+00:07:10,086 --> 00:07:12,810
+but you'll see that now we are getting a response streamed
+
+154
+00:07:12,911 --> 00:07:15,596
+back to us chunk by chunk. So let me do that again.
+
+155
+00:07:15,615 --> 00:07:18,360
+So run again. I'll see chunk, chunk, chunk. There
+
+156
+00:07:18,380 --> 00:07:21,206
+we go. You'll notice that each chunk contains multiple
+
+157
+00:07:21,225 --> 00:07:23,992
+different words. So again, we're not guaranteed to
+
+158
+00:07:24,031 --> 00:07:26,576
+just get back one single word inside of each event.
+
+159
+00:07:26,857 --> 00:07:29,422
+We might get several. There is one last feature here that
+
+160
+00:07:29,482 --> 00:07:32,165
+I want to show you. Now, as I've mentioned, we very
+
+161
+00:07:32,245 --> 00:07:34,850
+often want to stream a response back to a mobile app or
+
+162
+00:07:34,870 --> 00:07:37,692
+a web app so that a user can see each chunk
+
+163
+00:07:37,733 --> 00:07:40,557
+of text appear on the screen as soon as possible. But
+
+164
+00:07:40,677 --> 00:07:43,360
+something else we very often want to do after completing a stream
+
+165
+00:07:43,661 --> 00:07:46,725
+is take the entire message and maybe store it inside of a database.
+
+166
+00:07:46,745 --> 00:07:49,269
+So we have a record of the entire conversation that was had
+
+167
+00:07:49,348 --> 00:07:52,074
+with a particular user. Let me show you how we can collect
+
+168
+00:07:52,093 --> 00:07:54,620
+all these different events and present them all assembled
+
+169
+00:07:54,639 --> 00:07:57,425
+together inside of one single final message.
+
+170
+00:07:57,446 --> 00:08:00,012
+I'm going to replace this print statement right here with a
+
+171
+00:08:00,213 --> 00:08:03,059
+pass, just so we don't have any printing there. And
+
+172
+00:08:03,079 --> 00:08:08,531
+then after it, I'll do a stream.getfinalmessage.
+
+173
+00:08:08,512 --> 00:08:11,043
+And now if I run this again, we are still streaming back
+
+174
+00:08:11,084 --> 00:08:13,795
+a response and we could print it if we wanted to, but
+
+175
+00:08:13,836 --> 00:08:16,387
+we're also going to take all the individual events
+
+176
+00:08:16,447 --> 00:08:19,321
+we get back and assemble them together into one final
+
+177
+00:08:19,380 --> 00:08:22,153
+message, which we could then store inside the database or do
+
+178
+00:08:22,194 --> 00:08:23,922
+whatever else we need to do with it.

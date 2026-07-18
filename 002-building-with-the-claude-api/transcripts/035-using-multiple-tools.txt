@@ -1,0 +1,299 @@
+1
+00:00:00,031 --> 00:00:02,576
+The last thing we need to do is add in the Add Duration to
+
+2
+00:00:02,616 --> 00:00:05,402
+DateTime tool and the Set Reminder tool. This
+
+3
+00:00:05,442 --> 00:00:07,987
+is going to be a little bit anti-climactic because last
+
+4
+00:00:08,006 --> 00:00:10,772
+video was rather challenging. This one is going to be really easy,
+
+5
+00:00:10,813 --> 00:00:13,458
+short and straightforward. Turns out I've already put together
+
+6
+00:00:13,477 --> 00:00:16,103
+a lot of the code that we need for this inside of the
+
+7
+00:00:16,123 --> 00:00:18,708
+Tools and Schemas cell. You'll find that
+
+8
+00:00:18,748 --> 00:00:21,253
+I've already got an implementation of add_duration_to_datetime,
+
+9
+00:00:21,292 --> 00:00:24,178
+but together inside of here. And if you scroll down, you'll
+
+10
+00:00:24,198 --> 00:00:27,143
+see I've also got our set_reminder function put together. Now
+
+11
+00:00:27,182 --> 00:00:29,786
+the set_reminder doesn't actually set a reminder or anything like
+
+12
+00:00:29,806 --> 00:00:32,331
+that. It's just going to print out a statement that says, hey, we
+
+13
+00:00:32,371 --> 00:00:35,877
+set a reminder at this time with some given content.
+
+14
+00:00:35,856 --> 00:00:38,402
+I've also provided us a add_duration_to_date
+
+15
+00:00:38,421 --> 00:00:41,087
+time schema and a set_reminder schema.
+
+16
+00:00:41,468 --> 00:00:43,991
+So all we really need to do is pass these two schemas
+
+17
+00:00:44,133 --> 00:00:46,777
+into Claude, and we also need to make sure that if Claude ever asked
+
+18
+00:00:46,817 --> 00:00:49,323
+to use either tool, we call the appropriate tool function.
+
+19
+00:00:49,643 --> 00:00:52,228
+So let's get to it. Should be pretty straightforward.
+
+20
+00:00:52,427 --> 00:00:55,094
+First off, I'm going to find the run_conversation function.
+
+21
+00:00:55,695 --> 00:00:58,301
+Inside of here, I'm going to find the list of tools, and I'm going to add into
+
+22
+00:00:58,360 --> 00:01:01,167
+it, add_duration_to_date
+
+23
+00:01:01,188 --> 00:01:04,715
+time schema, and the set_reminder
+
+24
+00:01:04,975 --> 00:01:07,561
+schema as well. So now Claude is aware of
+
+25
+00:01:07,602 --> 00:01:10,436
+the existence of these two other tools. Next,
+
+26
+00:01:10,557 --> 00:01:14,442
+all I have to do is go up a little bit here to
+
+27
+00:01:14,483 --> 00:01:17,087
+the run_tool function. So this is the function where
+
+28
+00:01:17,106 --> 00:01:19,632
+we're going to get a tool name and some arguments. All we have
+
+29
+00:01:19,652 --> 00:01:22,355
+to do is find the appropriate tool function call, call
+
+30
+00:01:22,415 --> 00:01:24,959
+it, and return result. So adding into the thing
+
+31
+00:01:24,980 --> 00:01:27,885
+is really easy. Let's add in an if
+
+32
+00:01:27,924 --> 00:01:30,448
+case. So check and see if the tool name
+
+33
+00:01:31,391 --> 00:01:34,234
+is add_duration_to_date
+
+34
+00:01:34,415 --> 00:01:36,924
+time. And if it is, we'll return a
+
+35
+00:01:36,963 --> 00:01:39,808
+call to add_duration_to_date
+
+36
+00:01:39,947 --> 00:01:43,013
+time and **tool_input. I'll then repeat that for the other tool.
+
+37
+00:01:43,254 --> 00:01:46,438
+So the tool name is set_reminder return
+
+38
+00:01:47,801 --> 00:01:51,266
+set_reminder with **tool_input. And that's it. So
+
+39
+00:01:51,346 --> 00:01:54,111
+set_reminder with tool
+
+40
+00:01:54,450 --> 00:01:57,933
+input. And that's it. So
+
+41
+00:01:58,295 --> 00:02:01,299
+as soon as you put together this run_tool function and
+
+42
+00:02:01,340 --> 00:02:03,983
+the run_conversation function, after that initial
+
+43
+00:02:04,043 --> 00:02:06,787
+difficulty, everything around tool use starts to become really
+
+44
+00:02:06,947 --> 00:02:09,592
+easy and straightforward, because adding in additional tools
+
+45
+00:02:09,671 --> 00:02:12,456
+is super simple. Just update run_tool, add
+
+46
+00:02:12,497 --> 00:02:15,140
+in a tool schema, add in an implementation for the actual
+
+47
+00:02:15,181 --> 00:02:18,125
+tool function itself, and that's it. You're all done. So
+
+48
+00:02:18,145 --> 00:02:20,908
+now let's test this out. I'm going to make sure I rerun that cell.
+
+49
+00:02:22,211 --> 00:02:26,137
+I'm going to rerun run_conversation. And
+
+50
+00:02:26,157 --> 00:02:28,659
+then down here at the very bottom, let's update our
+
+51
+00:02:28,719 --> 00:02:31,524
+query. I'm going to ask Claude to set a reminder. And
+
+52
+00:02:31,544 --> 00:02:34,507
+I'm going to say that the reminder needs to be set 177 days
+
+53
+00:02:34,526 --> 00:02:37,311
+after January 1st, 2050. This is definitely
+
+54
+00:02:37,330 --> 00:02:40,033
+going to result in more than one tool call. Claude is going to first
+
+55
+00:02:40,074 --> 00:02:42,657
+have to add_duration_to_datetime, and then set
+
+56
+00:02:42,717 --> 00:02:45,240
+a reminder after that. Let's then run this and
+
+57
+00:02:45,300 --> 00:02:47,925
+see how it does. Claude initially tells us
+
+58
+00:02:48,064 --> 00:02:50,670
+that it needs to figure out 177 days after January
+
+59
+00:02:50,691 --> 00:02:53,197
+1st. Once it figures that out, it's then going to attempt
+
+60
+00:02:53,217 --> 00:02:55,883
+to set the reminder. Then we see a log statement right here.
+
+61
+00:02:56,123 --> 00:02:59,170
+This log statement is coming from the set_reminder function. Remember,
+
+62
+00:02:59,270 --> 00:03:01,896
+set_reminder doesn't actually do anything, it just prints out the argument
+
+63
+00:03:01,937 --> 00:03:04,683
+that it's given. And then finally, we get a response from Claude
+
+64
+00:03:04,743 --> 00:03:07,247
+telling us that our appointment has been set on the correct
+
+65
+00:03:07,268 --> 00:03:09,871
+date of Monday, June 27th of 2050.
+
+66
+00:03:10,491 --> 00:03:13,134
+We can also go down to the message conversation history.
+
+67
+00:03:13,876 --> 00:03:16,479
+So once again, we've got the user message, the
+
+68
+00:03:16,520 --> 00:03:19,163
+assistant right here that has a text block.
+
+69
+00:03:19,183 --> 00:03:21,866
+And in addition to the text block, once again, a tool
+
+70
+00:03:21,947 --> 00:03:24,651
+use block. So yet again, we're seeing an example here of a message
+
+71
+00:03:24,911 --> 00:03:27,794
+with multiple different blocks inside of it. We then respond
+
+72
+00:03:27,875 --> 00:03:30,799
+with the tool results. We then get some follow up. And from
+
+73
+00:03:30,838 --> 00:03:33,343
+there, I think you understand the process. All
+
+74
+00:03:33,365 --> 00:03:35,998
+right, so that's it. We have wired in multiple different tools
+
+75
+00:03:36,120 --> 00:03:38,430
+to our notebook. Excellent progress.

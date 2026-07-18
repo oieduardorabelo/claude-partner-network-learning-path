@@ -1,0 +1,123 @@
+1
+00:00:00,031 --> 00:00:02,537
+Let's go through a quick exercise on system
+
+2
+00:00:02,577 --> 00:00:05,144
+prompts. I've updated my notebook and I'm now asking
+
+3
+00:00:05,205 --> 00:00:07,812
+Claude to write out a Python function that is going to check a string
+
+4
+00:00:07,852 --> 00:00:10,439
+for duplicate characters. If I run this
+
+5
+00:00:10,660 --> 00:00:13,246
+and print out the answer, I'm going to see a tremendous
+
+6
+00:00:13,346 --> 00:00:15,933
+amount of code gets generated here. So some
+
+7
+00:00:15,974 --> 00:00:19,042
+of it is going to be a little bit of code, but there's also going to be a lot of explanation
+
+8
+00:00:19,141 --> 00:00:21,748
+and a lot of comments as well. So I would
+
+9
+00:00:21,789 --> 00:00:24,777
+like to go through an exercise here where we try to reduce
+
+10
+00:00:24,817 --> 00:00:27,422
+the amount of code that's being generated. I want to get
+
+11
+00:00:27,483 --> 00:00:30,050
+down to as concise and implementation of this function
+
+12
+00:00:30,210 --> 00:00:32,734
+as possible. To do so, I would like you to write out
+
+13
+00:00:32,835 --> 00:00:35,820
+a system prompt and pass it into the chat function call. Your
+
+14
+00:00:35,901 --> 00:00:38,585
+system prompt should assign a role to Claude and encourage
+
+15
+00:00:38,645 --> 00:00:41,429
+it to respond as concisely as possible. So
+
+16
+00:00:41,469 --> 00:00:44,194
+again, go ahead and pause the video here, go ahead and give it a shot,
+
+17
+00:00:44,573 --> 00:00:47,418
+and we'll go over solution right about now.
+
+18
+00:00:47,399 --> 00:00:49,923
+To solve this, I'm going to pass in a system prompt to
+
+19
+00:00:49,963 --> 00:00:52,848
+the chat function call. And inside that, I'm going to assign
+
+20
+00:00:52,868 --> 00:00:55,634
+a role to Claude that will encourage it to write very concise code.
+
+21
+00:00:56,054 --> 00:00:59,159
+I'll say you are a Python engineer who
+
+22
+00:00:59,320 --> 00:01:02,185
+writes very concise code. So
+
+23
+00:01:02,204 --> 00:01:04,769
+let's now run the cell and see what kind of response we get back
+
+24
+00:01:04,829 --> 00:01:07,456
+now. All right, that is definitely much more
+
+25
+00:01:07,495 --> 00:01:10,280
+in line with what I was looking for. You'll see that the actual
+
+26
+00:01:10,340 --> 00:01:12,983
+code we had to write to implement this uniqueness
+
+27
+00:01:13,043 --> 00:01:15,746
+check is very, very short, much shorter
+
+28
+00:01:15,787 --> 00:01:18,471
+than the code we saw a moment ago. Hopefully you had some
+
+29
+00:01:18,510 --> 00:01:21,293
+success with this exercise. And if you didn't, that is totally fine.
+
+30
+00:01:21,575 --> 00:01:24,078
+There are going to be many other exercises throughout the course where
+
+31
+00:01:24,097 --> 00:01:25,540
+you can test out your skills.

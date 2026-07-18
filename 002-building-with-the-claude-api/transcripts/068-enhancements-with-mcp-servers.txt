@@ -1,0 +1,203 @@
+1
+00:00:00,031 --> 00:00:02,976
+In this video, I want to show you one of the most interesting aspects
+
+2
+00:00:03,076 --> 00:00:05,740
+of Claude Code. Claude Code has an MCP
+
+3
+00:00:05,860 --> 00:00:08,724
+client embedded inside of it. That means we can connect
+
+4
+00:00:08,965 --> 00:00:11,669
+MCP servers to Claude Code and dramatically
+
+5
+00:00:11,689 --> 00:00:14,234
+expand its functionality. To demonstrate
+
+6
+00:00:14,253 --> 00:00:17,478
+this, we are going to connect Claude Code to the MCP
+
+7
+00:00:17,559 --> 00:00:20,324
+server that we have been working on. We just authored
+
+8
+00:00:20,344 --> 00:00:23,170
+a tool called Document Path to Markdown. We
+
+9
+00:00:23,210 --> 00:00:26,196
+can now expose this tool to Claude Code, allowing
+
+10
+00:00:26,236 --> 00:00:28,861
+it to read the contents of PDF and Word documents.
+
+11
+00:00:29,282 --> 00:00:31,847
+So we are dynamically expanding the capabilities
+
+12
+00:00:32,347 --> 00:00:35,134
+of Claude Code. Let me show you how to set this up.
+
+13
+00:00:35,923 --> 00:00:38,509
+Back inside of my terminal, I'm going to end my running session with
+
+14
+00:00:38,628 --> 00:00:41,234
+a Control-C. I'm then going to add in
+
+15
+00:00:41,375 --> 00:00:44,039
+an MCP server to Claude Code by executing Claude,
+
+16
+00:00:44,680 --> 00:00:47,246
+MCP, add, then we're going to put in
+
+17
+00:00:47,286 --> 00:00:50,072
+the name for our MCP server. Now the name could be anything
+
+18
+00:00:50,131 --> 00:00:52,697
+you want it to be. In our case, we are making a server
+
+19
+00:00:52,756 --> 00:00:56,564
+related to documents, so I'm going to call our server documents.
+
+20
+00:00:56,545 --> 00:00:59,107
+And then finally, we're going to put in the command that we used to start
+
+21
+00:00:59,247 --> 00:01:02,131
+up our server, which for us is uvrun main.py.
+
+22
+00:01:02,392 --> 00:01:05,174
+So uvrun main.py. And
+
+23
+00:01:05,215 --> 00:01:07,718
+that's it. I'm going to execute that, and I'll
+
+24
+00:01:07,737 --> 00:01:10,960
+start Claude Code back up with Claude. And
+
+25
+00:01:11,022 --> 00:01:13,563
+now we can make use of that tool that we just put together to
+
+26
+00:01:13,584 --> 00:01:16,507
+really test it out inside of our test directory. There
+
+27
+00:01:16,528 --> 00:01:19,331
+is a fixtures folder inside there are two demo
+
+28
+00:01:19,891 --> 00:01:22,775
+files, so a Word doc and a PDF doc. Both
+
+29
+00:01:22,814 --> 00:01:25,397
+contain just a tiny bit of documentation around MCP
+
+30
+00:01:25,457 --> 00:01:28,246
+itself. So I'm now going to ask Claude to convert
+
+31
+00:01:28,287 --> 00:01:30,998
+the contents of either one of those files into Markdown.
+
+32
+00:01:31,319 --> 00:01:33,829
+And my expectation is that Claude will make use of that
+
+33
+00:01:33,909 --> 00:01:38,846
+tool that we just authored a moment ago. And
+
+34
+00:01:38,888 --> 00:01:41,490
+if we scroll up just a little bit here, sure enough it worked.
+
+35
+00:01:41,731 --> 00:01:44,555
+So this actually is the contents of that file. This ability
+
+36
+00:01:44,596 --> 00:01:47,239
+to consume MCP servers adds an incredible amount
+
+37
+00:01:47,299 --> 00:01:49,823
+of flexibility to Claude Code, and really opens the door
+
+38
+00:01:49,864 --> 00:01:52,548
+to some really interesting development opportunities.
+
+39
+00:01:53,108 --> 00:01:55,993
+For example, you might decide to add in a series of MCP
+
+40
+00:01:56,054 --> 00:01:58,918
+servers related to your particular development flow.
+
+41
+00:01:58,897 --> 00:02:01,600
+For example, if you use Sentry for production monitoring, you
+
+42
+00:02:01,641 --> 00:02:04,424
+can add a Sentry MCP server to allow Claude
+
+43
+00:02:04,465 --> 00:02:07,248
+to fetch details about errors that are occurring in production.
+
+44
+00:02:07,789 --> 00:02:10,491
+If you make use of JIRA, you can add in an MCP server
+
+45
+00:02:10,551 --> 00:02:13,675
+that will allow Claude to view the contents of specific tickets. If
+
+46
+00:02:13,716 --> 00:02:16,278
+you're a Slack user, you can add Slack to message you whenever
+
+47
+00:02:16,338 --> 00:02:19,021
+Claude is completed working on some particular
+
+48
+00:02:19,062 --> 00:02:21,568
+problem. These are just a small fraction of
+
+49
+00:02:21,588 --> 00:02:24,276
+the possible enhancements that you can add into Claude
+
+50
+00:02:24,337 --> 00:02:26,846
+Code. So it would definitely worth your time to think
+
+51
+00:02:26,885 --> 00:02:29,715
+about how you can enhance your particular development workflow.

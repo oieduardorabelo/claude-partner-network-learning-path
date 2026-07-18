@@ -1,0 +1,627 @@
+1
+00:00:00,031 --> 00:00:02,694
+Now that our server is in a good place, we're going to shift gears
+
+2
+00:00:02,734 --> 00:00:05,299
+a little bit and start working on our MCP client.
+
+3
+00:00:05,860 --> 00:00:08,845
+The client can be found inside the MCP client.py
+
+4
+00:00:08,904 --> 00:00:11,489
+file inside the root project directory. Now before we do
+
+5
+00:00:11,509 --> 00:00:14,292
+anything inside this file, I just want to give you a very quick reminder
+
+6
+00:00:14,352 --> 00:00:16,937
+here. Remember what I told you about earlier. Usually
+
+7
+00:00:16,957 --> 00:00:19,762
+in a typical project, we are either making use of a client
+
+8
+00:00:20,001 --> 00:00:22,745
+or we are implementing a server. It's just in this
+
+9
+00:00:22,966 --> 00:00:25,751
+one particular project that we are working on that we are doing both. Again,
+
+10
+00:00:25,830 --> 00:00:28,541
+just so you can see both sides of the puzzle. Now
+
+11
+00:00:28,561 --> 00:00:31,065
+the MCP client itself inside of this
+
+12
+00:00:31,126 --> 00:00:33,652
+file is consisting of a single class. You'll notice
+
+13
+00:00:33,671 --> 00:00:36,296
+there is a lot of code inside of here and it doesn't look quite as
+
+14
+00:00:36,396 --> 00:00:39,082
+pretty as some of the code we just wrote out inside of the server.
+
+15
+00:00:39,563 --> 00:00:42,128
+So let me tell you exactly what's going on inside this file and exactly
+
+16
+00:00:42,228 --> 00:00:44,789
+why it is so large. Okay, so
+
+17
+00:00:44,829 --> 00:00:47,414
+inside this file, we are making the MCP
+
+18
+00:00:47,575 --> 00:00:50,320
+client class. This class is going to wrap
+
+19
+00:00:50,380 --> 00:00:53,206
+up something called a client session. The client session
+
+20
+00:00:53,225 --> 00:00:55,731
+is the actual connection to our MCP server.
+
+21
+00:00:56,192 --> 00:00:58,976
+This client session is a part of the Anthropic
+
+22
+00:00:59,116 --> 00:01:01,741
+Python SDK. So again, this session
+
+23
+00:01:01,862 --> 00:01:04,647
+is what gives us this connection to the outside server.
+
+24
+00:01:04,628 --> 00:01:07,731
+The session itself requires a little bit of resource cleanup.
+
+25
+00:01:07,751 --> 00:01:10,435
+In other words, whenever we close down our program or decide
+
+26
+00:01:10,454 --> 00:01:12,977
+that we don't need the server anymore, we have to go through a little bit of
+
+27
+00:01:12,998 --> 00:01:15,581
+a cleanup process. And I have already written out
+
+28
+00:01:15,620 --> 00:01:18,263
+a lot of that cleanup code inside of the MCP
+
+29
+00:01:18,403 --> 00:01:21,126
+client class. So that's really why this class
+
+30
+00:01:21,227 --> 00:01:23,730
+exists at all, just to make that cleanup a little
+
+31
+00:01:23,769 --> 00:01:26,474
+bit easier. You can see some of that cleanup code inside
+
+32
+00:01:26,493 --> 00:01:29,337
+of the Connect function and down a little bit lower.
+
+33
+00:01:30,817 --> 00:01:33,423
+at the cleanup, async enter, and async
+
+34
+00:01:33,543 --> 00:01:36,088
+exit functions as well. So it's very common
+
+35
+00:01:36,108 --> 00:01:38,754
+practice to not just make use of this
+
+36
+00:01:39,135 --> 00:01:41,700
+client session directly, instead very common to
+
+37
+00:01:41,739 --> 00:01:44,284
+wrap it up inside of a larger class that's going to manage some of
+
+38
+00:01:44,305 --> 00:01:46,810
+this different resource stuff for you. The
+
+39
+00:01:46,849 --> 00:01:49,614
+next thing I want to clarify is why this client exists
+
+40
+00:01:49,653 --> 00:01:52,456
+at all. So in other words, what is the client really doing
+
+41
+00:01:52,516 --> 00:01:55,021
+for us here? Well, remember, this full that
+
+42
+00:01:55,061 --> 00:01:57,664
+we looked at a little bit ago. So we had our code right
+
+43
+00:01:57,683 --> 00:02:00,606
+here. And at certain points in time, we needed, say,
+
+44
+00:02:00,808 --> 00:02:03,510
+a list of tools to send off to Claude. And then later
+
+45
+00:02:03,570 --> 00:02:06,114
+on after that, we also needed to run a tool
+
+46
+00:02:06,415 --> 00:02:08,981
+that was requested by Claude. In order
+
+47
+00:02:09,022 --> 00:02:11,686
+to reach out to our MCP server and get this list
+
+48
+00:02:11,746 --> 00:02:14,308
+of tools or to run a tool, that's where we
+
+49
+00:02:14,348 --> 00:02:17,073
+are making use of the MCP client. So we can imagine
+
+50
+00:02:17,112 --> 00:02:19,876
+that this client is exposing some functionality that
+
+51
+00:02:19,936 --> 00:02:23,060
+belongs to the server to the rest of our codebase. So
+
+52
+00:02:23,120 --> 00:02:25,864
+inside of our codebase, inside this project, specifically inside
+
+53
+00:02:25,883 --> 00:02:28,706
+of the core directory, there is a lot of code already
+
+54
+00:02:28,907 --> 00:02:31,570
+inside there that I put together that is making use of
+
+55
+00:02:31,610 --> 00:02:34,133
+this class. So there is some other code that's going to
+
+56
+00:02:34,193 --> 00:02:36,818
+call Some of the different functions you see inside of here,
+
+57
+00:02:36,937 --> 00:02:39,581
+like list tools, call tool, list prompts, get prompt, and so
+
+58
+00:02:39,662 --> 00:02:42,346
+on. For right now, in this video, we're going to focus on implementing
+
+59
+00:02:42,466 --> 00:02:44,969
+two functions, list tools and call tool.
+
+60
+00:02:45,251 --> 00:02:48,094
+So as you just saw in the diagram, we looked at a moment ago, these
+
+61
+00:02:48,115 --> 00:02:50,679
+two functions are going to be used in different parts of our code base
+
+62
+00:02:50,739 --> 00:02:53,323
+to get a list of tools to provide off to Claude, and
+
+63
+00:02:53,342 --> 00:02:55,986
+then eventually call a tool whenever Claude requests to call
+
+64
+00:02:56,046 --> 00:02:58,591
+a tool. Implementing these two functions is going to
+
+65
+00:02:58,610 --> 00:03:01,215
+be really simple and straightforward. So let me show you how we're going
+
+66
+00:03:01,235 --> 00:03:03,800
+to do it. We'll first begin with list tools. I'm
+
+67
+00:03:03,840 --> 00:03:06,525
+going to remove the two do inside there and replace
+
+68
+00:03:06,564 --> 00:03:11,854
+it with result is await self.session.
+
+69
+00:03:12,054 --> 00:03:14,960
+I'm going to call that like a function list underscore
+
+70
+00:03:15,300 --> 00:03:17,905
+tools. And then I will return result
+
+71
+00:03:17,944 --> 00:03:20,550
+dot tools. And that's it. So
+
+72
+00:03:20,569 --> 00:03:23,294
+this is going to get access to our session, which is our
+
+73
+00:03:23,474 --> 00:03:25,979
+actual connection to the MCP server. It's going to
+
+74
+00:03:26,020 --> 00:03:28,645
+call a built-in function to get a definition or a list
+
+75
+00:03:28,685 --> 00:03:31,471
+of all the different tools that are implemented by that server. I'm
+
+76
+00:03:31,510 --> 00:03:34,156
+going to get back result and then just return the tools and
+
+77
+00:03:34,195 --> 00:03:36,781
+that's it. Then we can implement call
+
+78
+00:03:36,820 --> 00:03:39,406
+tool right here in a very similar fashion. So this will
+
+79
+00:03:39,445 --> 00:03:42,418
+be return a
+
+80
+00:03:42,437 --> 00:03:45,082
+waitself.session, call
+
+81
+00:03:45,383 --> 00:03:49,129
+tool, tool name, and tool input.
+
+82
+00:03:49,150 --> 00:03:51,754
+Once again, getting access to the session, that is our
+
+83
+00:03:51,814 --> 00:03:54,419
+connection to the server, and I'm going to attempt to call
+
+84
+00:03:54,439 --> 00:03:57,064
+a very specific tool, the name the tool we passed in,
+
+85
+00:03:57,205 --> 00:03:59,949
+along with the input parameters or input arguments to it, that
+
+86
+00:03:59,969 --> 00:04:02,596
+were provided by Claude. Now, at this point
+
+87
+00:04:02,616 --> 00:04:05,139
+in time, I would like to test out these two functions really quickly.
+
+88
+00:04:05,760 --> 00:04:08,406
+To do so, we're going to go down to the bottom of this file, where
+
+89
+00:04:08,425 --> 00:04:11,510
+I put together a very small testing harness for us. So
+
+90
+00:04:11,591 --> 00:04:14,235
+down here, you'll notice I put together this
+
+91
+00:04:14,455 --> 00:04:17,281
+testing block, so we can run this MCP
+
+92
+00:04:17,701 --> 00:04:20,367
+client.py file directly. And if we do so, we're
+
+93
+00:04:20,387 --> 00:04:23,110
+going to form a connection to our MCP server, and
+
+94
+00:04:23,130 --> 00:04:25,675
+then we can just run some commands against it and just see what we get
+
+95
+00:04:25,716 --> 00:04:28,331
+back. Notice that in your version of the code,
+
+96
+00:04:28,411 --> 00:04:31,156
+there's a comment in there about changing the command and args
+
+97
+00:04:31,175 --> 00:04:33,899
+right here in case you are not making use of UV. So
+
+98
+00:04:33,920 --> 00:04:36,605
+if you're not using UV, make sure you take a look at that comment.
+
+99
+00:04:37,687 --> 00:04:40,250
+Inside of this with block, I'm going
+
+100
+00:04:40,271 --> 00:04:42,855
+to add in a little bit of testing code. So I'll
+
+101
+00:04:42,896 --> 00:04:45,639
+say result is await underscore
+
+102
+00:04:45,680 --> 00:04:48,305
+client list tools. And
+
+103
+00:04:48,324 --> 00:04:50,908
+then I'm going to just print out the result that we get
+
+104
+00:04:50,928 --> 00:04:53,685
+back. So this should start
+
+105
+00:04:53,745 --> 00:04:56,387
+up a copy of our MCP server, then
+
+106
+00:04:56,447 --> 00:04:59,310
+attempt to get a list of all the different tools that are defined
+
+107
+00:04:59,350 --> 00:05:02,595
+by it, and then just print out the result. To
+
+108
+00:05:02,634 --> 00:05:06,519
+test this out, I will flip back over to my terminal and
+
+109
+00:05:06,538 --> 00:05:09,502
+do a UV run, MCP underscore
+
+110
+00:05:09,603 --> 00:05:12,185
+client.py. And as usual, if you
+
+111
+00:05:12,245 --> 00:05:15,189
+are not making use of UV, you'll just do a Python
+
+112
+00:05:15,310 --> 00:05:17,896
+MCP client.py. Okay, so I'll run
+
+113
+00:05:17,937 --> 00:05:20,483
+that, and there is our list of tool
+
+114
+00:05:20,523 --> 00:05:24,372
+definitions. So I can see inside of here that I have the read.contents
+
+115
+00:05:24,392 --> 00:05:27,279
+tool, which we put together a little bit ago, and our edit
+
+116
+00:05:27,339 --> 00:05:30,487
+document tool as well. Each one has a description
+
+117
+00:05:30,507 --> 00:05:33,314
+and a input schema as well.
+
+118
+00:05:33,295 --> 00:05:36,081
+So this is our tool definition, which will eventually
+
+119
+00:05:36,120 --> 00:05:38,706
+be passed off to Claude. Now before we move on, there's
+
+120
+00:05:38,725 --> 00:05:41,632
+one other thing I want to test. Remember, we
+
+121
+00:05:41,673 --> 00:05:44,298
+just implemented the function that's going to allow us to
+
+122
+00:05:44,338 --> 00:05:47,043
+list out some tools and pass them off to Claude and
+
+123
+00:05:47,084 --> 00:05:49,749
+the function that's going to allow us to call a tool that is implemented
+
+124
+00:05:49,829 --> 00:05:52,535
+by the MCP server and then pass the result off to Claude
+
+125
+00:05:52,555 --> 00:05:55,199
+as well. I have already implemented the code that is
+
+126
+00:05:55,238 --> 00:05:57,742
+going to call list tools and call tool
+
+127
+00:05:57,942 --> 00:06:00,485
+for us somewhere else inside this project. So now
+
+128
+00:06:00,505 --> 00:06:03,009
+that we have added in this functionality, now that we have defined
+
+129
+00:06:03,028 --> 00:06:06,072
+these tools and the ability to call a particular tool, we
+
+130
+00:06:06,112 --> 00:06:08,836
+can now run our CLI again and attempt
+
+131
+00:06:08,877 --> 00:06:11,420
+to get Claude to make use of these tools. In other
+
+132
+00:06:11,439 --> 00:06:14,043
+words, we can ask Claude to inspect the contents
+
+133
+00:06:14,244 --> 00:06:17,026
+of some particular document and even edit a document.
+
+134
+00:06:17,427 --> 00:06:20,132
+So let me show you how we do that. Inside of my
+
+135
+00:06:20,391 --> 00:06:23,057
+MCP server, I just want to give you a reminder that there is
+
+136
+00:06:23,177 --> 00:06:26,524
+a document with a ID of report.pdf,
+
+137
+00:06:26,543 --> 00:06:29,569
+and it has some texture of something like a 20 meter
+
+138
+00:06:29,629 --> 00:06:32,254
+condenser tower. I'm going to go back over
+
+139
+00:06:32,274 --> 00:06:34,879
+to my terminal, and I'm going to run
+
+140
+00:06:34,920 --> 00:06:38,487
+my project with a UV run main.py.
+
+141
+00:06:39,478 --> 00:06:42,562
+And then I'm going to ask Claude what is the contents
+
+142
+00:06:42,961 --> 00:06:46,766
+of the report.pdf document.
+
+143
+00:06:46,786 --> 00:06:49,528
+And make sure you put in exactly report.pdf
+
+144
+00:06:49,548 --> 00:06:52,130
+here. And when we run this, we're
+
+145
+00:06:52,151 --> 00:06:54,774
+sending off along with the request our list of tools.
+
+146
+00:06:55,274 --> 00:06:57,956
+Claude is going to decide to use the read document tool.
+
+147
+00:06:58,396 --> 00:07:00,920
+And it's going to get the contents of the document. And then we will see
+
+148
+00:07:01,019 --> 00:07:03,581
+that yes, Claude was able to get the contents of
+
+149
+00:07:03,601 --> 00:07:06,144
+that document. We are told that the report is something
+
+150
+00:07:06,185 --> 00:07:08,687
+about a 20 meter condenser tower. All
+
+151
+00:07:08,728 --> 00:07:11,418
+right, so at this point, we have added in some functionality around
+
+152
+00:07:11,459 --> 00:07:14,069
+our client. Remember, the client is what allows
+
+153
+00:07:14,149 --> 00:07:16,822
+us to access some functionality that is implemented inside
+
+154
+00:07:16,862 --> 00:07:19,512
+of the MCP server. At this point in time, we have
+
+155
+00:07:19,793 --> 00:07:22,605
+been able to list out some tools that are created
+
+156
+00:07:22,665 --> 00:07:25,577
+by the server and execute a tool that has been implemented
+
+157
+00:07:25,637 --> 00:07:26,360
+by the server.

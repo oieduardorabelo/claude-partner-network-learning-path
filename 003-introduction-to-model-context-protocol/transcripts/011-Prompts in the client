@@ -1,0 +1,251 @@
+1
+00:00:00,031 --> 00:00:02,593
+Our last major task is to implement some functionality
+
+2
+00:00:02,673 --> 00:00:05,296
+inside of our MCP client and allow us to list
+
+3
+00:00:05,355 --> 00:00:07,918
+out all the different prompts that are defined inside the MCP
+
+4
+00:00:07,937 --> 00:00:10,461
+server and also get a particular prompt
+
+5
+00:00:10,820 --> 00:00:13,663
+with some variables interpolated into it. So
+
+6
+00:00:13,704 --> 00:00:16,245
+let's first implement list prompts. I will delete the
+
+7
+00:00:16,385 --> 00:00:19,009
+comment and replace it with a result is
+
+8
+00:00:19,088 --> 00:00:21,631
+await, self, session,
+
+9
+00:00:22,411 --> 00:00:24,974
+list prompts, and then I will return
+
+10
+00:00:25,254 --> 00:00:28,097
+result.prompts. And that's pretty much it.
+
+11
+00:00:28,481 --> 00:00:31,027
+And then get prompt. Now to be clear, when we get a
+
+12
+00:00:31,068 --> 00:00:34,094
+individual prompt, we're going to be given some number of arguments.
+
+13
+00:00:34,636 --> 00:00:37,201
+These arguments will eventually show up inside
+
+14
+00:00:37,341 --> 00:00:40,069
+of our prompt function. So for example, inside
+
+15
+00:00:40,109 --> 00:00:43,095
+a format document right here, we expect to receive a document
+
+16
+00:00:43,256 --> 00:00:45,831
+ID. Inside of this args
+
+17
+00:00:45,972 --> 00:00:48,594
+dictionary, the expectation is that there will be a document
+
+18
+00:00:48,695 --> 00:00:51,258
+ID key. And that will be passed in to
+
+19
+00:00:51,298 --> 00:00:53,881
+the appropriate function over here. And then we will get that
+
+20
+00:00:53,941 --> 00:00:56,543
+value interpolated into the prompt itself. So
+
+21
+00:00:56,603 --> 00:00:59,347
+inside the get prompt function, I will get a result
+
+22
+00:01:00,307 --> 00:01:03,692
+from self session, get
+
+23
+00:01:03,951 --> 00:01:06,515
+prompt. I'm going to pass in the prompt name. That's the
+
+24
+00:01:06,575 --> 00:01:09,097
+name of the prompt I want to retrieve. And then I'll pass in the
+
+25
+00:01:09,218 --> 00:01:12,123
+arguments. And then I will return result
+
+26
+00:01:12,164 --> 00:01:14,769
+.messages. So those are the messages coming
+
+27
+00:01:14,829 --> 00:01:17,396
+back. They form some kind of conversation that we want to
+
+28
+00:01:17,475 --> 00:01:20,102
+feed directly into Claude. And that's
+
+29
+00:01:20,183 --> 00:01:22,789
+it. That's all we have to do for our client. So
+
+30
+00:01:22,828 --> 00:01:26,156
+now we can test this out inside of the CLI itself. I'll
+
+31
+00:01:26,197 --> 00:01:30,733
+flip back over, run the project again. And
+
+32
+00:01:30,772 --> 00:01:33,337
+now if I put in a slash right here, I'll see that I
+
+33
+00:01:33,358 --> 00:01:36,143
+can access this format command. Now format
+
+34
+00:01:36,162 --> 00:01:39,087
+is really just the name of the prompt that we're going to invoke.
+
+35
+00:01:39,608 --> 00:01:42,253
+So if I select that and then hit space, I'll
+
+36
+00:01:42,272 --> 00:01:44,938
+then be asked to select one of the different documents and
+
+37
+00:01:44,977 --> 00:01:47,983
+you'll go with plan.md. I'll hit enter.
+
+38
+00:01:48,688 --> 00:01:51,191
+And then we're taking that entire prompt, really just
+
+39
+00:01:51,251 --> 00:01:53,834
+that single user message, and finiate directly
+
+40
+00:01:53,956 --> 00:01:56,938
+into Claude. So Claude now has the instructions
+
+41
+00:01:57,200 --> 00:02:00,082
+to go and reformat a document into Markdown syntax.
+
+42
+00:02:00,504 --> 00:02:03,046
+And it has also been given the ID of the document that
+
+43
+00:02:03,087 --> 00:02:05,650
+we want to reformat. So the first thing it needs to do here
+
+44
+00:02:05,670 --> 00:02:08,193
+is go and fetch that document's contents. And it
+
+45
+00:02:08,213 --> 00:02:10,917
+will do so by using the Git document tool.
+
+46
+00:02:10,896 --> 00:02:13,861
+And then finally, Claude is going to respond with the markdown
+
+47
+00:02:13,901 --> 00:02:16,787
+version of this document. So here is the document
+
+48
+00:02:16,847 --> 00:02:20,293
+with a bunch of markdown syntax inside of it. All
+
+49
+00:02:20,312 --> 00:02:22,856
+right, since it looked like this work just fine, let's do a
+
+50
+00:02:22,917 --> 00:02:25,442
+quick recap on prompts and make sure we understand what they are all
+
+51
+00:02:25,481 --> 00:02:28,106
+about. We begin by writing out an
+
+52
+00:02:28,247 --> 00:02:30,812
+evaluating a prompt that has some relevancy
+
+53
+00:02:30,894 --> 00:02:33,560
+to our MCP server's purpose. In our case,
+
+54
+00:02:33,620 --> 00:02:36,486
+we were making a document server. So having some functionality
+
+55
+00:02:36,608 --> 00:02:39,153
+or something about rewriting a document in a different
+
+56
+00:02:39,174 --> 00:02:41,680
+style, I think it kind of makes sense.
+
+57
+00:02:41,659 --> 00:02:44,266
+Once we have put our prompt together, we'll define a prompt
+
+58
+00:02:44,348 --> 00:02:46,995
+inside the MCP server. And then our client can
+
+59
+00:02:47,195 --> 00:02:50,144
+ask for that prompt at any point in time. When
+
+60
+00:02:50,183 --> 00:02:53,231
+we ask for the prompt, we will put in some number of arguments
+
+61
+00:02:53,573 --> 00:02:56,221
+that will be provided to this prompting function
+
+62
+00:02:56,241 --> 00:02:59,049
+right here as keyword arguments. And then our function
+
+63
+00:02:59,188 --> 00:03:01,997
+can make use of those keyword arguments inside the prompt itself.

@@ -1,0 +1,819 @@
+1
+00:00:00,031 --> 00:00:02,754
+In this video, we're going to move on to the next major feature inside
+
+2
+00:00:02,794 --> 00:00:05,418
+of MCP servers, which is Resources. To
+
+3
+00:00:05,458 --> 00:00:08,282
+help you understand resources, we're going to be implementing another
+
+4
+00:00:08,362 --> 00:00:10,904
+feature inside of our project. Here's what we're going to add in.
+
+5
+00:00:11,346 --> 00:00:13,948
+I want to allow a user to mention a document
+
+6
+00:00:14,128 --> 00:00:16,972
+by putting in an @ symbol and then the name of a document.
+
+7
+00:00:17,452 --> 00:00:19,977
+Whenever they do so, I want to automatically fetch the
+
+8
+00:00:20,016 --> 00:00:22,660
+contents of that document and insert it into the prompt
+
+9
+00:00:22,699 --> 00:00:25,445
+that we send off to Claude. So in total, there's kind
+
+10
+00:00:25,464 --> 00:00:28,030
+of two aspects to this feature. Whenever user types
+
+11
+00:00:28,070 --> 00:00:30,975
+out the @ symbol inside the message, we're going to automatically
+
+12
+00:00:31,015 --> 00:00:33,520
+show a list of all the different documents that they can mention
+
+13
+00:00:33,640 --> 00:00:36,265
+inside of a little autocomplete window. Then whenever
+
+14
+00:00:36,365 --> 00:00:38,890
+user submits a message with a mention inside of
+
+15
+00:00:38,951 --> 00:00:41,737
+it, we're going to automatically get the contents of that document
+
+16
+00:00:42,097 --> 00:00:45,023
+and insert it into the prompt that we send off to Claude.
+
+17
+00:00:45,003 --> 00:00:47,670
+So for example, if a user says something like what's
+
+18
+00:00:47,710 --> 00:00:50,415
+in the @report.pdf file, I
+
+19
+00:00:50,435 --> 00:00:52,982
+would want to assemble a prompt like this and send it to Claude.
+
+20
+00:00:53,323 --> 00:00:55,929
+So we're going to have the query inside there from the user, and
+
+21
+00:00:55,950 --> 00:00:58,557
+then we're also going to tell Claude that the user might have referenced
+
+22
+00:00:58,576 --> 00:01:01,965
+some document, and here is the contents of the document.
+
+23
+00:01:02,113 --> 00:01:04,816
+So the approach here or the idea here is that we will
+
+24
+00:01:04,856 --> 00:01:07,358
+not have to rely upon Claude to go and make
+
+25
+00:01:07,439 --> 00:01:10,022
+use of some tool to figure out what is inside of the
+
+26
+00:01:10,162 --> 00:01:12,704
+report.pdf file. Instead, the user can just
+
+27
+00:01:12,784 --> 00:01:15,787
+preemptively mention the file, and we're going to automatically
+
+28
+00:01:15,808 --> 00:01:18,311
+insert some context ahead of time. Now, one thing I
+
+29
+00:01:18,430 --> 00:01:20,953
+want to clarify here is that we're kind of talking about two
+
+30
+00:01:21,153 --> 00:01:23,837
+separate features. The first feature is that whenever
+
+31
+00:01:23,856 --> 00:01:26,498
+a user types in the @ symbol, we really need
+
+32
+00:01:26,558 --> 00:01:29,061
+the MCVP server to give us a list of all the
+
+33
+00:01:29,081 --> 00:01:31,885
+different documents that the user can possibly mention.
+
+34
+00:01:31,864 --> 00:01:34,388
+And then the second aspect here is that whenever a
+
+35
+00:01:34,728 --> 00:01:37,653
+user submits a message that contains a mention, then
+
+36
+00:01:37,694 --> 00:01:40,658
+we need the MCP server to give us the contents of a single
+
+37
+00:01:40,838 --> 00:01:43,442
+document. To get this information out of our MCP server,
+
+38
+00:01:43,563 --> 00:01:46,668
+we are going to be making use of resources. Resources
+
+39
+00:01:46,707 --> 00:01:49,412
+allow our MCP server to expose some amount
+
+40
+00:01:49,471 --> 00:01:52,516
+of data to the client. We usually define one resource
+
+41
+00:01:52,576 --> 00:01:55,200
+for each distinct read operation. So in
+
+42
+00:01:55,320 --> 00:01:57,924
+our example, we need to get a list of documents and
+
+43
+00:01:57,965 --> 00:02:00,468
+read the contents of a single document. So we would
+
+44
+00:02:00,528 --> 00:02:03,515
+probably end up making two separate resources. One
+
+45
+00:02:03,555 --> 00:02:06,200
+resource would be responsible for returning just a list
+
+46
+00:02:06,240 --> 00:02:08,885
+of document names so we can put them inside the autocomplete,
+
+47
+00:02:09,366 --> 00:02:12,212
+and then we would probably make another resource that will expose
+
+48
+00:02:12,252 --> 00:02:14,818
+the contents of a single document based upon its
+
+49
+00:02:14,877 --> 00:02:17,572
+document ID. When we define these
+
+50
+00:02:17,611 --> 00:02:20,437
+resources, they are going to be accessed through our MCP
+
+51
+00:02:20,497 --> 00:02:23,360
+client. So the entire flow that we're going to eventually
+
+52
+00:02:23,401 --> 00:02:25,944
+put together here, whenever user types in something
+
+53
+00:02:26,044 --> 00:02:28,990
+like what's in the @ and then presumably
+
+54
+00:02:29,030 --> 00:02:31,734
+they're going to put in something right there, as soon as they type in that @
+
+55
+00:02:31,753 --> 00:02:34,377
+character, we need to display a list of document
+
+56
+00:02:34,418 --> 00:02:37,021
+names to put in the auto complete. So our
+
+57
+00:02:37,081 --> 00:02:39,826
+code is going to reach out to the MCP client,
+
+58
+00:02:39,847 --> 00:02:42,651
+which in turn is going to send a read resource
+
+59
+00:02:42,691 --> 00:02:45,375
+request off to the MCP server.
+
+60
+00:02:45,354 --> 00:02:47,879
+Inside of that read resource request, we're going to include
+
+61
+00:02:47,939 --> 00:02:50,625
+something called the URI. That is essentially
+
+62
+00:02:50,645 --> 00:02:53,189
+the address of the resource we want to read.
+
+63
+00:02:53,991 --> 00:02:56,575
+This URI gets defined whenever we put together
+
+64
+00:02:56,676 --> 00:02:59,382
+our resource initially. So the URI is that
+
+65
+00:02:59,542 --> 00:03:02,046
+right there. When we send
+
+66
+00:03:02,106 --> 00:03:04,752
+off this read resource request, the MCP
+
+67
+00:03:04,771 --> 00:03:07,538
+server is going to look at the exact URI that we put inside
+
+68
+00:03:07,578 --> 00:03:10,223
+of here, and then run the function we
+
+69
+00:03:10,283 --> 00:03:13,008
+put together right there. Take the result and
+
+70
+00:03:13,090 --> 00:03:15,715
+send it back to us inside of a read resource
+
+71
+00:03:15,754 --> 00:03:18,306
+result message. We can then take the data
+
+72
+00:03:18,346 --> 00:03:21,111
+inside there and display it inside of our autocomplete or do
+
+73
+00:03:21,331 --> 00:03:24,057
+whatever else we need to do with it. There are two different
+
+74
+00:03:24,098 --> 00:03:27,063
+types of resources, direct and templated. You'll
+
+75
+00:03:27,084 --> 00:03:29,849
+also sometimes see direct resources referred to as static
+
+76
+00:03:29,909 --> 00:03:32,514
+resources. A direct resource just has
+
+77
+00:03:32,655 --> 00:03:35,381
+a static URI, so it's always going to be the exact
+
+78
+00:03:35,401 --> 00:03:38,768
+same thing, such as docs, colon slash slash documents.
+
+79
+00:03:38,747 --> 00:03:41,772
+A templated resource will have one or more parameters
+
+80
+00:03:41,872 --> 00:03:44,818
+inside of its URI. So for example, we might have documents
+
+81
+00:03:44,837 --> 00:03:47,763
+slash, and then kind of a wildcard right here. So
+
+82
+00:03:47,802 --> 00:03:50,687
+we can put in any document ID we want to. And
+
+83
+00:03:50,706 --> 00:03:53,391
+whenever we ask for this resource, that document
+
+84
+00:03:53,491 --> 00:03:55,996
+ID right there inside the URI will be automatically parsed
+
+85
+00:03:56,216 --> 00:03:58,881
+by the Python MCP SDK and
+
+86
+00:03:58,920 --> 00:04:02,105
+provided as a keyword argument to our function.
+
+87
+00:04:02,086 --> 00:04:04,788
+The keyword argument will have the exact same name of whatever
+
+88
+00:04:04,830 --> 00:04:07,473
+string you put in right there. So Doc ID right there will
+
+89
+00:04:07,513 --> 00:04:10,135
+be Doc ID right there. As
+
+90
+00:04:10,175 --> 00:04:13,159
+you can probably guess, we'll make use of templated resources anytime
+
+91
+00:04:13,340 --> 00:04:16,184
+that we want to allow a little bit more selection or variety
+
+92
+00:04:16,343 --> 00:04:18,987
+or customization in what someone is asking for
+
+93
+00:04:19,048 --> 00:04:21,670
+out of our MCP server. Implementing resources
+
+94
+00:04:21,711 --> 00:04:24,314
+is pretty straightforward. So let's go back over to our editor and we're
+
+95
+00:04:24,334 --> 00:04:27,098
+going to add in some resources to our server right away.
+
+96
+00:04:27,466 --> 00:04:30,232
+All right, so back over inside my editor, I will find the MCP
+
+97
+00:04:30,392 --> 00:04:32,918
+server.py file. I'm then going to scroll down a
+
+98
+00:04:32,937 --> 00:04:35,985
+little bit and I'm going to find some comments for writing
+
+99
+00:04:36,004 --> 00:04:39,031
+a resource to return all document IDs and
+
+100
+00:04:39,072 --> 00:04:41,637
+writing a resource to return the contents of a particular
+
+101
+00:04:41,697 --> 00:04:44,262
+document. Now for this first one right here, I
+
+102
+00:04:44,322 --> 00:04:46,846
+put in the comment Document IDs. Remember
+
+103
+00:04:47,007 --> 00:04:49,610
+for us, our document IDs are essentially the
+
+104
+00:04:49,690 --> 00:04:52,514
+name of the document. So for us, we're really just returning
+
+105
+00:04:52,536 --> 00:04:55,100
+these IDs. They're going to serve the purpose of the name. That
+
+106
+00:04:55,139 --> 00:04:57,704
+means we can put them directly into that autocomplete element.
+
+107
+00:04:59,286 --> 00:05:01,850
+All right, so to make our resource, I'm going to delete
+
+108
+00:05:01,889 --> 00:05:05,305
+that to do. and then I'll add in an MCP.resource.
+
+109
+00:05:06,127 --> 00:05:08,930
+The first argument is going to be the URI for accessing
+
+110
+00:05:08,949 --> 00:05:11,793
+this thing. Again, it's kind of equivalent to a route handler.
+
+111
+00:05:12,413 --> 00:05:14,956
+So I will use docs, colon slash
+
+112
+00:05:14,976 --> 00:05:17,600
+slash documents, and I'm also going
+
+113
+00:05:17,620 --> 00:05:20,882
+to add in a MIME type of application
+
+114
+00:05:21,023 --> 00:05:23,545
+slash JSON. A resource can
+
+115
+00:05:23,586 --> 00:05:26,689
+return any type of data, so it can be plain text,
+
+116
+00:05:26,709 --> 00:05:29,872
+it can be JSON, it can be binary data, anything.
+
+117
+00:05:30,189 --> 00:05:32,853
+It's up to us to kind of give our client a hint
+
+118
+00:05:33,074 --> 00:05:35,677
+as to what kind of data we are returning. To do
+
+119
+00:05:35,737 --> 00:05:38,261
+so, we're going to define this MIME type. A MIME
+
+120
+00:05:38,281 --> 00:05:40,944
+type of application slash JSON is a hint to
+
+121
+00:05:40,964 --> 00:05:43,608
+our client, who's eventually going to ask for this resource
+
+122
+00:05:43,649 --> 00:05:46,211
+right here, that we're going to be sending back a string that
+
+123
+00:05:46,271 --> 00:05:49,115
+contains some structured JSON data. And
+
+124
+00:05:49,156 --> 00:05:51,759
+so it would be up to our client to de-serialize
+
+125
+00:05:51,800 --> 00:05:54,444
+that data, or essentially turn it into some usable data
+
+126
+00:05:54,463 --> 00:05:57,223
+structure. Underneath that decorator, I'll
+
+127
+00:05:57,242 --> 00:06:00,305
+write out my function of list_docs, and
+
+128
+00:06:00,326 --> 00:06:04,269
+I'm going to return a list of strings. And
+
+129
+00:06:04,288 --> 00:06:06,932
+then inside there, I will return list_docs
+
+130
+00:06:07,192 --> 00:06:09,714
+keys. So just take all the keys out of that dictionary and
+
+131
+00:06:09,754 --> 00:06:12,937
+turn it into a list, and I'm going to return it. Now,
+
+132
+00:06:12,958 --> 00:06:15,620
+you'll notice that we are not returning distinct JSON here.
+
+133
+00:06:15,660 --> 00:06:18,843
+In other words, we're not actually returning a string. The MCP
+
+134
+00:06:18,983 --> 00:06:21,586
+Python SDK is going to automatically take whatever we return
+
+135
+00:06:21,766 --> 00:06:25,079
+and turn it into a string for us. All
+
+136
+00:06:25,100 --> 00:06:27,605
+right, let's take care of our second resource. So I'm going
+
+137
+00:06:27,625 --> 00:06:30,694
+to delete that comment and then replace it with MCP
+
+138
+00:06:30,913 --> 00:06:33,459
+resource, docs, colon
+
+139
+00:06:33,480 --> 00:06:36,065
+slash slash documents. And then this time I
+
+140
+00:06:36,107 --> 00:06:38,752
+want a templated resource because I'm putting in this
+
+141
+00:06:38,973 --> 00:06:41,891
+wildcard right here. And
+
+142
+00:06:41,911 --> 00:06:44,696
+then my mind type this time around, just for a little
+
+143
+00:06:44,716 --> 00:06:47,420
+bit of variety, I'm going to be returning plain
+
+144
+00:06:47,500 --> 00:06:50,245
+text because it's going to be just the contents of the document.
+
+145
+00:06:50,404 --> 00:06:53,230
+And I'm not going to wrap it up in any kind of structure. Now,
+
+146
+00:06:53,250 --> 00:06:55,853
+just so you know, in a real application, something
+
+147
+00:06:55,954 --> 00:06:58,718
+like read a document, I would probably return
+
+148
+00:06:58,738 --> 00:07:01,303
+an entire document record. So some kind of
+
+149
+00:07:01,343 --> 00:07:03,848
+dictionary that contains maybe the ID, the
+
+150
+00:07:03,908 --> 00:07:06,471
+content, the author name, the author ID, and
+
+151
+00:07:06,492 --> 00:07:09,096
+stuff like that. But just for the sake of an example, I'm
+
+152
+00:07:09,115 --> 00:07:11,720
+going to return just the text at the document to show
+
+153
+00:07:11,740 --> 00:07:14,463
+you how we would normally return plain text. So
+
+154
+00:07:14,504 --> 00:07:17,288
+in this scenario, my MIME type would be text slash plane,
+
+155
+00:07:19,011 --> 00:07:22,435
+and then I will make fetch_doc.
+
+156
+00:07:22,456 --> 00:07:25,139
+I'm going to take doc_id, which is going to be a string,
+
+157
+00:07:25,500 --> 00:07:28,470
+and I'm going to return a string. Once again, whatever
+
+158
+00:07:28,509 --> 00:07:31,014
+word you put right there, it's going to show up as a
+
+159
+00:07:31,154 --> 00:07:33,678
+keyword argument inside of your function. If we
+
+160
+00:07:33,779 --> 00:07:36,725
+added in some additional parameters inside of here, such
+
+161
+00:07:36,865 --> 00:07:39,449
+as maybe doc_type or something like that, it would
+
+162
+00:07:39,470 --> 00:07:42,175
+just show up as an additional keyword argument
+
+163
+00:07:42,254 --> 00:07:45,538
+like so. Then
+
+164
+00:07:45,619 --> 00:07:48,283
+inside of here, I'm going to first make sure that the ID that this person
+
+165
+00:07:48,322 --> 00:07:50,987
+is asking for actually exists. So if doc_id
+
+166
+00:07:51,107 --> 00:07:53,610
+not in docs, I'm
+
+167
+00:07:53,630 --> 00:07:56,454
+going to raise a ValueError with
+
+168
+00:07:56,535 --> 00:08:00,500
+an f-string that says doc with ID not
+
+169
+00:08:00,560 --> 00:08:03,665
+found. And then if we get past that check, I'll
+
+170
+00:08:03,725 --> 00:08:07,007
+return docs[doc_id]. And
+
+171
+00:08:07,048 --> 00:08:09,935
+that's it. Now let's try testing this stuff out inside
+
+172
+00:08:09,975 --> 00:08:12,523
+of our MCP Inspector once again. So
+
+173
+00:08:12,543 --> 00:08:15,451
+remember at our terminal, we can run the command UVicorn,
+
+174
+00:08:15,612 --> 00:08:18,740
+mcptest.mcpserver:app --reload.
+
+175
+00:08:20,408 --> 00:08:22,951
+That's going to start up a web server at port 6277
+
+176
+00:08:23,071 --> 00:08:25,654
+or C_VI 6274 as the default. So I'm going
+
+177
+00:08:26,095 --> 00:08:29,079
+to make sure I open that up inside my browser. Here
+
+178
+00:08:29,119 --> 00:08:31,942
+we go. I'll click connect. I'll then find
+
+179
+00:08:31,983 --> 00:08:34,667
+resources. And then I should be able to list
+
+180
+00:08:34,807 --> 00:08:37,309
+out all the different resources that are available. Now when
+
+181
+00:08:37,330 --> 00:08:40,014
+I list out resources, this is going to be specifically static
+
+182
+00:08:40,134 --> 00:08:42,937
+or direct resources. So I'll see only docs
+
+183
+00:08:42,976 --> 00:08:45,804
+slash documents. And then I can separately list
+
+184
+00:08:45,865 --> 00:08:48,495
+out all my different resource templates. And so I'll see
+
+185
+00:08:48,517 --> 00:08:51,528
+that I have one resource template of fetch_doc.
+
+186
+00:08:52,183 --> 00:08:54,868
+I can first try to run the slash documents
+
+187
+00:08:54,908 --> 00:08:57,491
+right here. We'll see what we get back. So this
+
+188
+00:08:57,552 --> 00:09:00,196
+is the actual message, the exact structure that
+
+189
+00:09:00,235 --> 00:09:02,919
+gets returned from our MCP server. You'll
+
+190
+00:09:02,940 --> 00:09:05,643
+notice that it has a text property and inside there is all
+
+191
+00:09:05,663 --> 00:09:08,447
+the data that we are returning serialized as JSON
+
+192
+00:09:08,488 --> 00:09:11,351
+string. So again, it would be up to us inside
+
+193
+00:09:11,371 --> 00:09:14,035
+of our CLI application to take this text right here and
+
+194
+00:09:14,135 --> 00:09:16,899
+deserialize it from this JSON string into
+
+195
+00:09:16,919 --> 00:09:19,708
+a usable list of strings. Then
+
+196
+00:09:19,729 --> 00:09:22,351
+we can also test out fetch_doc. So I'll click on that.
+
+197
+00:09:22,893 --> 00:09:25,515
+I have to enter a doc ID. So I'm going to put in.
+
+198
+00:09:25,535 --> 00:09:28,558
+I want to read the report.pdf
+
+199
+00:09:28,619 --> 00:09:31,162
+file. And I'll read
+
+200
+00:09:31,182 --> 00:09:33,804
+the resource. And now I should see the contents
+
+201
+00:09:34,346 --> 00:09:36,889
+of that particular document. And you'll notice this
+
+202
+00:09:36,948 --> 00:09:39,591
+is around. Once again, I get a text slash plain. So that's
+
+203
+00:09:39,631 --> 00:09:42,294
+a hint to me that this is plain text. And I should
+
+204
+00:09:42,355 --> 00:09:44,937
+not attempt to deserialize it from JSON in
+
+205
+00:09:45,057 --> 00:09:45,798
+any way.

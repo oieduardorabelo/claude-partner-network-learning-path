@@ -1,0 +1,643 @@
+1
+00:00:00,031 --> 00:00:02,595
+Last major focus we're going to have inside of our MCP server
+
+2
+00:00:02,615 --> 00:00:05,198
+is going to be on prompts. Once again, just like
+
+3
+00:00:05,240 --> 00:00:08,103
+we did with resources, we're going to implement a small feature
+
+4
+00:00:08,144 --> 00:00:10,667
+inside of our project. And we're going to use this feature to
+
+5
+00:00:10,829 --> 00:00:13,393
+understand what prompts are all about, just like we did with
+
+6
+00:00:13,432 --> 00:00:16,056
+resources a moment ago. Let me tell you about the feature we're
+
+7
+00:00:16,077 --> 00:00:18,742
+going to add into our program. We're going to add in
+
+8
+00:00:18,782 --> 00:00:21,506
+support for slash commands. So
+
+9
+00:00:21,606 --> 00:00:24,710
+for example, I want to have a format command. I've
+
+10
+00:00:24,731 --> 00:00:27,295
+got some screenshots over here of how it's going to work.
+
+11
+00:00:27,315 --> 00:00:30,000
+Whenever user types into slash, we're going to list out some number
+
+12
+00:00:30,059 --> 00:00:33,024
+of commands that are supported by our application. For
+
+13
+00:00:33,045 --> 00:00:35,909
+right now, we're going to have just one command called format. So
+
+14
+00:00:35,929 --> 00:00:38,914
+if I type in just slash, I should see a little autocomplete
+
+15
+00:00:38,954 --> 00:00:42,340
+right here, and the only autocomplete option should be format.
+
+16
+00:00:42,320 --> 00:00:45,012
+If I then select Format, I should be prompted
+
+17
+00:00:45,052 --> 00:00:47,706
+to add in some document ID after it. So
+
+18
+00:00:47,887 --> 00:00:50,418
+one of our different document names like report.pdf or
+
+19
+00:00:50,579 --> 00:00:53,325
+whatever else. Then whenever user runs
+
+20
+00:00:53,386 --> 00:00:56,170
+this command, the goal is to get Claude to
+
+21
+00:00:56,210 --> 00:00:59,115
+reformat this document using Markdown
+
+22
+00:00:59,155 --> 00:01:01,901
+syntax. So in other words, take the plain
+
+23
+00:01:01,960 --> 00:01:04,525
+string that we have without any special formatting tied to
+
+24
+00:01:04,585 --> 00:01:07,490
+it inside of each of our documents right now. Remember,
+
+25
+00:01:08,031 --> 00:01:10,716
+inside of our MCP server, our current document
+
+26
+00:01:10,757 --> 00:01:13,302
+content is just plain text. We want to feed
+
+27
+00:01:13,341 --> 00:01:16,087
+this into Claude and somehow get Claude to rewrite
+
+28
+00:01:16,147 --> 00:01:18,692
+it using Markdown syntax. So I would
+
+29
+00:01:18,733 --> 00:01:21,317
+expect to see some output like this, something that says, I'll
+
+30
+00:01:21,337 --> 00:01:23,903
+help you reform out the document. Claude is then going
+
+31
+00:01:23,942 --> 00:01:26,507
+to use a tool to read the contents of the document. And
+
+32
+00:01:26,528 --> 00:01:29,334
+then finally, inside the final response, I want to see the content
+
+33
+00:01:29,453 --> 00:01:32,159
+of that document rewritten down here in Markdown
+
+34
+00:01:32,198 --> 00:01:34,942
+syntax. Now, there's something interesting about
+
+35
+00:01:34,962 --> 00:01:37,606
+this feature that I want to point out. The real core
+
+36
+00:01:37,667 --> 00:01:40,531
+of this feature, like the real goal here, is to allow
+
+37
+00:01:40,570 --> 00:01:43,213
+a user to reformat a document into
+
+38
+00:01:43,254 --> 00:01:45,858
+Markdown syntax. And that is an operation
+
+39
+00:01:45,897 --> 00:01:48,421
+that actually doesn't require you and I,
+
+40
+00:01:48,460 --> 00:01:51,064
+the developers, to write out any code to implement.
+
+41
+00:01:51,805 --> 00:01:54,308
+What do I mean by that? Well, a user can already
+
+42
+00:01:54,509 --> 00:01:57,733
+launch our CLI and say something like reformat
+
+43
+00:01:57,772 --> 00:02:00,879
+the report.pedia file in
+
+44
+00:02:00,918 --> 00:02:04,064
+markdown syntax.
+
+45
+00:02:04,084 --> 00:02:06,730
+I use your can already do this. No issue whatsoever.
+
+46
+00:02:06,829 --> 00:02:09,514
+And Claude is going to do a reasonable job of it. It's going to take
+
+47
+00:02:09,556 --> 00:02:12,281
+the contents of our document and reformat it into markdown.
+
+48
+00:02:12,861 --> 00:02:15,507
+And as you can see right here, it worked entirely perfectly.
+
+49
+00:02:15,486 --> 00:02:18,069
+So what are we really doing with this feature? Well,
+
+50
+00:02:18,191 --> 00:02:20,693
+the thought process here is that if we just left this up to
+
+51
+00:02:20,813 --> 00:02:23,358
+users and allowed them to manually type in something
+
+52
+00:02:23,397 --> 00:02:26,622
+like convert this to Markdown, they might get a OK
+
+53
+00:02:26,681 --> 00:02:29,205
+result, but they might get much better result
+
+54
+00:02:29,485 --> 00:02:32,028
+if they had a really strong prompt that is custom
+
+55
+00:02:32,068 --> 00:02:34,592
+tailored for this particular scenario of converting a
+
+56
+00:02:34,652 --> 00:02:37,336
+document into Markdown. So a user might be a lot
+
+57
+00:02:37,396 --> 00:02:39,942
+happier if you and I sat down as
+
+58
+00:02:39,981 --> 00:02:42,786
+the MCP server authors and wrote out and
+
+59
+00:02:42,847 --> 00:02:45,711
+tested and evaluated and went through the entire process of evaluating
+
+60
+00:02:45,731 --> 00:02:48,496
+our really thorough, fantastic prompts
+
+61
+00:02:48,556 --> 00:02:51,461
+like the one you see on the right hand side. So again, just
+
+62
+00:02:51,521 --> 00:02:54,387
+repeat, yes, a user can execute this entire workflow
+
+63
+00:02:54,486 --> 00:02:57,050
+on their own, but if they use this fancy prompt over
+
+64
+00:02:57,110 --> 00:03:00,377
+here, instead, well, I think they would be all the better.
+
+65
+00:03:00,356 --> 00:03:03,062
+This is the real goal of the prompts feature inside
+
+66
+00:03:03,082 --> 00:03:05,608
+of MCP servers. The thought here is that
+
+67
+00:03:05,747 --> 00:03:08,593
+ahead of time, we can define a set of prompts inside
+
+68
+00:03:08,614 --> 00:03:11,199
+of our server that are custom tailored to whatever
+
+69
+00:03:11,300 --> 00:03:14,044
+our server is really specialized to do. In our case,
+
+70
+00:03:14,286 --> 00:03:16,991
+our server is all about managing documents, reading
+
+71
+00:03:17,032 --> 00:03:19,637
+documents, editing documents, and so on. So we might
+
+72
+00:03:19,676 --> 00:03:22,562
+decide to add in a set of prompts that are very
+
+73
+00:03:22,622 --> 00:03:25,187
+high quality that have been evaluated and tested, and
+
+74
+00:03:25,227 --> 00:03:28,132
+we know that they work in a wide variety of different scenarios. We
+
+75
+00:03:28,171 --> 00:03:30,877
+can then expose these prompts for use inside
+
+76
+00:03:30,917 --> 00:03:33,520
+of any client application, like the CLI app that
+
+77
+00:03:33,540 --> 00:03:36,045
+we are putting together right now. Now, one thing I want to point
+
+78
+00:03:36,086 --> 00:03:38,670
+out here is that we could develop this prompt and just
+
+79
+00:03:38,691 --> 00:03:41,215
+put it directly into our CLI code base.
+
+80
+00:03:41,465 --> 00:03:44,112
+That is totally possible. We could do that, obviously. But
+
+81
+00:03:44,313 --> 00:03:47,081
+again, the thought here is that your MCP server that
+
+82
+00:03:47,141 --> 00:03:49,770
+might specialize in some particular task might
+
+83
+00:03:49,810 --> 00:03:52,578
+expose some number of prompts that people can just come and use
+
+84
+00:03:52,838 --> 00:03:55,828
+without having to worry about developing them ahead of time.
+
+85
+00:03:55,960 --> 00:03:58,503
+To define a prompt inside of our MCP server, we're going to write
+
+86
+00:03:58,544 --> 00:04:01,068
+out a little bit of syntax very similar to the tools and
+
+87
+00:04:01,108 --> 00:04:03,812
+resources we have already put together. We will use the prompt
+
+88
+00:04:03,853 --> 00:04:06,637
+decorator. We'll add a name to the prompt and
+
+89
+00:04:06,657 --> 00:04:09,322
+optionally a description as well. Then whenever
+
+90
+00:04:09,361 --> 00:04:12,086
+the client asks for this prompt, we'll send back a list
+
+91
+00:04:12,126 --> 00:04:14,850
+of messages. These are actual user and assistant
+
+92
+00:04:14,890 --> 00:04:17,535
+messages. So we can take the messages and send them off
+
+93
+00:04:17,555 --> 00:04:20,086
+to Claude directly. All right, so let's go over
+
+94
+00:04:20,125 --> 00:04:22,968
+to our server, and we're gonna try putting together our own prompt.
+
+95
+00:04:23,389 --> 00:04:25,891
+And just like you see right here, it's gonna be all about taking the contents of
+
+96
+00:04:25,930 --> 00:04:28,733
+a document and somehow rewriting it in Markdown
+
+97
+00:04:28,774 --> 00:04:31,576
+format. Okay, so back inside my editor,
+
+98
+00:04:32,956 --> 00:04:35,480
+I'm gonna find my MCP server file. I'm gonna go down
+
+99
+00:04:35,519 --> 00:04:38,882
+a little bit to the comment about rewriting
+
+100
+00:04:38,903 --> 00:04:41,464
+a document in Markdown format. I'll
+
+101
+00:04:41,504 --> 00:04:44,088
+delete that to do, and then I'll add
+
+102
+00:04:44,127 --> 00:04:46,649
+in a MCP prompt, the
+
+103
+00:04:46,689 --> 00:04:49,533
+name of format, and
+
+104
+00:04:49,572 --> 00:04:53,317
+a description of rewrites the contents
+
+105
+00:04:53,396 --> 00:04:56,139
+of the document in Markdown format.
+
+106
+00:04:59,624 --> 00:05:02,305
+I'll then add in an actual implementation. So
+
+107
+00:05:02,386 --> 00:05:04,928
+format document, I can receive
+
+108
+00:05:04,968 --> 00:05:07,471
+as an argument a doc ID, and
+
+109
+00:05:07,512 --> 00:05:10,053
+then optionally we can add in a field description here
+
+110
+00:05:10,173 --> 00:05:12,677
+as well, just like we did with our tool earlier
+
+111
+00:05:12,836 --> 00:05:15,759
+on. So I can optionally add in a field with
+
+112
+00:05:15,819 --> 00:05:18,583
+a description of ID of the
+
+113
+00:05:19,846 --> 00:05:22,348
+document to format. And I'm also going to add
+
+114
+00:05:22,389 --> 00:05:24,892
+in a type annotation of string. Just make sure that's
+
+115
+00:05:24,932 --> 00:05:27,735
+really clear as well. From this function, we are going to return
+
+116
+00:05:27,956 --> 00:05:30,819
+a list of messages.
+
+117
+00:05:32,543 --> 00:05:35,206
+I'm going to make sure I add in an import for this base thing at
+
+118
+00:05:35,225 --> 00:05:37,829
+the top right away. So right underneath
+
+119
+00:05:37,850 --> 00:05:40,954
+the existing MCP server import, I will add in from
+
+120
+00:05:41,093 --> 00:05:43,617
+MCP server fast MCP
+
+121
+00:05:44,038 --> 00:05:47,555
+prompts import base. Then
+
+122
+00:05:47,615 --> 00:05:50,439
+back down at the bottom. Inside of here, we're going to define
+
+123
+00:05:50,459 --> 00:05:53,302
+our very well-tested, very well-evaluated prompt.
+
+124
+00:05:53,963 --> 00:05:56,726
+I wrote a prompt out ahead of time. I'm going to paste it in like
+
+125
+00:05:56,766 --> 00:05:59,529
+so. So this prompt is just asking Claude
+
+126
+00:05:59,550 --> 00:06:02,553
+to take in a document ID. Implicitly,
+
+127
+00:06:02,593 --> 00:06:05,177
+we are kind of asking Claude to fetch the document ID's
+
+128
+00:06:05,216 --> 00:06:07,920
+contents using the redocument tool. And then after
+
+129
+00:06:07,961 --> 00:06:10,603
+getting that document, just go ahead and rewrite it with Markdown syntax.
+
+130
+00:06:11,024 --> 00:06:13,627
+And finally, after rewriting it, edit the document
+
+131
+00:06:13,708 --> 00:06:16,430
+as well to save those updates inside of our server.
+
+132
+00:06:18,706 --> 00:06:21,312
+Now, after defining this prompt, we're then going
+
+133
+00:06:21,353 --> 00:06:23,980
+to return a list of messages. So down here,
+
+134
+00:06:24,040 --> 00:06:26,887
+I'm going to return a list with base
+
+135
+00:06:27,309 --> 00:06:29,956
+user message, and I'm going to feed in
+
+136
+00:06:29,995 --> 00:06:32,783
+our prompt that we just wrote out to it, like so.
+
+137
+00:06:33,555 --> 00:06:36,079
+Now I'm going to save this file, and then let's go start
+
+138
+00:06:36,139 --> 00:06:38,863
+up our MCP development inspector and test
+
+139
+00:06:38,983 --> 00:06:41,487
+out this prompt from that interface. So at my
+
+140
+00:06:41,528 --> 00:06:44,132
+terminal, I'll run that same command again, and then
+
+141
+00:06:44,172 --> 00:06:47,076
+navigate to that address inside of my browser. I'll
+
+142
+00:06:47,115 --> 00:06:49,639
+make sure I connect to my server. I'll then find the
+
+143
+00:06:49,680 --> 00:06:52,204
+prompts section. I'm going to list out all the different
+
+144
+00:06:52,244 --> 00:06:55,127
+prompts that are available to us. And at this point in time, we have one
+
+145
+00:06:55,187 --> 00:06:57,752
+prompt, just format. So I click on
+
+146
+00:06:57,791 --> 00:07:00,896
+format, and then I have to enter in a document ID right here.
+
+147
+00:07:01,298 --> 00:07:03,961
+Let's, this time around, maybe we'll put in a
+
+148
+00:07:04,002 --> 00:07:08,168
+document ID of how about outlook.pdf.
+
+149
+00:07:09,370 --> 00:07:12,233
+So I'll put that in. And then get
+
+150
+00:07:12,274 --> 00:07:15,038
+prompt. And then here is our list of messages.
+
+151
+00:07:15,418 --> 00:07:17,922
+So these have been put together ahead of time. I've got one
+
+152
+00:07:17,983 --> 00:07:20,706
+message part here. So a text part with
+
+153
+00:07:20,947 --> 00:07:23,651
+our full prompt right there. We could see that
+
+154
+00:07:23,690 --> 00:07:26,634
+the document ID was interpolated into it. Now
+
+155
+00:07:26,654 --> 00:07:29,178
+that we have these messages, we can send them off to Claude.
+
+156
+00:07:29,327 --> 00:07:31,872
+And hopefully we're going to get back some appropriate kind of response.
+
+157
+00:07:32,754 --> 00:07:35,380
+So once again, the entire idea here behind these
+
+158
+00:07:35,500 --> 00:07:38,307
+prompts, we might implement inside of our MCP server, is
+
+159
+00:07:38,346 --> 00:07:40,851
+that the prompts we are defining are going to be well-tested,
+
+160
+00:07:41,052 --> 00:07:43,697
+well-evaluated, really specialized to one particular
+
+161
+00:07:43,737 --> 00:07:44,620
+use case.

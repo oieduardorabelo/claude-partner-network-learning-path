@@ -1,0 +1,359 @@
+1
+00:00:00,031 --> 00:00:02,552
+We are all done with our project, but before we move on, I want
+
+2
+00:00:02,573 --> 00:00:05,176
+to do a quick recap on the three server primitives
+
+3
+00:00:05,195 --> 00:00:07,937
+that we learned about. So tools, resources, and prompts.
+
+4
+00:00:08,579 --> 00:00:11,141
+In particular, I want to highlight something interesting about each of
+
+5
+00:00:11,180 --> 00:00:14,064
+these. Namely, what part of an app is really
+
+6
+00:00:14,144 --> 00:00:16,666
+responsible for running each? In other words, in
+
+7
+00:00:16,725 --> 00:00:19,228
+a typical application, who is really running each
+
+8
+00:00:19,248 --> 00:00:21,850
+of these things and who benefits from them? Well,
+
+9
+00:00:22,010 --> 00:00:25,114
+we would say that tools are model controlled. This
+
+10
+00:00:25,173 --> 00:00:27,716
+means that Claude alone is really responsible for
+
+11
+00:00:27,775 --> 00:00:30,939
+deciding when to run a given tool. Resources
+
+12
+00:00:30,978 --> 00:00:33,642
+are app controlled. In other words, some code
+
+13
+00:00:33,661 --> 00:00:36,326
+running inside of your app is going to decide that
+
+14
+00:00:36,345 --> 00:00:38,969
+it needs some data provided by a resource. It will
+
+15
+00:00:38,988 --> 00:00:41,893
+be your app's code that decides to execute a resource
+
+16
+00:00:42,472 --> 00:00:45,076
+and use the return data in some way, maybe by
+
+17
+00:00:45,197 --> 00:00:48,140
+using that data in the UI or something like that. In
+
+18
+00:00:48,179 --> 00:00:50,682
+our case, we fetch a resource and then use
+
+19
+00:00:50,723 --> 00:00:53,406
+that data inside the UI to provide a list of autocomplete
+
+20
+00:00:53,506 --> 00:00:56,216
+options. We also fetch a resource
+
+21
+00:00:56,517 --> 00:01:00,091
+to augment a prompt. Both of those things were really application-related
+
+22
+00:01:00,213 --> 00:01:02,722
+code that was authored by you and I to
+
+23
+00:01:02,783 --> 00:01:05,540
+put together. And finally, prompts
+
+24
+00:01:05,659 --> 00:01:08,403
+are really user-controlled. So a user decides
+
+25
+00:01:08,424 --> 00:01:11,168
+when a prompt is going to run. A user might
+
+26
+00:01:11,289 --> 00:01:13,914
+start the invocation of a prompt by clicking on some UI
+
+27
+00:01:13,993 --> 00:01:16,518
+element, like a button or a menu option,
+
+28
+00:01:16,959 --> 00:01:19,483
+or they might make use of a slash command, which is what we
+
+29
+00:01:19,522 --> 00:01:22,027
+did. The reason I highlight what is controlling each
+
+30
+00:01:22,046 --> 00:01:24,932
+of these is to give you some idea of their purpose.
+
+31
+00:01:24,912 --> 00:01:27,474
+So if you ever need to add capabilities to
+
+32
+00:01:27,575 --> 00:01:30,299
+Claude, you're probably going to want to look at
+
+33
+00:01:30,478 --> 00:01:33,343
+implementing some tools inside of your MCP server or
+
+34
+00:01:33,483 --> 00:01:36,025
+consuming some server's tools through
+
+35
+00:01:36,066 --> 00:01:38,688
+your MCP client. If you ever
+
+36
+00:01:38,748 --> 00:01:41,352
+want to get some data into your app for the purposes of showing
+
+37
+00:01:41,412 --> 00:01:43,956
+content in UI or something similar, then you
+
+38
+00:01:43,995 --> 00:01:46,679
+probably want to use a resource. And if you ever
+
+39
+00:01:46,879 --> 00:01:49,563
+want to implement some kind of predefined workflow, you
+
+40
+00:01:49,623 --> 00:01:52,272
+probably want to look at prompts. Now
+
+41
+00:01:52,293 --> 00:01:55,102
+you can see examples of all these ideas inside
+
+42
+00:01:55,182 --> 00:01:57,689
+of the official Claude interface at
+
+43
+00:01:57,790 --> 00:02:00,299
+Claude.ai. So here's what it currently looks
+
+44
+00:02:00,338 --> 00:02:02,841
+like for me. You'll notice that underneath the
+
+45
+00:02:03,001 --> 00:02:05,745
+main chat input are some buttons right here. If
+
+46
+00:02:05,864 --> 00:02:08,487
+I click on one, and then click on one of these
+
+47
+00:02:08,527 --> 00:02:11,131
+examples, you'll see that I immediately dove
+
+48
+00:02:11,151 --> 00:02:14,174
+into a chat. So this was a user-controlled
+
+49
+00:02:14,213 --> 00:02:16,917
+action. I, as the user, decided to start
+
+50
+00:02:16,977 --> 00:02:19,479
+off this particular workflow, and I'm making use of a
+
+51
+00:02:19,539 --> 00:02:22,043
+prompt that was probably already written ahead of time
+
+52
+00:02:22,362 --> 00:02:24,985
+and probably has been optimized in some way. So
+
+53
+00:02:25,006 --> 00:02:27,568
+to implement that list of buttons right there, we would probably want
+
+54
+00:02:27,588 --> 00:02:30,512
+to put together a series of different prompts inside of a MCP
+
+55
+00:02:30,551 --> 00:02:33,637
+server. Likewise, if I go back and
+
+56
+00:02:33,697 --> 00:02:36,562
+maybe click on this little tab right here, the plus button,
+
+57
+00:02:36,582 --> 00:02:39,087
+you'll notice that I have a add from Google Drive button.
+
+58
+00:02:39,508 --> 00:02:42,054
+Now, I'm not going to click on it because it's going to show some of my internal
+
+59
+00:02:42,093 --> 00:02:44,800
+documents. But if I click on that button, I'm going to see some
+
+60
+00:02:44,860 --> 00:02:48,447
+documents that I can add into this chat as some context.
+
+61
+00:02:48,628 --> 00:02:51,174
+Knowing what documents to actually render in that list,
+
+62
+00:02:51,435 --> 00:02:53,960
+and then whenever I click on one, automatically injecting its
+
+63
+00:02:54,241 --> 00:02:56,825
+contents into the context of this chat, that is all
+
+64
+00:02:56,866 --> 00:02:59,551
+application-related code. So it is solely
+
+65
+00:02:59,592 --> 00:03:02,236
+the application that needs to know the list of documents
+
+66
+00:03:02,277 --> 00:03:04,842
+to render here. And that's, again, specifically
+
+67
+00:03:04,883 --> 00:03:07,508
+UI-related elements. So to implement
+
+68
+00:03:07,548 --> 00:03:10,173
+that listing of documents from Google Drive, I
+
+69
+00:03:10,193 --> 00:03:12,818
+would probably look at implementing a resource inside
+
+70
+00:03:12,837 --> 00:03:15,402
+of an MCP server. And then, finally, if I
+
+71
+00:03:15,483 --> 00:03:18,087
+enter in a message to this chat of something like,
+
+72
+00:03:18,587 --> 00:03:21,133
+what is squared three use JavaScript to calculate the value
+
+73
+00:03:21,353 --> 00:03:24,158
+and send it off, I'm clearly expecting Claude
+
+74
+00:03:24,199 --> 00:03:26,723
+to somehow execute some JavaScript code, which would
+
+75
+00:03:26,984 --> 00:03:29,639
+likely be done through the use of a tool. In
+
+76
+00:03:29,680 --> 00:03:32,949
+this case, the decision to use a tool was 100% model
+
+77
+00:03:32,989 --> 00:03:35,575
+controlled. It is the model that decided to use some
+
+78
+00:03:35,616 --> 00:03:38,403
+JavaScript tool execution. To implement something
+
+79
+00:03:38,424 --> 00:03:41,312
+like this inside of an MCP server, we'd likely
+
+80
+00:03:41,372 --> 00:03:43,998
+want to, you guessed it, provide a tool.
+
+81
+00:03:45,058 --> 00:03:47,622
+So in total, that's our three different server
+
+82
+00:03:47,662 --> 00:03:50,165
+primitives. And each one is really intended to
+
+83
+00:03:50,186 --> 00:03:53,129
+be used by a different portion of your overall application.
+
+84
+00:03:53,590 --> 00:03:56,213
+So we got tools which are generally going to serve your model,
+
+85
+00:03:56,754 --> 00:03:59,437
+resources, which are generally going to serve your app,
+
+86
+00:03:59,457 --> 00:04:02,602
+and prompts which are going to serve your users. And
+
+87
+00:04:02,622 --> 00:04:05,286
+once again, these are high level guidelines. And the only reason
+
+88
+00:04:05,346 --> 00:04:07,889
+I mentioned them is to just give you a sense of when
+
+89
+00:04:07,930 --> 00:04:10,652
+you should use each of these primitives, depending upon what
+
+90
+00:04:10,712 --> 00:04:11,995
+you are trying to put together.

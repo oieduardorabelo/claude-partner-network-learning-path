@@ -12,3 +12,4 @@ Each module folder contains:
 |---|---|---|
 | 001 | [Introduction to agent skills](001-introduction-to-agent-skills/README.md) | What Skills are, how to build and configure them, how they compare to CLAUDE.md/subagents/hooks/MCP, sharing them across a team or org, and troubleshooting. |
 | 002 | [Building with the Claude API](002-building-with-the-claude-api/README.md) | Making requests, prompt engineering and evals, tool use, RAG, advanced request features (caching, extended thinking, citations), MCP, Claude Code, and agents vs. workflows. |
+| 003 | [Introduction to Model Context Protocol](003-introduction-to-model-context-protocol/README.md) | MCP architecture (clients, servers, message flow) and a hands-on CLI project implementing the three server primitives: tools, resources, and prompts. |

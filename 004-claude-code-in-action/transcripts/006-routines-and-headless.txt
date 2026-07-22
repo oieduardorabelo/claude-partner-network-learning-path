@@ -1,0 +1,95 @@
+[0:03]
+Once you trust Claude to do a task, the next move is to stop doing it by hand.
+
+[0:07]
+The most direct way needs no script or a server, a routine, which is a saved prompt plus repositories and connectors that runs on Anthropics managed infrastructure whenever it's triggered.
+
+[0:20]
+When you need full control instead, headless mode in the agent SDK run Claude code from your own scripts and applications.
+
+[0:26]
+Start with a path where you build nothing.
+
+[0:30]
+A routine bundles a prompt, the repository it works on and any connectors it needs, then runs that bundle in the cloud on a trigger, a cron schedule, an HTTP post to its API endpoint, or a GitHub event like a new pull request.
+
+[0:42]
+The infrastructure is anthropic, so there's no machine of yours staying on overnight and no workflow file to maintain.
+
+[0:48]
+You create one from the web at claw.ai slash code slash routines or from inside claw code where you can run slash schedule daily dependency audit at 9 a.m. A morning dependency audit or a PR triager that fires when a new pull request lands.
+
+[1:02]
+Anything that's the same prompt on a recurring trigger fit.
+
+[1:05]
+Three things to know before you rely on it though.
+
+[1:07]
+Routines are a research preview, so behavior and limits will just keep on moving.
+
+[1:11]
+A recurring schedule runs at most hourly, and each run starts from a fresh clone of your default branch and can only push to clod slash prefix branches unless you loosen that per repo, which is the guardrail that keeps an autonomous run from rewriting main.
+
+[1:24]
+When the job needs your environment or logic around that run, drop to headless mode.
+
+[1:29]
+The dash P flag, alias print, runs Claude code as a one-shot command with no interactive 2E.
+
+[1:35]
+It reads standard in and write standard out, so it pipes like any other shell tool.
+
+[1:41]
+Bear skips auto-discovery of hooks, skills, plugins, MCP servers, and the ClaudeMD file.
+
+[1:46]
+You get Claude, plus the tools that you allow explicitly, and nothing the local environment happens to load.
+
+[1:52]
+Startup is much faster this way.
+
+[1:55]
+Now you can pair the JSON schema with output format JSON and Claude constraints the structure output to match your schema.
+
+[2:01]
+The schema matching object lands in the structured output field of the JSON response.
+
+[2:06]
+So you can pull it with a JQ command and pipe it into a database or another script.
+
+[2:12]
+For multi-step automation, capture the session's ID from a JSON output and resume.
+
+[2:16]
+One script kicks off the work.
+
+[2:18]
+Another resumes it later with full context.
+
+[2:21]
+The Agent SDK gets you a library that embeds Cloud code inside of your own TypeScript or Python applications.
+
+[2:27]
+Both expose a query function and the same primitives as the CLI.
+
+[2:32]
+You pass a prompt plus options like allow tools, a system prompt, and a permission mode, then iterate the messages that Cloud streams back.
+
+[2:43]
+Routines are the default for repeat work.
+
+[2:45]
+It runs on Anthropics infrastructure and nothing for you to host.
+
+[2:50]
+Drop to headless when the job needs your pipeline.
+
+[2:52]
+Dash P to pipe data through a script.
+
+[2:56]
+Bear when CI needs the same results every single run.
+
+[2:59]
+And the agent SDK when the work belongs inside of your own product.

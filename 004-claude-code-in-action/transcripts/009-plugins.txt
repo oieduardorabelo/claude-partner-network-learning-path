@@ -1,0 +1,110 @@
+[0:04]
+A setup you trust is worth more when your whole team runs it.
+
+[0:07]
+Plugins are how ClogCode packages a setup and moves it between people.
+
+[0:11]
+And there are two sides to that, using the plugins, other people publish, and packaging your own once you've built something worth sharing.
+
+[0:18]
+A plugin is one installable unit.
+
+[0:21]
+Where it lives sets how you install it.
+
+[0:23]
+Inside a session, slash plugin install the organization name at the plugin name does the same thing.
+
+[0:29]
+For a team, add a private marketplace once with the slash plugin marketplace at your organization slash cloud plugins or whatever you want to call it.
+
+[0:37]
+And every install after that resolves through it with centralized discovery, version tracking, and updates.
+
+[0:44]
+Now, a plugin runs code on your machine with your privileges, and its hooks fire on every matching tool call.
+
+[0:50]
+Install it for the skills, and you also get its pre-tool use and stop hooks whether you read them or not.
+
+[0:55]
+A community plugin can ship a stop hook that calls out to a network endpoint, and nothing in your configuration will warn you.
+
+[1:01]
+See every hook, agent, and MCP server that it adds.
+
+[1:03]
+Install plugins and add marketplaces only from sources that you truly trust.
+
+[1:08]
+The in-app submission form posts to the community marketplace after Anthropix automated review.
+
+[1:12]
+and the official marketplace is curated on its own track.
+
+[1:15]
+Reviewed isn't the same as Trusted, though, so check what it does.
+
+[1:20]
+A plugin doesn't overwrite your configuration.
+
+[1:22]
+Its components run alongside yours.
+
+[1:24]
+So first, hooks stack together.
+
+[1:26]
+A plugin's pre-tool use and your own both fire on every tool call, which is the reason you read the details first.
+
+[1:31]
+Skills, agents, and commands are namespaced under the plugin name, so they never clash.
+
+[1:36]
+A plugin can also ship a settings.json file, but a narrow one.
+
+[1:40]
+So Cloud Code honors only the agent and subagent status line keys.
+
+[1:44]
+Setting agent promotes one of the plugin's subagents to the main thread with its system prompt, tool, restrictions, and model.
+
+[1:50]
+And enabling that plugin changes how Cloud Code behaves by default, which is one of the main reasons to look before you even turn it on.
+
+[1:58]
+So once you've built a .claw directory, instead of your team copying and pasting between machines, package it instead.
+
+[2:05]
+A plugin bundles all of it as one version installable unit, skills, subagents, hooks, and MCP server configs, plus the longer tail of the language server protocol servers, background monitors, themes, and a settings.json slice.
+
+[2:19]
+The manifest lives at .cloud plugin slash plugin.json and holds the name, version, description, and author.
+
+[2:25]
+It's optional, but leave it out and Cloud Code discovers components by directory convention.
+
+[2:29]
+The directory structure does the rest.
+
+[2:31]
+The same .cloud shape that you already use with skills with one folder per skill, agents with one markdown file per subagent, hooks slash hooks.json and .mcp.json, all at the plugin root.
+
+[2:42]
+Name is the only required field.
+
+[2:43]
+and it namespaces your skills as the company name, skill name.
+
+[2:47]
+Version it like any other dependency.
+
+[2:54]
+When you use plugins, read before you install.
+
+[2:56]
+When you build one, package your dot cloud the moment it works.
+
+[2:59]
+One manifest, one install, and the setup you trust reaches your entire team.

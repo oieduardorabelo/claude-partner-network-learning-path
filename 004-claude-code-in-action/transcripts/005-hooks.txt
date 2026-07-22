@@ -1,0 +1,128 @@
+[0:03]
+A hook is a deterministic code at a fixed point in the loop, which means it can guarantee far more than formatting on a run you're not watching.
+
+[0:10]
+It turns a rule from Claude usually listens into Claude can't skip it.
+
+[0:15]
+Claude code fires around 30 hook events.
+
+[0:17]
+The handful you'll reach for is pre-tool use, which fires before a tool call, the enforcement primitive.
+
+[0:23]
+Post-tool use, which fires after a successful tool call.
+
+[0:26]
+This is usually where like auto-formatting or an auto-lint would go.
+
+[0:30]
+Stop, which fires when Claude wants to end his turn.
+
+[0:33]
+Refuse if conditions are met.
+
+[0:34]
+Sub-agent stop is the same signal, but for sub-agent finishing.
+
+[0:38]
+Pre-compact and post-compact, fire before and after, compaction.
+
+[0:41]
+To re-inject context after compaction, use session start with the compact matcher, not post-compact.
+
+[0:46]
+Instructions loaded, fires when a claw.md or rule file loads.
+
+[0:50]
+Audit what made it into context.
+
+[0:52]
+Session start, primes the environment.
+
+[0:54]
+Check source startup to run only on fresh starts.
+
+[0:58]
+For pre-tool use, return JSON and exit zero with a permission decision field, allow, deny, or ask.
+
+[1:04]
+There's a fourth value defer, but it only applies to non-interactive dash p runs where a calling process pauses the tool and resumes it later.
+
+[1:11]
+So you'll rarely reach for it.
+
+[1:13]
+You can also return updated input to modify the tool call without blocking, which can be useful for redacting secrets out of a bash command.
+
+[1:20]
+One catch is that updated input replaces the whole input object.
+
+[1:23]
+So echo back the fields that you aren't changing.
+
+[1:27]
+For hooks that don't return JSON, exit codes work too.
+
+[1:30]
+So here's the three numbers that matter.
+
+[1:31]
+Zero is a success, so if the standard out is JSON, Claude parses it.
+
+[1:36]
+Plain text is ignored on most events, but on session start, user prompt submit, and user prompt expansion, it gets added to context, which is exactly what makes the state preserver work.
+
+[1:46]
+Two is a blocking error.
+
+[1:47]
+So standard error gets fed back to Claude as a context.
+
+[1:50]
+This is the blocking exit code almost everywhere where the loan exception WorkTreeCreate aborts any non-zero code.
+
+[1:57]
+Watch out because exit one feels like an error, but it actually does not block.
+
+[2:01]
+So Claude runs the command anyway.
+
+[2:02]
+And then anything else is non-blocking and is locked.
+
+[2:05]
+Exit2 can block stop, which is how you say, no, you're not done.
+
+[2:08]
+PostTool use fires after the tool already ran, so it's too late to stop the call, though it can still feed text back to Claude.
+
+[2:15]
+A few events ignore blocking, like notification, session start, and file change, show your standard error, and carry on.
+
+[2:23]
+A pretool used guardrail that redax instead of blocking.
+
+[2:26]
+The matcher picks the tool to watch, say, bash, and an optional if clause narrows it to a specific command.
+
+[2:32]
+So returning deny stops a dangerous call.
+
+[2:35]
+The lesser known move is return updated input to rewrite the call, which is how you strip a secret out of a command and still let it run.
+
+[2:44]
+When Claude compacts a long conversation, it drops a lot of details, but a session start hook with the compact matcher runs right after a print short summary of the files you've been working on.
+
+[2:55]
+That summary goes back into context, so Claude picks up where it was instead of starting cold.
+
+[3:01]
+Hooks turns a rule Claude usually follows into one that it always follows.
+
+[3:08]
+Reach past auto formatting, guard tools with pre-tool use, gate the turn with stop, and preserve stay across compact.
+
+[3:14]
+The setup pays back the first time it catches something on a run you weren't watching.

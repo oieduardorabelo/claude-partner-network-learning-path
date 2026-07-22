@@ -1,0 +1,86 @@
+[0:03]
+You handed Claude a task and let it run without watching every step.
+
+[0:06]
+Now it says it's done, but before you ship that, you need a way to check work that you didn't even supervise.
+
+[0:12]
+Check is what makes hands-off Claude code safe to rely on.
+
+[0:17]
+Verify in proportion to the road that you gave the run.
+
+[0:19]
+A short session where you watched the messages scroll by needs a glance.
+
+[0:23]
+An unattended run or a job that fired in continuous integration with nobody in the loop actually needs a real check because no one saw happen.
+
+[0:31]
+And when a run does go unattended at work.
+
+[0:34]
+keep it in auto mode rather than bypass permissions.
+
+[0:37]
+The classifier still reviews each actions for danger.
+
+[0:40]
+It never judges whether the code is right though, so the verification bar stays where it was.
+
+[0:44]
+Set that bar from how unsupervised this run was.
+
+[0:49]
+So start with the diff itself rather than a cloud summary of it.
+
+[0:52]
+Run slash code review to walk the changes and flag issues.
+
+[0:55]
+Then put your eyes on git diff.
+
+[0:57]
+The trap is a tidy summary that reads fine while the diff touched a file that you honestly didn't even expect it to.
+
+[1:03]
+Read what changed and read the files that were in the plan first.
+
+[1:07]
+The real gate on an unsupervised run is whether the test passed and whether Claude ran them or only claimed that it did.
+
+[1:14]
+Don't leave that to trust.
+
+[1:15]
+Wire it as a hook so Claude can't skip it.
+
+[1:17]
+A stop hook that runs your test and refuses to end the turn on a failure, or a post-tool use hook that lints and type checks after every edit.
+
+[1:25]
+A hook that exists with code 2 feeds the failure straight back to Claude, which reads it and fixes it without you asking.
+
+[1:31]
+The check fires on every run, whether or not you remember to ask.
+
+[1:35]
+The sub-agent code review you'd run before a PR works here too.
+
+[1:39]
+Point it at an unsupervised run.
+
+[1:41]
+Open a fresh session or sub-agent and have it review the change code with no memory of how the code was built.
+
+[1:47]
+It has no stake in the approach and catches what the original run talked itself past.
+
+[1:54]
+Make the check as serious as the run was unsupervised.
+
+[1:57]
+Read the diff, turn the test into a hook that gates the turn, verify headless runs by their JSON result and exit code, and get a cold second opinion on anything that matters.
+
+[2:06]
+Do that, and Claude did it while I wasn't looking, no longer takes faith.

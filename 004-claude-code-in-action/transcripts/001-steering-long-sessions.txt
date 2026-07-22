@@ -1,0 +1,152 @@
+[0:02]
+You can prompt Claude and watch it finish a quick task, but running a long one is much harder.
+
+[0:06]
+Refactoring across a dozen files or implementing a new feature can take hours, and if you are steering Claude in the right direction, it can potentially take longer.
+
+[0:14]
+But there are many ways to help Claude during these long sessions.
+
+[0:18]
+There are two important habits.
+
+[0:20]
+The first is to scope the work before Claude starts.
+
+[0:23]
+So if you use plan mode, Claude will do the research in read-only mode and hand you a plan.
+
+[0:28]
+Once the plan has been provided, actually read through it.
+
+[0:30]
+The more thorough the plan, the less likely that you're going to have hiccups when Claude executes.
+
+[0:35]
+And when it comes to revising the plan, just ask Claude to add it where you want.
+
+[0:39]
+It's much faster to iterate over a plan than it is to simply hope for the best.
+
+[0:43]
+The second habit is to steer Claude in the right direction.
+
+[0:46]
+And here are some ways that you can do that.
+
+[0:49]
+Compact summarizes your conversation and uses that as a new context while deleting the old, freeing up your context window.
+
+[0:56]
+However, there is a risk that something important will be removed, causing Claude to drift in the wrong direction.
+
+[1:01]
+So when you do the compact command, add in the changes you want.
+
+[1:04]
+And adding instructions after the command tells Claude how to summarize.
+
+[1:08]
+So if you were done debugging a while ago but want to just focus on those API changes, well, here you can do that.
+
+[1:15]
+When Claude goes down the wrong path, you don't have to prompt your way out of it.
+
+[1:19]
+Rewind brings you to the last checkpoint.
+
+[1:21]
+To open it, double tap escape on an empty prompt and you'll get the rewind menu.
+
+[1:26]
+Every user prompt creates a checkpoint that you can revert back to with different options.
+
+[1:31]
+One, you can restore the code, conversation, or both.
+
+[1:34]
+To summarize from here, we'll summarize everything after the checkpoint.
+
+[1:38]
+Great if you had a side conversation and just want to free up some space.
+
+[1:41]
+And summarize up to here, we'll summarize everything before the checkpoint.
+
+[1:45]
+So this is great if you want to summarize a long setup phase, but keep the implementation parts.
+
+[1:51]
+When we talk about steering, we assume that you are hands-on.
+
+[1:55]
+If you want something a little bit more autonomous, there is the goal and loop.
+
+[1:59]
+Goal sets a completion condition.
+
+[2:01]
+You describe what done looks like and Claude keeps working across turns until a fast evaluator confirms that those conditions have been met.
+
+[2:08]
+instead of just stopping for the first time it thinks it's finished.
+
+[2:11]
+So for example, I could do slash goal, all tests in source billing, pass, and the type checker report zero errors.
+
+[2:18]
+Doing slash goal clear will cancel it.
+
+[2:20]
+And one constraint here is that the evaluator only reads the transcript, so the condition has to be checkable from the output that Claude produces.
+
+[2:27]
+like the test results that it ran.
+
+[2:29]
+Loop runs a prompt on an interval between turns, fixed or self-paced.
+
+[2:33]
+Use it to pull something external like a CI run or a deploy and act when the state changes.
+
+[2:38]
+You can press escape to stop it.
+
+[2:41]
+So our steering metaphor assumes one steering wheel in one car.
+
+[2:45]
+But when we're working with multiple agents on the same code base, we don't want to have two steering wheels in one car.
+
+[2:51]
+Well, that's just unsafe.
+
+[2:53]
+This is where work trees come in.
+
+[2:54]
+It prevents two or more cloud sessions from fighting over files in a repository.
+
+[2:58]
+This prevents conflicts by having three independent file trees.
+
+[3:02]
+On exit, a clean work tree is auto removed.
+
+[3:04]
+A .worktree include file at the repo root lists get ignored files to copy into each work tree, which is useful for a environment variable file or a local configuration that you need but don't want to commit into the version control.
+
+[3:23]
+When it comes to handling long cloud code sessions, scope your work first and then steer.
+
+[3:27]
+Direct your compaction so the summary keeps what matters.
+
+[3:30]
+Use the rewind menu to course correct.
+
+[3:31]
+Set a goal when you can describe done better than you can describe the steps and run parallel work and work trees.
+
+[3:37]
+Do that and you can trust a long run without babysitting it.

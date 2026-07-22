@@ -1,0 +1,116 @@
+[0:02]
+Permission mode lets you decide once what's safe to run without you.
+
+[0:06]
+You already cycle through several of them with shift-tab, manual, accept edits, and plan.
+
+[0:10]
+The rest are where hands-off Claude code lives and the one to lead with is auto.
+
+[0:15]
+Claude runs without prompts while a separate classifier reviews each action before it executes, stepping in on ones it identifies as dangerous.
+
+[0:23]
+So here are the permission modes.
+
+[0:25]
+First, we have manual, which reads only without prompting.
+
+[0:28]
+Everything else asks.
+
+[0:29]
+Accept edits, reads, file edits, and common file system bash commands.
+
+[0:33]
+This is for iterating on code that you review after the fact.
+
+[0:36]
+Plan reads only.
+
+[0:37]
+It researches and proposes without editing.
+
+[0:39]
+Auto mode accepts everything with a classifier model reviewing each action before it runs.
+
+[0:44]
+Don't ask.
+
+[0:45]
+Only pre-approved tools allowed.
+
+[0:47]
+Everything else auto-denied with no prompt.
+
+[0:49]
+This is great for your CI pipelines.
+
+[0:51]
+And then bypass permissions, skips all check.
+
+[0:54]
+This is equivalent to the dangerously skipped permissions.
+
+[0:56]
+Only run it inside of an isolated container or virtual machine.
+
+[1:00]
+Press shift tab to cycle through manual, accept edits, plan, and auto.
+
+[1:04]
+The status bar shows which one that you're in.
+
+[1:07]
+Auto mode is where Claude runs, but before each action executes, a separate classifier model reviews it.
+
+[1:12]
+The classifier guards intent.
+
+[1:14]
+It blocks the moves that escalate beyond your request, production deploys, and migrations, force pushing or piping download code into a shell, sending sensitive data to external endpoints, and destroying files that exist for the session.
+
+[1:27]
+It allows the everyday work, local edits in your project, installing dependencies from your log file, read-only requests, and pushing to your own branch.
+
+[1:35]
+Now, the classifier won't catch whether the code works or not.
+
+[1:38]
+So if you ask Claude to refactor authentication and it writes broken authentication, the classifier waves it through because broken isn't dangerous.
+
+[1:46]
+Use auto mode together with a stop hook that runs your tests.
+
+[1:49]
+Auto mode watches what Claude is trying to do while the hook confirms that the code actually runs.
+
+[1:53]
+Auto mode guardrails are still evolving, so check the docs for the current block and allow lists.
+
+[1:58]
+Don't ask is the right move whenever no human is there to approve prompts.
+
+[2:02]
+CI, scheduled jobs, overnight batches.
+
+[2:05]
+Anything off that list gets auto-denied.
+
+[2:07]
+So your pipeline keeps moving instead of hanging on an approval no one will give.
+
+[2:15]
+There are several permission modes and you can reach the everyday ones by cycling shift tab.
+
+[2:19]
+Auto is the hands-off default.
+
+[2:21]
+The classifier checks intent before each action runs and a stop hook checks correctness after.
+
+[2:27]
+Don't ask covers unattended pipelines and bypass permission belong only inside isolated containers and VMs.
+
+[2:33]
+Match the mode to the job.

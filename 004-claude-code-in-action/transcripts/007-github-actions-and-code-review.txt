@@ -1,0 +1,119 @@
+[0:03]
+The best place to hand off repetitive work is the pull request.
+
+[0:06]
+There are two ways to get that.
+
+[0:07]
+The managed one is CodeReview, an Anthropic-hosted service that reviews PRs through the Cloud GitHub app and posts findings as inline comments with nothing for you to build or host.
+
+[0:16]
+The do-it-yourself one is the Cloud Code GitHub action for when the job goes beyond review and into custom CI.
+
+[0:24]
+An organization admin turns it on from the cloud code admin settings, then installs the cloud GitHub app and picks which repos it watches and when it runs.
+
+[0:32]
+Once when a PR opens on every push or only when someone comments at cloud review.
+
+[0:38]
+And from there, it runs on Anthropics infrastructure.
+
+[0:40]
+A set of review agents analyzes the diff against the full code base and posts findings as inline comments on the specific lines.
+
+[0:47]
+tagged by severity with a summary table in the check run.
+
+[0:50]
+It deduplicates and ranks so you read a handful of real findings instead of a wall of nits.
+
+[0:55]
+It never approves or blocks the PR, the judgment call stays with a human.
+
+[0:59]
+Code review is a research preview, currently for team and enterprise plans, so expect the behavior to keep on moving.
+
+[1:04]
+And there's no managed autofix, the service post findings only.
+
+[1:08]
+Applying them is a local move from your own terminal where the slash code review command reviews a diff and its dash dash fix flag applies the findings to your working tree.
+
+[1:18]
+The action covers the jobs beyond review, implementing changes from a comment, schedule reports, anything you'd write a workflow for.
+
+[1:25]
+It runs the agent on PR comments, schedule jobs, and any GitHub event.
+
+[1:28]
+So from inside Cloud Code, you can run the slash install GitHub app command.
+
+[1:33]
+And you need repo admin to do this.
+
+[1:35]
+The slash command walks you through installing the GitHub app and setting the Anthropic API key secret on the repo.
+
+[1:40]
+The action itself is Anthropics slash Cloud Code action at V1.
+
+[1:45]
+And the inputs you'll use is the Anthropic API key, which is required, the GitHub token, which defaults to secrets.githubtoken, the trigger phrase, which is what the action listens for in comments, which just defaults to at Claude.
+
+[1:57]
+If you use Bedrock or Vertex, you can switch to those providers, the prompt, which is the instruction for the run, and then the Claude arguments, which is a string of CLI arguments passed through to Claude code.
+
+[2:07]
+So if you drop this into .github slash workflows slash Claude.yaml, it listens for at Claude on PR comments and issue comments.
+
+[2:14]
+So someone writes, at Claude, implement the spec in the linked linear issue on a pull request, and the action picks it up.
+
+[2:21]
+Claude pushes commits and posts comments with what it did.
+
+[2:25]
+This one's the daily rollup.
+
+[2:26]
+Cron fires at nine UTC.
+
+[2:28]
+The action runs.
+
+[2:29]
+Claude posts the results.
+
+[2:30]
+The workflow dispatch trigger also lets you run it manually from the actions tab.
+
+[2:35]
+So the Claude args line is where all this fine tuning happens.
+
+[2:38]
+I set the max turns to five.
+
+[2:40]
+This just puts a hard cap on the agent loop.
+
+[2:42]
+Permission mode I put don't ask.
+
+[2:44]
+This is the unintended mode.
+
+[2:45]
+Allow tools is exactly what this job needs.
+
+[2:48]
+So read only for a report.
+
+[2:53]
+For PR reviews, take the manage path, enable code review, let the GitHub app post inline findings and apply fixes locally with slash code review dash dash fix.
+
+[3:02]
+Reach for the action when the job is more than review.
+
+[3:04]
+Install GitHub app for setup, one workflow for at Claude mentions, one for cron, all the tuning and Claude args.
